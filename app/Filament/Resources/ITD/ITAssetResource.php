@@ -151,6 +151,11 @@ class ITAssetResource extends Resource
                     ->getStateUsing(fn ($record) => $record->asset_serial_number ? strtoupper($record->asset_serial_number) : 'N/A')
                     ->searchable()
                     ->sortable(),
+                TextColumn::make('asset_port')
+                    ->label('Port')
+                    ->getStateUsing(fn ($record) => $record->asset_port ? strtoupper($record->asset_port) : 'N/A')
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('asset_year_bought')
                     ->label('Asset Year')
                     ->sortable()
