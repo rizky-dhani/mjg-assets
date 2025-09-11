@@ -87,7 +87,12 @@ class ITAssetResource extends Resource
                         TextInput::make('asset_serial_number')
                             ->label('Serial Number')
                             ->maxLength(100)
-                            ->afterStateUpdated(fn ($state, callable $set) => $set('asset_serial_number', strtoupper($state))),  
+                            ->afterStateUpdated(fn ($state, callable $set) => $set('asset_serial_number', strtoupper($state))),
+                        TextInput::make('asset_port')
+                            ->label('Port')
+                            ->maxLength(36)
+                            ->afterStateUpdated(fn ($state, callable $set) => $set('asset_port', strtoupper($state)))
+                            ->visible(fn (callable $get) => static::isNetworkingCategory($get('asset_category_id'))),
                     ]),
                 TextInput::make('asset_price')
                     ->label('Price')
@@ -350,5 +355,19 @@ class ITAssetResource extends Resource
             'edit' => Pages\EditITAsset::route('/{record}/edit'),
             'view' => Pages\ViewITAsset::route('/{record}'),
         ];
+    }
+
+    public static function isNetworkingCategory(?int $categoryId): bool
+    {
+        if (!$categoryId) {
+            return false;
+        }
+        
+        $category = ITAssetCategory::find($categoryId);
+        if (!$category) {
+            return false;
+        }
+        
+        return $category->code === '009' || strtoupper($category->name) === 'NETWORKING';
     }
 }

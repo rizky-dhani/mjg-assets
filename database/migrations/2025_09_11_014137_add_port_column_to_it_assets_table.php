@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('it_assets', function (Blueprint $table) {
-            $table->string('port')->after('asset_serial_number')->nullable();
+            $table->string('asset_port')->after('asset_serial_number')->nullable();
         });
     }
 
