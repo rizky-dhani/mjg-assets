@@ -75,7 +75,7 @@ class ITAssetResource extends Resource
                     ->closeOnDateSelection()
                     ->default(now())
                     ->required(),
-                Grid::make(3)
+                Grid::make(4)
                     ->schema([
                         TextInput::make('asset_brand')
                             ->label('Brand')
