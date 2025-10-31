@@ -72,11 +72,12 @@ class UserResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->successNotificationTitle('User updated successfully'),
                 Tables\Actions\DeleteAction::make()
                     ->modalHeading('Are you sure you want to delete this user?')
                     ->modalDescription('This action cannot be undone.')
-                    ->successNotificationTitle('User deleted successfully.')
+                    ->successNotificationTitle('User deleted successfully')
                     ->requiresConfirmation(),
             ])
             ->bulkActions([
@@ -84,7 +85,7 @@ class UserResource extends Resource
                     Tables\Actions\DeleteBulkAction::make()
                         ->modalHeading('Are you sure you want to delete these users?')
                         ->modalDescription('This action cannot be undone.')
-                        ->successNotificationTitle('Users deleted successfully.')
+                        ->successNotificationTitle('Selected User(s) deleted successfully')
                         ->requiresConfirmation(),
                 ]),
             ]);
