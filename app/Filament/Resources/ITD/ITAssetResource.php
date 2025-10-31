@@ -241,30 +241,26 @@ class ITAssetResource extends Resource
                     })
             ])
             ->actions([
-                ActionGroup::make([
-                    Tables\Actions\Action::make('Detail')
-                        ->label('Detail')
-                        ->color('warning')
-                        ->icon('heroicon-o-information-circle')
-                        ->url(fn ($record) => route('assets.show', ['assetId' => $record->assetId]))
-                        ->openUrlInNewTab(),
-                    Tables\Actions\ViewAction::make(),
+                Tables\Actions\Action::make('Detail')
+                    ->label('Detail')
+                    ->color('warning')
+                    ->icon('heroicon-o-information-circle')
+                    ->url(fn ($record) => route('assets.show', ['assetId' => $record->assetId]))
+                    ->openUrlInNewTab(),
+                Tables\Actions\ViewAction::make(),
 
-                    Tables\Actions\EditAction::make(),
-                    Tables\Actions\DeleteAction::make()    
-                        ->modalHeading('Are you sure you want to delete this asset?')
-                        ->modalDescription('This action cannot be undone.')
-                        ->successNotificationTitle('Asset deleted successfully.')
-                        ->requiresConfirmation()
-                        ->after(function ($record) {
-                            // After deleting, delete the asset's usage history
-                            if ($record->asset) {
-                                $record->asset->usageHistory()->delete();
-                            }
-                        }),
-                ])
-                ->icon('heroicon-m-ellipsis-horizontal')
-                ->tooltip('Actions')
+                Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make()    
+                    ->modalHeading('Are you sure you want to delete this asset?')
+                    ->modalDescription('This action cannot be undone.')
+                    ->successNotificationTitle('Asset deleted successfully.')
+                    ->requiresConfirmation()
+                    ->after(function ($record) {
+                        // After deleting, delete the asset's usage history
+                        if ($record->asset) {
+                            $record->asset->usageHistory()->delete();
+                        }
+                    }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
