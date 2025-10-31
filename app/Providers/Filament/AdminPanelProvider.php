@@ -8,6 +8,7 @@ use App\Filament\Pages\Auth\CustomLogin;
 use App\Models\ITAssetUsageHistory;
 use Filament\Pages;
 use Filament\Panel;
+use Filament\Support\Enums\MaxWidth;
 use Filament\Widgets;
 use Filament\PanelProvider;
 use Filament\Enums\ThemeMode;
@@ -41,6 +42,7 @@ class AdminPanelProvider extends PanelProvider
             ->loginRouteSlug('login')
             ->profile()
             ->defaultThemeMode(ThemeMode::Light)
+            ->maxContentWidth(MaxWidth::Full)
             ->brandName('MJG Asset Management')
             ->brandLogo(asset('assets/images/LOGO-MEDQUEST-HD.png'))
             ->brandLogoHeight('2rem')
