@@ -3,12 +3,12 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Filament\Panel;
-use Spatie\Permission\Traits\HasRoles;
-use Illuminate\Notifications\Notifiable;
 use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements FilamentUser
 {
@@ -16,6 +16,7 @@ class User extends Authenticatable implements FilamentUser
     {
         return str_ends_with($this->email, '@medquest.co.id');
     }
+
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, HasRoles, Notifiable;
 
@@ -48,10 +49,17 @@ class User extends Authenticatable implements FilamentUser
             'password' => 'hashed',
         ];
     }
+
     public function getRouteKeyName(): string
     {
         return 'userId';
     }
+
+    public function division()
+    {
+        return $this->belongsTo(EmployeeDivision::class, 'division_id');
+    }
+
     public function employee()
     {
         return $this->hasOne(Employee::class, 'user_id');

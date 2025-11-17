@@ -2,28 +2,29 @@
 
 namespace App\Filament\Resources\UserManagement;
 
-use Filament\Forms;
-use App\Models\User;
-use Filament\Tables;
-use Filament\Forms\Form;
-use Filament\Tables\Table;
-use Filament\Resources\Resource;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Section;
-use Filament\Forms\Components\TextInput;
-use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\UserManagement\UserResource\Pages;
-use App\Filament\Resources\UserManagement\UserResource\RelationManagers;
+use App\Models\User;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Form;
+use Filament\Resources\Resource;
+use Filament\Tables;
+use Filament\Tables\Table;
 
 class UserResource extends Resource
 {
     protected static ?string $model = User::class;
+
     protected static ?string $navigationIcon = 'heroicon-o-user';
+
     protected static ?string $navigationGroup = 'User Management';
+
     public static function canViewAny(): bool
     {
         return auth()->user()->hasRole(['Super Admin', 'ITD']);
     }
+
     public static function form(Form $form): Form
     {
         return $form
@@ -39,6 +40,14 @@ class UserResource extends Resource
                             ->email()
                             ->required()
                             ->maxLength(255),
+                        Select::make('division_id')
+                            ->label('Division')
+                            ->relationship('division', 'name')
+                            ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
+                            ->preload()
+                            ->searchable()
+                            ->placeholder('Select Division')
+                            ->columnSpanFull(),
                         Select::make('roles')
                             ->label('Roles')
                             ->relationship('roles', 'name')
@@ -63,10 +72,14 @@ class UserResource extends Resource
                     ->label('Email Address')
                     ->searchable()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('division.name')
+                    ->label('Division')
+                    ->searchable()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('roles.name')
                     ->label('Roles')
                     ->searchable()
-                    ->sortable()
+                    ->sortable(),
             ])
             ->filters([
                 //
