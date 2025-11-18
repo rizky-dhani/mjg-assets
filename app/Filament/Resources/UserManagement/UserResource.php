@@ -113,10 +113,12 @@ class UserResource extends Resource
                                 ->placeholder('Select Division')
                                 ->required(),
                         ])
-                        ->action(function (array $data) {
-                            User::update([
-                                'division_id' => $data['division_id'],
-                            ]);
+                        ->action(function (array $data, $records) {
+                            foreach ($records as $record) {
+                                $record->update([
+                                    'division_id' => $data['division_id'],
+                                ]);
+                            }
                         })
                         ->deselectRecordsAfterCompletion()
                         ->requiresConfirmation()
