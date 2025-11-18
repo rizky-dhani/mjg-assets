@@ -109,7 +109,7 @@ class UsageHistoryRelationManager extends RelationManager
                                     ->label('Division Name')
                                     ->required()
                                     ->maxLength(255),
-                                Forms\Components\TextInput::make('abbreviation')
+                                Forms\Components\TextInput::make('initial')
                                     ->label('Initial')
                                     ->required()
                                     ->maxLength(3)
