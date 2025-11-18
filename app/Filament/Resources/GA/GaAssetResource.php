@@ -24,7 +24,6 @@ use Filament\Tables\Actions\ActionGroup;
 use Filament\Forms\Components\DatePicker;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
-use App\Traits\HasResourceRolePermissions;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
 use App\Filament\Resources\GA\GaAssetResource\Pages;
@@ -32,11 +31,16 @@ use App\Filament\Resources\GA\GaAssetResource\RelationManagers\UsageHistoryRelat
 
 class GaAssetResource extends Resource
 {
-    use HasResourceRolePermissions;
 
     protected static ?string $model = GaAsset::class;
     protected static ?string $navigationGroup = 'General Affairs';
     protected static ?string $navigationLabel = 'Assets';
+
+    public static function canViewAny(): bool
+    {
+        // Only users with GA division or Super Admin can access this resource
+        return auth()->user()?->hasRole('Super Admin') || auth()->user()?->division?->initial === 'GA' ?? false;
+    }
     protected static ?string $slug = 'general-affairs/assets';
     protected static ?string $navigationIcon = 'heroicon-o-tv';
 

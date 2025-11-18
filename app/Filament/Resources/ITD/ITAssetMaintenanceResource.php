@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources\ITD;
 
-use App\Traits\HasResourceRolePermissions;
 use Carbon\Carbon;
 use Filament\Forms;
 use Filament\Tables;
@@ -26,11 +25,15 @@ use App\Filament\Resources\ITD\ITAssetMaintenanceResource\RelationManagers;
 
 class ITAssetMaintenanceResource extends Resource
 {
-    use HasResourceRolePermissions;
     protected static ?string $model = ITAssetMaintenance::class;
     protected static ?string $navigationLabel = 'Maintenance Log';
     protected static ?string $modelLabel = 'Asset Maintenance Log';
     protected static ?string $pluralModelLabel = 'Asset Maintenance Logs';
+
+    public static function canViewAny(): bool
+    {
+        return auth()->user()?->hasRole('Super Admin') ?? false;
+    }
     protected static ?int $navigationSort = 2;
     protected static ?string $slug = 'it-asset-maintenance-log';
     protected static ?string $navigationParentItem = 'Assets';

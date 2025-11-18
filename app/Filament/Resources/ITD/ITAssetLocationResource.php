@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources\ITD;
 
-use App\Traits\HasResourceRolePermissions;
 use Filament\Forms;
 use Filament\Tables;
 use Filament\Forms\Form;
@@ -20,11 +19,15 @@ use App\Filament\Resources\ITD\ITAssetLocationResource\RelationManagers;
 
 class ITAssetLocationResource extends Resource
 {
-    use HasResourceRolePermissions;
     protected static ?string $model = ITAssetLocation::class;
     protected static ?string $slug = 'it-asset-locations';
     protected static ?string $navigationGroup = ' ITD';
     protected static ?string $navigationLabel = 'Locations';
+
+    public static function canViewAny(): bool
+    {
+        return auth()->user()?->hasRole('Super Admin') ?? false;
+    }
     protected static ?string $navigationIcon = 'heroicon-o-map-pin';
     protected static ?string $navigationParentItem = 'Assets';
     protected static ?string $modelLabel = 'Asset Location';

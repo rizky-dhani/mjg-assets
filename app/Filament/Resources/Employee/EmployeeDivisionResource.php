@@ -15,7 +15,6 @@ use Filament\Forms\Components\Select;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use Illuminate\Database\Eloquent\Builder;
-use App\Traits\HasResourceRolePermissions;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\Employee\EmployeeDivisionResource\Pages;
@@ -23,12 +22,16 @@ use App\Filament\Resources\Employee\EmployeeDivisionResource\RelationManagers;
 
 class EmployeeDivisionResource extends Resource
 {
-    use HasResourceRolePermissions;
     protected static ?string $model = EmployeeDivision::class;
     protected static ?string $navigationLabel = 'Divisions';
     protected static ?string $navigationIcon = 'heroicon-o-users';
     protected static ?string $navigationParentItem = 'Employees';
     protected static ?string $navigationGroup = 'User Management';
+
+    public static function canViewAny(): bool
+    {
+        return auth()->user()?->hasRole('Super Admin') ?? false;
+    }
 
     public static function form(Form $form): Form
     {

@@ -14,7 +14,6 @@ use Filament\Support\Enums\FontWeight;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use Illuminate\Database\Eloquent\Builder;
-use App\Traits\HasResourceRolePermissions;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -24,12 +23,16 @@ use App\Filament\Resources\Employee\EmployeeDepartmentResource\RelationManagers;
 
 class EmployeeDepartmentResource extends Resource
 {
-    use HasResourceRolePermissions;
     protected static ?string $model = EmployeeDepartment::class;
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $navigationLabel = 'Departments';
     protected static ?string $navigationParentItem = 'Employees';
     protected static ?string $navigationGroup = 'User Management';
+
+    public static function canViewAny(): bool
+    {
+        return auth()->user()?->hasRole('Super Admin') ?? false;
+    }
 
     public static function form(Form $form): Form
     {

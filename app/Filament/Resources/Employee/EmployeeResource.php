@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources\Employee;
 
-use App\Traits\HasResourceRolePermissions;
 use Filament\Forms;
 use Filament\Tables;
 use App\Models\Employee\Employee;
@@ -18,11 +17,16 @@ use App\Filament\Resources\Employee\EmployeeResource\RelationManagers;
 
 class EmployeeResource extends Resource
 {
-    use HasResourceRolePermissions;
     protected static ?string $model = Employee::class;
     
     protected static ?string $navigationIcon = 'heroicon-o-credit-card';
     protected static ?string $navigationGroup = 'User Management';
+
+    public static function canViewAny(): bool
+    {
+        // Only allow users with Super Admin role or employees with division
+        return auth()->user()?->hasRole('Super Admin') ?? false;
+    }
     public static function form(Form $form): Form
     {
         return $form

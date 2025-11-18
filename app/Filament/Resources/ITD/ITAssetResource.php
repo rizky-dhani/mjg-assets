@@ -24,7 +24,6 @@ use Filament\Tables\Actions\ActionGroup;
 use Filament\Forms\Components\DatePicker;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
-use App\Traits\HasResourceRolePermissions;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
 use App\Filament\Resources\ITD\ITAssetResource\Pages;
@@ -32,11 +31,16 @@ use App\Filament\Resources\ITD\ITAssetResource\RelationManagers\UsageHistoryRela
 
 class ITAssetResource extends Resource
 {
-    use HasResourceRolePermissions;
 
     protected static ?string $model = ITAsset::class;
     protected static ?string $navigationLabel = 'Assets';
     protected static ?string $slug = 'it-assets';
+
+    public static function canViewAny(): bool
+    {
+        // Only users with ITD division or Super Admin can access this resource
+        return auth()->user()?->hasRole('Super Admin') || auth()->user()?->division?->initial === 'ITD' ?? false;
+    }
     protected static ?string $navigationIcon = 'heroicon-o-tv';
     protected static ?string $navigationGroup = ' ITD';
     public static function getBreadcrumb(): string
