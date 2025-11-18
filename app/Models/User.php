@@ -57,11 +57,11 @@ class User extends Authenticatable implements FilamentUser
 
     public function division()
     {
-        return $this->belongsTo(EmployeeDivision::class, 'division_id');
+        return $this->belongsTo(\App\Models\Employee\EmployeeDivision::class, 'division_id');
     }
 
     public function employee()
     {
-        return $this->hasOne(Employee::class, 'user_id');
+        return $this->hasOne(\App\Models\Employee\Employee::class, 'user_id');
     }
 }
