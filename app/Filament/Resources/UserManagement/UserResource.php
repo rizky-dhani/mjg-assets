@@ -100,6 +100,31 @@ class UserResource extends Resource
                         ->modalDescription('This action cannot be undone.')
                         ->successNotificationTitle('Selected User(s) deleted successfully')
                         ->requiresConfirmation(),
+                    Tables\Actions\BulkAction::make('updateDivision')
+                        ->label('Update Division')
+                        ->icon('heroicon-o-arrows-right-left')
+                        ->form([
+                            Select::make('division_id')
+                                ->label('New Division')
+                                ->options(\App\Models\Employee\EmployeeDivision::pluck('name', 'id'))
+                                ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
+                                ->preload()
+                                ->searchable()
+                                ->placeholder('Select Division')
+                                ->required(),
+                        ])
+                        ->action(function (array $records, array $data) {
+                            foreach ($records as $record) {
+                                $record->update([
+                                    'division_id' => $data['division_id']
+                                ]);
+                            }
+                        })
+                        ->deselectRecordsAfterCompletion()
+                        ->requiresConfirmation()
+                        ->modalHeading('Update Division for Selected Users')
+                        ->modalDescription('Are you sure you want to update the division for the selected users?')
+                        ->successNotificationTitle('Division updated successfully for selected users'),
                 ]),
             ]);
     }
