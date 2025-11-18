@@ -18,12 +18,12 @@ use App\Filament\Resources\GA\GaAssetUsageHistoryResource\Pages;
 class GaAssetUsageHistoryResource extends Resource
 {
     protected static ?string $model = GaAssetUsageHistory::class;
-
+    protected static ?string $slug = 'general-affairs/usage-histories';
     protected static ?string $navigationIcon = 'heroicon-o-clock';
     protected static ?string $navigationGroup = 'General Affairs';
     protected static ?string $navigationParentItem = 'Assets';
 
-    protected static ?string $navigationLabel = 'Asset Usage History';
+    protected static ?string $navigationLabel = 'Usage History';
     protected static ?string $modelLabel = 'Asset Usage History';
     protected static ?string $pluralModelLabel = 'Asset Usage Histories';
 

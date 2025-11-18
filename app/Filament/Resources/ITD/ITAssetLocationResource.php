@@ -10,7 +10,6 @@ use Filament\Tables\Table;
 use Illuminate\Support\Str;
 use App\Models\IT\ITAssetLocation;
 use Filament\Resources\Resource;
-use App\Models\ResourcePermission;
 use Filament\Forms\Components\Hidden;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;

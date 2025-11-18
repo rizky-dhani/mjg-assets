@@ -2,18 +2,11 @@
 
 namespace App\Traits;
 
-use App\Models\ResourcePermission;
-
 trait HasResourceRolePermissions
 {
-    public static function getPermittedRoles(): array
-    {
-        return ResourcePermission::where('resource_name', static::$model)
-            ->first()?->roles->pluck('name')->toArray() ?? [];
-    }
-
     public static function canViewAny(): bool
     {
-        return auth()->user()?->hasAnyRole(['Super Admin'], self::getPermittedRoles());
+        // By default, only Super Admin can access resources that use this trait
+        return auth()->user()?->hasRole('Super Admin') ?? false;
     }
 }

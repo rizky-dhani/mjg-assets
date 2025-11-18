@@ -2,30 +2,31 @@
 
 namespace App\Providers\Filament;
 
-use App\Filament\Resources\ITAssetResource;
-use App\Filament\Resources\ITAssetUsageHistoryResource;
-use App\Filament\Pages\Auth\CustomLogin;
-use App\Models\ITAssetUsageHistory;
 use Filament\Pages;
 use Filament\Panel;
-use Filament\Support\Enums\MaxWidth;
 use Filament\Widgets;
 use Filament\PanelProvider;
 use Filament\Enums\ThemeMode;
 use Filament\Navigation\MenuItem;
 use Filament\Support\Colors\Color;
+use App\Models\ITAssetUsageHistory;
+use Filament\Support\Enums\MaxWidth;
 use Filament\Navigation\NavigationItem;
+use App\Filament\Pages\Auth\CustomLogin;
 use Filament\Navigation\NavigationGroup;
 use Filament\Http\Middleware\Authenticate;
+use App\Filament\Resources\ITAssetResource;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Filament\Http\Middleware\AuthenticateSession;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use App\Filament\Resources\ITAssetUsageHistoryResource;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
+use App\Filament\Resources\GA\GaAssetResource\Widgets\GaAssetWidget;
 use App\Filament\Resources\ITD\ITAssetResource\Widgets\ITAssetWidget;
 use Althinect\FilamentSpatieRolesPermissions\FilamentSpatieRolesPermissionsPlugin;
 
@@ -72,6 +73,7 @@ class AdminPanelProvider extends PanelProvider
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
                 ITAssetWidget::class,
+                GaAssetWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,

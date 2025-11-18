@@ -19,7 +19,7 @@ class GaAssetLocationResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-map-pin';
     protected static ?string $navigationGroup = 'General Affairs';
     protected static ?string $navigationParentItem = 'Assets';
-
+    protected static ?string $slug = 'general-affairs/asset-locations';
     protected static ?string $navigationLabel = 'Asset Location';
     protected static ?string $modelLabel = 'Asset Location';
     protected static ?string $pluralModelLabel = 'Asset Locations';

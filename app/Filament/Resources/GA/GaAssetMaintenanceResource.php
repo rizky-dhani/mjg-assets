@@ -22,7 +22,7 @@ class GaAssetMaintenanceResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-wrench-screwdriver';
     protected static ?string $navigationGroup = 'General Affairs';
     protected static ?string $navigationParentItem = 'Assets';
-
+    protected static ?string $slug = 'general-affairs/asset-maintenance';
     protected static ?string $navigationLabel = 'Asset Maintenance';
     protected static ?string $modelLabel = 'Asset Maintenance';
     protected static ?string $pluralModelLabel = 'Asset Maintenances';

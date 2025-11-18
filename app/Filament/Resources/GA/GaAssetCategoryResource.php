@@ -21,7 +21,7 @@ class GaAssetCategoryResource extends Resource
 
     protected static ?string $navigationGroup = 'General Affairs';
     protected static ?string $navigationParentItem = 'Assets';
-
+    protected static ?string $slug = 'general-affairs/asset-categories';
     protected static ?string $navigationLabel = 'Asset Category';
     protected static ?string $modelLabel = 'Asset Category';
     protected static ?string $pluralModelLabel = 'Asset Categories';

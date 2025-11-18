@@ -11,7 +11,6 @@ use App\Models\IT\ITAssetCategory;
 use App\Models\IT\ITAssetLocation;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
-use App\Models\ResourcePermission;
 use Filament\Support\Colors\Color;
 use Filament\Forms\Components\Grid;
 use Filament\Tables\Filters\Filter;

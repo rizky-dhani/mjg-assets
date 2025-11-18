@@ -11,7 +11,6 @@ use App\Models\GA\GaAssetCategory;
 use App\Models\GA\GaAssetLocation;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
-use App\Models\ResourcePermission;
 use Filament\Support\Colors\Color;
 use Filament\Forms\Components\Grid;
 use Filament\Tables\Filters\Filter;
@@ -38,7 +37,7 @@ class GaAssetResource extends Resource
     protected static ?string $model = GaAsset::class;
     protected static ?string $navigationGroup = 'General Affairs';
     protected static ?string $navigationLabel = 'Assets';
-    protected static ?string $slug = 'ga-assets';
+    protected static ?string $slug = 'general-affairs/assets';
     protected static ?string $navigationIcon = 'heroicon-o-tv';
 
     public static function form(Form $form): Form
