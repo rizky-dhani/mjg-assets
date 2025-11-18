@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Employee;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -22,6 +22,6 @@ class EmployeeDivision extends Model
     }
     public function usageHistories()
     {
-        return $this->hasMany(ITAssetUsageHistory::class, 'division_id');
+        return $this->hasMany(\App\Models\IT\ITAssetUsageHistory::class, 'division_id');
     }
 }

@@ -58,7 +58,7 @@ class DivisionRelationManager extends RelationManager
                         if (!empty($selectedDivisions)) {
                             // Update each selected division's department_id
                             foreach ($selectedDivisions as $divisionId) {
-                                \App\Models\EmployeeDivision::where('id', $divisionId)
+                                \App\Models\Employee\EmployeeDivision::where('id', $divisionId)
                                     ->update(['department_id' => $departmentId]);
                             }
                         }
@@ -68,7 +68,7 @@ class DivisionRelationManager extends RelationManager
                             ->label('Select Divisions')
                             ->multiple()
                             ->options(
-                                \App\Models\EmployeeDivision::query()
+                                \App\Models\Employee\EmployeeDivision::query()
                                     ->pluck('name', 'id')
                             )
                             ->required(),

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Employee;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -24,6 +24,6 @@ class EmployeePosition extends Model
     }
     public function usageHistories()
     {
-        return $this->hasMany(ITAssetUsageHistory::class, 'position_id');
+        return $this->hasMany(\App\Models\IT\ITAssetUsageHistory::class, 'position_id');
     }
 }

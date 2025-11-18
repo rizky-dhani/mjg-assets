@@ -5,7 +5,7 @@ namespace App\Filament\Resources\Employee;
 use App\Traits\HasResourceRolePermissions;
 use Filament\Forms;
 use Filament\Tables;
-use App\Models\Employee;
+use App\Models\Employee\Employee;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;

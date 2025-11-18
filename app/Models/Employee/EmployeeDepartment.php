@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Employee;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -17,6 +17,6 @@ class EmployeeDepartment extends Model
     }
     public function usageHistories()
     {
-        return $this->hasMany(ITAssetUsageHistory::class, 'department_id');
+        return $this->hasMany(\App\Models\IT\ITAssetUsageHistory::class, 'department_id');
     }
 }

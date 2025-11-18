@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Employee;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -13,14 +13,14 @@ class Employee extends Model
     }
     public function division()
     {
-        return $this->belongsTo(EmployeeDivision::class);
+        return $this->belongsTo(\App\Models\Employee\EmployeeDivision::class);
     }
     public function position()
     {
-        return $this->belongsTo(EmployeePosition::class);
+        return $this->belongsTo(\App\Models\Employee\EmployeePosition::class);
     }
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(\App\Models\User::class);
     }
 }
