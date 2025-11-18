@@ -13,7 +13,7 @@ class ITAssetLocationPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->division && $user->division->abbreviation === 'ITD';
+        return $user->division && $user->division->initial === 'ITD';
     }
 
     /**
@@ -21,7 +21,7 @@ class ITAssetLocationPolicy
      */
     public function view(User $user, ITAssetLocation $iTAssetLocation): bool
     {
-        return $user->division && $user->division->abbreviation === 'ITD';
+        return $user->division && $user->division->initial === 'ITD';
     }
 
     /**
@@ -29,7 +29,7 @@ class ITAssetLocationPolicy
      */
     public function create(User $user): bool
     {
-        return $user->division && $user->division->abbreviation === 'ITD';
+        return $user->division && $user->division->initial === 'ITD';
     }
 
     /**
@@ -37,7 +37,7 @@ class ITAssetLocationPolicy
      */
     public function update(User $user, ITAssetLocation $iTAssetLocation): bool
     {
-        return $user->division && $user->division->abbreviation === 'ITD';
+        return $user->division && $user->division->initial === 'ITD';
     }
 
     /**
@@ -45,7 +45,7 @@ class ITAssetLocationPolicy
      */
     public function delete(User $user, ITAssetLocation $iTAssetLocation): bool
     {
-        return $user->division && $user->division->abbreviation === 'ITD';
+        return $user->division && $user->division->initial === 'ITD';
     }
 
     /**
@@ -53,7 +53,7 @@ class ITAssetLocationPolicy
      */
     public function restore(User $user, ITAssetLocation $iTAssetLocation): bool
     {
-        return $user->division && $user->division->abbreviation === 'ITD';
+        return $user->division && $user->division->initial === 'ITD';
     }
 
     /**
@@ -61,6 +61,6 @@ class ITAssetLocationPolicy
      */
     public function forceDelete(User $user, ITAssetLocation $iTAssetLocation): bool
     {
-        return $user->division && $user->division->abbreviation === 'ITD';
+        return $user->division && $user->division->initial === 'ITD';
     }
 }

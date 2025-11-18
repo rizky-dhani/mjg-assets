@@ -13,7 +13,7 @@ class ITAssetUsageHistoryPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->division && $user->division->abbreviation === 'ITD';
+        return $user->division && $user->division->initial === 'ITD';
     }
 
     /**
@@ -21,7 +21,7 @@ class ITAssetUsageHistoryPolicy
      */
     public function view(User $user, ITAssetUsageHistory $iTAssetUsageHistory): bool
     {
-        return $user->division && $user->division->abbreviation === 'ITD';
+        return $user->division && $user->division->initial === 'ITD';
     }
 
     /**
@@ -29,7 +29,7 @@ class ITAssetUsageHistoryPolicy
      */
     public function create(User $user): bool
     {
-        return $user->division && $user->division->abbreviation === 'ITD';
+        return $user->division && $user->division->initial === 'ITD';
     }
 
     /**
@@ -37,7 +37,7 @@ class ITAssetUsageHistoryPolicy
      */
     public function update(User $user, ITAssetUsageHistory $iTAssetUsageHistory): bool
     {
-        return $user->division && $user->division->abbreviation === 'ITD';
+        return $user->division && $user->division->initial === 'ITD';
     }
 
     /**
@@ -45,7 +45,7 @@ class ITAssetUsageHistoryPolicy
      */
     public function delete(User $user, ITAssetUsageHistory $iTAssetUsageHistory): bool
     {
-        return $user->division && $user->division->abbreviation === 'ITD';
+        return $user->division && $user->division->initial === 'ITD';
     }
 
     /**
@@ -53,7 +53,7 @@ class ITAssetUsageHistoryPolicy
      */
     public function restore(User $user, ITAssetUsageHistory $iTAssetUsageHistory): bool
     {
-        return $user->division && $user->division->abbreviation === 'ITD';
+        return $user->division && $user->division->initial === 'ITD';
     }
 
     /**
@@ -61,6 +61,6 @@ class ITAssetUsageHistoryPolicy
      */
     public function forceDelete(User $user, ITAssetUsageHistory $iTAssetUsageHistory): bool
     {
-        return $user->division && $user->division->abbreviation === 'ITD';
+        return $user->division && $user->division->initial === 'ITD';
     }
 }
