@@ -3,34 +3,35 @@
 namespace App\Filament\Resources\ITD\ITAssetResource\Widgets;
 
 use App\Filament\Resources\ITD\ITAssetResource;
-use App\Models\IT\ITAsset;
 use App\Models\IT\ITAssetCategory;
-use Filament\Widgets\StatsOverviewWidget\Stat;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
+use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class ITAssetWidget extends BaseWidget
 {
     protected static ?string $pollingInterval = null;
-    protected ?string $heading = 'Assets';
+
+    protected static ?int $sort = 1;
 
     public static function canView(): bool
     {
         // Only allow users with ITD division to see this widget
         return auth()->user()?->division?->initial === 'ITD';
     }
+
     protected function getStats(): array
     {
         $stats = [];
         // Get categories with asset counts using Eloquent and sort them
         $categoriesWithCounts = ITAssetCategory::withCount([
-                'assets as total_assets_count',
-                'assets as in_use_assets_count' => function ($query) {
-                    $query->whereNotNull('asset_user_id');
-                },
-                'assets as available_assets_count' => function ($query) {
-                    $query->whereNull('asset_user_id');
-                }
-            ])
+            'assets as total_assets_count',
+            'assets as in_use_assets_count' => function ($query) {
+                $query->whereNotNull('asset_user_id');
+            },
+            'assets as available_assets_count' => function ($query) {
+                $query->whereNull('asset_user_id');
+            },
+        ])
             ->orderByDesc('total_assets_count')
             ->get();
 
@@ -42,7 +43,7 @@ class ITAssetWidget extends BaseWidget
 
             // Available stat with category in label
             $stats[] = Stat::make("{$category->name}", $availableAssets)
-                ->description("Available")
+                ->description('Available')
                 ->color('success')
                 ->icon('heroicon-o-check-circle')
                 ->url(ITAssetResource::getUrl('index', [
@@ -59,7 +60,7 @@ class ITAssetWidget extends BaseWidget
 
             // In Use stat with category in label
             $stats[] = Stat::make("{$category->name}", $inUseAssets)
-                ->description("In use")
+                ->description('In use')
                 ->color('danger')
                 ->icon('heroicon-o-user')
                 ->url(ITAssetResource::getUrl('index', [
@@ -76,7 +77,7 @@ class ITAssetWidget extends BaseWidget
 
             // Total stat with category in label
             $stats[] = Stat::make("{$category->name}", $totalAssets)
-                ->description("Total")
+                ->description('Total')
                 ->color('primary')
                 ->icon('heroicon-o-computer-desktop')
                 ->url(ITAssetResource::getUrl('index', [

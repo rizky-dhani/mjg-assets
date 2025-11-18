@@ -10,9 +10,9 @@ class GAAssetChartWidget extends ChartWidget
 {
     protected static ?string $heading = 'GA Assets Distribution (Bar)';
 
-    protected static ?int $sort = 2;
+    protected static ?int $sort = 1;
 
-    protected static ?int $columnSpan = 6;
+    protected int|string|array $columnSpan = 'full';
 
     public static function canView(): bool
     {
