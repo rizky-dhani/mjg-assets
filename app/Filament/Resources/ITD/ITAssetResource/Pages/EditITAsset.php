@@ -9,7 +9,7 @@ use Filament\Resources\Pages\EditRecord;
 class EditITAsset extends EditRecord
 {
     protected static string $resource = ITAssetResource::class;
-    protected static ?string $title = 'Edit IT Asset';
+    protected static ?string $title = 'Edit Asset';
     protected ?bool $hasDatabaseTransactions = true;
     protected function getRedirectUrl(): string
     {

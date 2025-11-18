@@ -144,7 +144,7 @@ class UsageHistoryRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
-            ->emptyStateHeading('No IT Asset Usage History Found')
+            ->emptyStateHeading('No Asset Usage History Found')
             ->emptyStateDescription('')
             ->modifyQueryUsing(fn (Builder $query) => $query->orderByDesc('created_at'))
             ->columns([

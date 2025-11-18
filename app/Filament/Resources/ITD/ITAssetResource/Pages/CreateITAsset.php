@@ -3,12 +3,12 @@
 namespace App\Filament\Resources\ITD\ITAssetResource\Pages;
 
 use Filament\Actions;
-use App\Models\ITAsset;
+use App\Models\IT\ITAsset;
 use Illuminate\Database\Eloquent\Model;
 use Milon\Barcode\DNS2D;
 use Illuminate\Support\Str;
-use App\Models\ITAssetCategory;
-use App\Models\ITAssetLocation;
+use App\Models\IT\ITAssetCategory;
+use App\Models\IT\ITAssetLocation;
 use Illuminate\Support\Facades\Storage;
 use Filament\Resources\Pages\CreateRecord;
 use App\Filament\Resources\ITD\ITAssetResource;
@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\DB;
 class CreateITAsset extends CreateRecord
 {
     protected static string $resource = ITAssetResource::class;
-    protected static ?string $title = 'Create IT Asset';
+    protected static ?string $title = 'Create Asset';
     protected ?bool $hasDatabaseTransactions = true;
     protected function mutateFormDataBeforeCreate(array $data): array
     {

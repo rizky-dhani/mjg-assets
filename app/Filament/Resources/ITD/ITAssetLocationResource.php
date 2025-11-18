@@ -27,9 +27,9 @@ class ITAssetLocationResource extends Resource
     protected static ?string $navigationGroup = ' ITD';
     protected static ?string $navigationLabel = 'Locations';
     protected static ?string $navigationIcon = 'heroicon-o-map-pin';
-    protected static ?string $navigationParentItem = 'IT Assets';
-    protected static ?string $modelLabel = 'IT Asset Location';
-    protected static ?string $pluralModelLabel = 'IT Asset Locations';
+    protected static ?string $navigationParentItem = 'Assets';
+    protected static ?string $modelLabel = 'Asset Location';
+    protected static ?string $pluralModelLabel = 'Asset Locations';
     protected static ?int $navigationSort = 4;
     public static function form(Form $form): Form
     {
@@ -47,7 +47,7 @@ class ITAssetLocationResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->emptyStateHeading('No IT Asset Locations Found')
+            ->emptyStateHeading('No Asset Locations Found')
             ->columns([
                 TextColumn::make('name')
                     ->label('Location Name')

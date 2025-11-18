@@ -57,6 +57,8 @@ class AdminPanelProvider extends PanelProvider
                 NavigationGroup::make()
                     ->label(' ITD'),
                 NavigationGroup::make()
+                    ->label(' General Affairs'),
+                NavigationGroup::make()
                     ->label('User Management')
             ])
             ->plugins([

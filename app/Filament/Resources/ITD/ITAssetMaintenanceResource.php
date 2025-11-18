@@ -30,16 +30,16 @@ class ITAssetMaintenanceResource extends Resource
     use HasResourceRolePermissions;
     protected static ?string $model = ITAssetMaintenance::class;
     protected static ?string $navigationLabel = 'Maintenance Log';
-    protected static ?string $modelLabel = 'IT Asset Maintenance Log';
-    protected static ?string $pluralModelLabel = 'IT Asset Maintenance Logs';
+    protected static ?string $modelLabel = 'Asset Maintenance Log';
+    protected static ?string $pluralModelLabel = 'Asset Maintenance Logs';
     protected static ?int $navigationSort = 2;
     protected static ?string $slug = 'it-asset-maintenance-log';
-    protected static ?string $navigationParentItem = 'IT Assets';
+    protected static ?string $navigationParentItem = 'Assets';
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $navigationGroup = ' ITD';
     public static function getBreadcrumb(): string
     {
-        return 'IT Asset Maintenance Log';
+        return 'Asset Maintenance Log';
     }    
     public static function form(Form $form): Form
     {
@@ -137,7 +137,7 @@ class ITAssetMaintenanceResource extends Resource
     {
         return $table
             ->modifyQueryUsing(fn (Builder $query) => $query->orderByDesc('created_at'))
-            ->emptyStateHeading('No IT Asset Maintenance Logs Found')
+            ->emptyStateHeading('No Asset Maintenance Logs Found')
             ->columns([
                 TextColumn::make('maintenance_date')
                     ->label('Maintenance Date')

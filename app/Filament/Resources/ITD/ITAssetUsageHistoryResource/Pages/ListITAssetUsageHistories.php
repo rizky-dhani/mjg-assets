@@ -14,7 +14,7 @@ class ListITAssetUsageHistories extends ListRecords
     {
         return [
             Actions\CreateAction::make()
-                ->label('New IT Asset Usage History'),
+                ->label('New Asset Usage History'),
         ];
     }
 }

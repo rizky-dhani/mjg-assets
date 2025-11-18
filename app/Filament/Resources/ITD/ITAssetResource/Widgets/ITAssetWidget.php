@@ -11,7 +11,13 @@ use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 class ITAssetWidget extends BaseWidget
 {
     protected static ?string $pollingInterval = null;
-    protected ?string $heading = 'IT Assets';
+    protected ?string $heading = 'Assets';
+
+    public static function canView(): bool
+    {
+        // Only allow users with ITD division to see this widget
+        return auth()->user()?->division?->initial === 'ITD';
+    }
     protected function getStats(): array
     {
         $stats = [];

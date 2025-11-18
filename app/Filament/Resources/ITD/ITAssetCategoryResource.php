@@ -26,11 +26,11 @@ class ITAssetCategoryResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $slug = 'it-asset-categories';
     protected static ?int $navigationSort = 3;
-    protected static ?string $navigationParentItem = 'IT Assets';
+    protected static ?string $navigationParentItem = 'Assets';
     protected static ?string $navigationGroup = ' ITD';
     protected static ?string $navigationLabel = 'Categories';
-    protected static ?string $modelLabel = 'IT Asset Category';
-    protected static ?string $pluralModelLabel = 'IT Asset Categories';
+    protected static ?string $modelLabel = 'Asset Category';
+    protected static ?string $pluralModelLabel = 'Asset Categories';
 
     public static function form(Form $form): Form
     {
@@ -57,7 +57,7 @@ class ITAssetCategoryResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->emptyStateHeading('No IT Asset Categories Found')
+            ->emptyStateHeading('No Asset Categories Found')
             ->columns([
                 TextColumn::make('code')
                     ->label('Code')

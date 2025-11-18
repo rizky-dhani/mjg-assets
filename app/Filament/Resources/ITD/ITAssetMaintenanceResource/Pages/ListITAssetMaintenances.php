@@ -13,7 +13,7 @@ class ListITAssetMaintenances extends ListRecords
     {
         return [
             Actions\CreateAction::make()
-            ->label('New IT Maintenance Log'),
+            ->label('New Maintenance Log'),
         ];
     }
 }

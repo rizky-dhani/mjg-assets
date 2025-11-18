@@ -11,7 +11,7 @@ use Illuminate\Support\Str;
 class CreateITAssetUsageHistory extends CreateRecord
 {
     protected static string $resource = ITAssetUsageHistoryResource::class;
-    protected static ?string $title = 'Create IT Asset Usage History';
+    protected static ?string $title = 'Create Asset Usage History';
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         $data['usageId'] = Str::orderedUuid();

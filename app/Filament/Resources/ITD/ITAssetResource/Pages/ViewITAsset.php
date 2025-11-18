@@ -9,7 +9,7 @@ use App\Filament\Resources\ITD\ITAssetResource;
 class ViewITAsset extends ViewRecord
 {
     protected static string $resource = ITAssetResource::class;
-    protected static ?string $title = 'View IT Asset';
+    protected static ?string $title = 'View Asset';
     protected function getHeaderActions(): array
     {
         return [

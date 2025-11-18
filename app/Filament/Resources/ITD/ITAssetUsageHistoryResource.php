@@ -24,15 +24,15 @@ class ITAssetUsageHistoryResource extends Resource
     protected static ?string $model = ITAssetUsageHistory::class;
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $navigationGroup = ' ITD';
-    protected static ?string $navigationParentItem = 'IT Assets';
+    protected static ?string $navigationParentItem = 'Assets';
     protected static ?string $navigationLabel = 'Usage History';
-    protected static ?string $modelLabel = 'IT Asset Usage History';
-    protected static ?string $pluralModelLabel = 'IT Asset Usage Histories';
+    protected static ?string $modelLabel = 'Asset Usage History';
+    protected static ?string $pluralModelLabel = 'Asset Usage Histories';
     protected static ?string $slug = 'it-asset-usage-histories';
     protected static ?int $navigationSort = 1;
     public static function getBreadcrumb(): string
     {
-        return 'IT Asset Usage History';
+        return 'Asset Usage History';
     }
 
     public static function form(Form $form): Form
@@ -72,7 +72,7 @@ class ITAssetUsageHistoryResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->emptyStateHeading('No IT Asset Usage History Found')
+            ->emptyStateHeading('No Asset Usage History Found')
             ->modifyQueryUsing(fn (Builder $query) => $query->orderByDesc('created_at'))
             ->columns([
                 TextColumn::make('asset.asset_code')

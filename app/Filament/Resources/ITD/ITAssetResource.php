@@ -36,13 +36,13 @@ class ITAssetResource extends Resource
     use HasResourceRolePermissions;
 
     protected static ?string $model = ITAsset::class;
-    protected static ?string $navigationLabel = 'IT Assets';
+    protected static ?string $navigationLabel = 'Assets';
     protected static ?string $slug = 'it-assets';
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-tv';
     protected static ?string $navigationGroup = ' ITD';
     public static function getBreadcrumb(): string
     {
-        return 'IT Assets';
+        return 'Assets';
     }
     public static function form(Form $form): Form
     {
@@ -136,7 +136,7 @@ class ITAssetResource extends Resource
     {
         return $table
             ->modifyQueryUsing(fn(Builder $query) => $query->orderByDesc('created_at'))
-            ->emptyStateHeading('No IT Assets Found')
+            ->emptyStateHeading('No Assets Found')
             ->columns([
                 TextColumn::make('asset_name')
                     ->label('Asset Name')

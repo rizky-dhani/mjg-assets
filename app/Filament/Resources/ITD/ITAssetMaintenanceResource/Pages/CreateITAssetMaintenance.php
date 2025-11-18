@@ -11,7 +11,7 @@ use Illuminate\Support\Str;
 class CreateITAssetMaintenance extends CreateRecord
 {
     protected static string $resource = ITAssetMaintenanceResource::class;
-    protected static ?string $title = 'Create IT Asset Maintenance Log';
+    protected static ?string $title = 'Create Asset Maintenance Log';
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         $data['maintenanceId'] = Str::orderedUuid();

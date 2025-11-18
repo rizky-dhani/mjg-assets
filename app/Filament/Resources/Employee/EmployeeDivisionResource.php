@@ -137,8 +137,6 @@ class EmployeeDivisionResource extends Resource
     {
         return [
             'index' => Pages\ListEmployeeDivisions::route('/'),
-            'create' => Pages\CreateEmployeeDivision::route('/create'),
-            'edit' => Pages\EditEmployeeDivision::route('/{record}/edit'),
         ];
     }
 }

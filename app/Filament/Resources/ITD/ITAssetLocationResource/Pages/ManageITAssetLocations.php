@@ -14,7 +14,7 @@ class ManageITAssetLocations extends ManageRecords
     {
         return [
             Actions\CreateAction::make()
-            ->label('New IT Asset Location'),
+            ->label('New Asset Location'),
         ];
     }
 }
