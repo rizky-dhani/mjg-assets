@@ -2,33 +2,28 @@
 
 namespace App\Providers\Filament;
 
-use Filament\Pages;
-use Filament\Panel;
-use Filament\Widgets;
-use Filament\PanelProvider;
-use Filament\Enums\ThemeMode;
-use Filament\Navigation\MenuItem;
-use Filament\Support\Colors\Color;
-use App\Models\ITAssetUsageHistory;
-use Filament\Support\Enums\MaxWidth;
-use Filament\Navigation\NavigationItem;
+use Althinect\FilamentSpatieRolesPermissions\FilamentSpatieRolesPermissionsPlugin;
 use App\Filament\Pages\Auth\CustomLogin;
-use Filament\Navigation\NavigationGroup;
-use Filament\Http\Middleware\Authenticate;
-use App\Filament\Resources\ITAssetResource;
-use Illuminate\Session\Middleware\StartSession;
-use Illuminate\Cookie\Middleware\EncryptCookies;
-use Filament\Http\Middleware\AuthenticateSession;
-use Illuminate\Routing\Middleware\SubstituteBindings;
-use Illuminate\View\Middleware\ShareErrorsFromSession;
-use App\Filament\Resources\ITAssetUsageHistoryResource;
-use Filament\Http\Middleware\DisableBladeIconComponents;
-use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
-use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use App\Filament\Resources\GA\GaAssetResource\Widgets\GaAssetWidget;
 use App\Filament\Resources\ITD\ITAssetResource\Widgets\ITAssetWidget;
-use Althinect\FilamentSpatieRolesPermissions\FilamentSpatieRolesPermissionsPlugin;
+use Filament\Enums\ThemeMode;
+use Filament\Http\Middleware\Authenticate;
+use Filament\Http\Middleware\AuthenticateSession;
+use Filament\Http\Middleware\DisableBladeIconComponents;
+use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\MenuItem;
+use Filament\Navigation\NavigationGroup;
+use Filament\Pages;
+use Filament\Panel;
+use Filament\PanelProvider;
+use Filament\Support\Colors\Color;
+use Filament\Support\Enums\MaxWidth;
+use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
+use Illuminate\Cookie\Middleware\EncryptCookies;
+use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
+use Illuminate\Routing\Middleware\SubstituteBindings;
+use Illuminate\Session\Middleware\StartSession;
+use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -49,7 +44,7 @@ class AdminPanelProvider extends PanelProvider
             ->brandLogoHeight('2rem')
             ->favicon(asset('assets/images/Medquest-Favicon.png'))
             ->userMenuItems([
-                'profile' => MenuItem::make()->label('Edit Profile')
+                'profile' => MenuItem::make()->label('Edit Profile'),
             ])
             ->colors([
                 'primary' => Color::Blue,
@@ -60,10 +55,10 @@ class AdminPanelProvider extends PanelProvider
                 NavigationGroup::make()
                     ->label(' General Affairs'),
                 NavigationGroup::make()
-                    ->label('User Management')
+                    ->label('User Management'),
             ])
             ->plugins([
-                FilamentSpatieRolesPermissionsPlugin::make()
+                FilamentSpatieRolesPermissionsPlugin::make(),
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')

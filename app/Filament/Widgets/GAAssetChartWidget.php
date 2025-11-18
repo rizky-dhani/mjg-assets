@@ -2,20 +2,22 @@
 
 namespace App\Filament\Widgets;
 
-use Filament\Widgets\ChartWidget;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
-use App\Models\GA\GaAsset;
 use App\Models\GA\GaAssetCategory;
+use Filament\Widgets\ChartWidget;
+use Illuminate\Support\Facades\Auth;
 
 class GAAssetChartWidget extends ChartWidget
 {
     protected static ?string $heading = 'GA Assets Distribution (Bar)';
+
     protected static ?int $sort = 2;
+
+    protected static ?int $columnSpan = 6;
 
     public static function canView(): bool
     {
         $user = Auth::user();
+
         return $user && ($user->division?->initial === 'GA' || $user->hasRole('Super Admin'));
     }
 

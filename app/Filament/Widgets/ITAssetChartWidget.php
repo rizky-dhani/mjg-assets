@@ -2,20 +2,22 @@
 
 namespace App\Filament\Widgets;
 
-use Filament\Widgets\ChartWidget;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
-use App\Models\IT\ITAsset;
 use App\Models\IT\ITAssetCategory;
+use Filament\Widgets\ChartWidget;
+use Illuminate\Support\Facades\Auth;
 
 class ITAssetChartWidget extends ChartWidget
 {
     protected static ?string $heading = 'IT Assets Distribution';
+
     protected static ?int $sort = 2;
+
+    protected static ?int $columnSpan = 6;
 
     public static function canView(): bool
     {
         $user = Auth::user();
+
         return $user && ($user->division?->initial === 'ITD' || $user->hasRole('Super Admin'));
     }
 
