@@ -36,11 +36,6 @@ class ITAssetResource extends Resource
     protected static ?string $navigationLabel = 'Assets';
     protected static ?string $slug = 'it-assets';
 
-    public static function canViewAny(): bool
-    {
-        // Only users with ITD division or Super Admin can access this resource
-        return auth()->user()?->hasRole('Super Admin') || auth()->user()?->division?->initial === 'ITD' ?? false;
-    }
     protected static ?string $navigationIcon = 'heroicon-o-tv';
     protected static ?string $navigationGroup = ' ITD';
     public static function getBreadcrumb(): string
