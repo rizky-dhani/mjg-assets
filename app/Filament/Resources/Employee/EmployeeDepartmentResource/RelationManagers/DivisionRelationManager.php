@@ -28,7 +28,7 @@ class DivisionRelationManager extends RelationManager
                     ->label('Division Name')
                     ->required()
                     ->maxLength(255),
-                TextInput::make('abbreviation')
+                TextInput::make('initial')
                     ->label('Initial')
                     ->required()
                     ->maxLength(3)
@@ -41,7 +41,7 @@ class DivisionRelationManager extends RelationManager
             ->recordTitleAttribute('name')
             ->columns([
                 TextColumn::make('name'),
-                TextColumn::make('abbreviation')
+                TextColumn::make('initial')
                     ->label('Initial'),
             ])
             ->filters([
