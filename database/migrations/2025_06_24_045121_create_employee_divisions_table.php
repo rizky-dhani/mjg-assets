@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('employee_divisions', function (Blueprint $table) {
             $table->id();
             $table->uuid('divisionId')->unique();
-            $table->string('abbreviation', 25)->unique();
+            $table->string('initial', 10)->unique();
             $table->string('name');
             $table->timestamps();
         });
