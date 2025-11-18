@@ -5,6 +5,7 @@ namespace App\Providers\Filament;
 use Althinect\FilamentSpatieRolesPermissions\FilamentSpatieRolesPermissionsPlugin;
 use App\Filament\Pages\Auth\CustomLogin;
 use App\Filament\Resources\GA\GaAssetResource\Widgets\GaAssetWidget;
+use App\Filament\Resources\ITD\ITAssetResource\Widgets\ITAssetTableWidget;
 use App\Filament\Resources\ITD\ITAssetResource\Widgets\ITAssetWidget;
 use Filament\Enums\ThemeMode;
 use Filament\Http\Middleware\Authenticate;
@@ -68,6 +69,7 @@ class AdminPanelProvider extends PanelProvider
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
                 ITAssetWidget::class,
+                ITAssetTableWidget::class,
                 GaAssetWidget::class,
             ])
             ->middleware([
