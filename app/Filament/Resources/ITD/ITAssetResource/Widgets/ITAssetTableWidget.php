@@ -13,8 +13,8 @@ use Illuminate\Database\Eloquent\Builder;
 class ITAssetTableWidget extends TableWidget
 {
     protected static ?string $heading = 'IT Assets Summary';
-
-    protected static ?int $sort = 2;
+    //protected int | string | array $columnSpan = 'full';
+    protected static ?int $sort = 1;
 
     public static function canView(): bool
     {
@@ -25,33 +25,12 @@ class ITAssetTableWidget extends TableWidget
     public function table(Table $table): Table
     {
         return $table
-            ->query(function () {
-                // Get categories with asset counts using Eloquent and sort them
-                $categoriesWithCounts = ITAssetCategory::withCount([
-                    'assets as total_assets_count',
-                    'assets as in_use_assets_count' => function ($query) {
-                        $query->whereNotNull('asset_user_id');
-                    },
-                    'assets as available_assets_count' => function ($query) {
-                        $query->whereNull('asset_user_id');
-                    },
-                ])
-                ->orderByDesc('total_assets_count')
-                ->get();
-
-                // Convert to a collection to simulate a table-like structure
-                return collect($categoriesWithCounts)->map(function ($category) {
-                    return [
-                        'category_name' => $category->name,
-                        'available_count' => $category->available_assets_count,
-                        'in_use_count' => $category->in_use_assets_count,
-                        'total_count' => $category->total_assets_count,
-                        'category_id' => $category->id,
-                    ];
-                });
-            })
+            ->query(
+                ITAssetCategory::query()
+                    ->select('id', 'name')
+            )
             ->columns([
-                Tables\Columns\TextColumn::make('category_name')
+                Tables\Columns\TextColumn::make('name')
                     ->label('Category')
                     ->weight('bold')
                     ->formatStateUsing(function ($state) {
@@ -61,10 +40,16 @@ class ITAssetTableWidget extends TableWidget
                 Tables\Columns\TextColumn::make('available_count')
                     ->label('Available')
                     ->color('success')
+                    ->getStateUsing(function (ITAssetCategory $record) {
+                        $availableCount = ITAsset::where('asset_category_id', $record->id)
+                            ->whereNull('asset_user_id')
+                            ->count();
+                        return $availableCount;
+                    })
                     ->url(fn ($record) => ITAssetResource::getUrl('index', [
                         'tableFilters' => [
                             'category_id' => [
-                                'value' => $record['category_id'],
+                                'value' => $record['id'],
                             ],
                             'asset_user_id' => [
                                 'available' => 'true',
@@ -72,18 +57,21 @@ class ITAssetTableWidget extends TableWidget
                             ],
                         ],
                     ]))
-                    ->formatStateUsing(function ($state) {
-                        return $state . ' assets';
-                    })
                     ->weight('semibold'),
 
                 Tables\Columns\TextColumn::make('in_use_count')
                     ->label('In Use')
                     ->color('danger')
+                    ->getStateUsing(function (ITAssetCategory $record) {
+                        $inUseCount = ITAsset::where('asset_category_id', $record->id)
+                            ->whereNotNull('asset_user_id')
+                            ->count();
+                        return $inUseCount;
+                    })
                     ->url(fn ($record) => ITAssetResource::getUrl('index', [
                         'tableFilters' => [
                             'category_id' => [
-                                'value' => $record['category_id'],
+                                'value' => $record['id'],
                             ],
                             'asset_user_id' => [
                                 'available' => 'false',
@@ -91,24 +79,23 @@ class ITAssetTableWidget extends TableWidget
                             ],
                         ],
                     ]))
-                    ->formatStateUsing(function ($state) {
-                        return $state . ' assets';
-                    })
                     ->weight('semibold'),
 
                 Tables\Columns\TextColumn::make('total_count')
                     ->label('Total')
                     ->color('primary')
+                    ->getStateUsing(function (ITAssetCategory $record) {
+                        $totalCount = ITAsset::where('asset_category_id', $record->id)
+                            ->count();
+                        return $totalCount;
+                    })
                     ->url(fn ($record) => ITAssetResource::getUrl('index', [
                         'tableFilters' => [
                             'category_id' => [
-                                'value' => $record['category_id'],
+                                'value' => $record['id'],
                             ],
                         ],
                     ]))
-                    ->formatStateUsing(function ($state) {
-                        return $state . ' assets';
-                    })
                     ->weight('semibold'),
             ])
             ->paginated(false)
