@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\IT;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -18,11 +18,11 @@ class ITAsset extends Model
     }
     public function user()
     {
-        return $this->belongsTo(User::class, 'pic_id');
+        return $this->belongsTo(\App\Models\User::class, 'pic_id');
     }
     public function employee()
     {
-        return $this->belongsTo(Employee::class, 'asset_user_id');
+        return $this->belongsTo(\App\Models\Employee\Employee::class, 'asset_user_id');
     }
     public function maintenance()
     {

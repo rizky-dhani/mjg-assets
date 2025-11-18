@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\IT;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -18,18 +18,18 @@ class ITAssetMaintenance extends Model
     }
     public function division()
     {
-        return $this->belongsTo(EmployeeDivision::class, 'division_id');
+        return $this->belongsTo(\App\Models\Employee\EmployeeDivision::class, 'division_id');
     }
     public function user()
     {
-        return $this->belongsTo(User::class, 'pic_id');
+        return $this->belongsTo(\App\Models\User::class, 'pic_id');
     }
     public function employee()
     {
-        return $this->belongsTo(Employee::class, 'employee_id');
+        return $this->belongsTo(\App\Models\Employee\Employee::class, 'employee_id');
     }
     public function reviewer()
     {
-        return $this->belongsTo(Employee::class, 'reviewer_id');
+        return $this->belongsTo(\App\Models\Employee\Employee::class, 'reviewer_id');
     }
 }

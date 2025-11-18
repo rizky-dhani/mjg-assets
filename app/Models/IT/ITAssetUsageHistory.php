@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\IT;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -19,22 +19,22 @@ class ITAssetUsageHistory extends Model
     }
     public function user()
     {
-        return $this->belongsTo(User::class, 'asset_user_id');
+        return $this->belongsTo(\App\Models\User::class, 'asset_user_id');
     }
     public function employee()
     {
-        return $this->belongsTo(Employee::class, 'employee_id');
+        return $this->belongsTo(\App\Models\Employee\Employee::class, 'employee_id');
     }
     public function department()
     {
-        return $this->belongsTo(EmployeeDepartment::class, 'department_id');
+        return $this->belongsTo(\App\Models\Employee\EmployeeDepartment::class, 'department_id');
     }
     public function division()
     {
-        return $this->belongsTo(EmployeeDivision::class, 'division_id');
+        return $this->belongsTo(\App\Models\Employee\EmployeeDivision::class, 'division_id');
     }
     public function position()
     {
-        return $this->belongsTo(EmployeePosition::class, 'position_id');
+        return $this->belongsTo(\App\Models\Employee\EmployeePosition::class, 'position_id');
     }
 }

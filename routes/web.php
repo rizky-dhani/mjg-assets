@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\ITAsset;
+use App\Models\IT\ITAsset;
 use Spatie\Browsershot\Browsershot;
 use App\Livewire\Public\AssetDetail;
 use App\Livewire\Public\DetailAsset;

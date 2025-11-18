@@ -8,7 +8,7 @@ use Filament\Tables;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
-use App\Models\ITAssetLocation;
+use App\Models\IT\ITAssetLocation;
 use Filament\Resources\Resource;
 use App\Models\ResourcePermission;
 use Filament\Forms\Components\Hidden;

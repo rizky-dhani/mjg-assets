@@ -74,12 +74,12 @@ class UsageHistoryRelationManager extends RelationManager
                                     ->label('Initial')
                                     ->required()
                                     ->maxLength(3)
-                                    ->unique(\App\Models\Employee::class, 'initial', ignoreRecord: true),
+                                    ->unique(\App\Models\Employee\Employee::class, 'initial', ignoreRecord: true),
                                 Forms\Components\TextInput::make('employee_number')
                                     ->label('Employee Number')
                                     ->required()
                                     ->maxLength(10)
-                                    ->unique(\App\Models\Employee::class, 'employee_number', ignoreRecord: true),
+                                    ->unique(\App\Models\Employee\Employee::class, 'employee_number', ignoreRecord: true),
                             ])
                             ->preload()
                             ->columnSpanFull(),

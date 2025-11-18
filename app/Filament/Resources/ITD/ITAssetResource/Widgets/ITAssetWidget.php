@@ -3,8 +3,8 @@
 namespace App\Filament\Resources\ITD\ITAssetResource\Widgets;
 
 use App\Filament\Resources\ITD\ITAssetResource;
-use App\Models\ITAsset;
-use App\Models\ITAssetCategory;
+use App\Models\IT\ITAsset;
+use App\Models\IT\ITAssetCategory;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 

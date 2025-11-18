@@ -3,12 +3,12 @@
 namespace App\Filament\Resources\ITD;
 
 use Filament\Tables;
-use App\Models\ITAsset;
+use App\Models\IT\ITAsset;
 use App\Models\Employee;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
-use App\Models\ITAssetCategory;
-use App\Models\ITAssetLocation;
+use App\Models\IT\ITAssetCategory;
+use App\Models\IT\ITAssetLocation;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use App\Models\ResourcePermission;

@@ -7,7 +7,7 @@ use Filament\Forms;
 use Filament\Tables;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
-use App\Models\ITAssetCategory;
+use App\Models\IT\ITAssetCategory;
 use Filament\Resources\Resource;
 use App\Models\ResourcePermission;
 use Filament\Forms\Components\Textarea;
