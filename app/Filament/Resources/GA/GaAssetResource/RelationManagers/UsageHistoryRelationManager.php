@@ -10,6 +10,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Support\Enums\MaxWidth;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -220,6 +221,7 @@ class UsageHistoryRelationManager extends RelationManager
                 Tables\Actions\CreateAction::make()
                     ->label('Assign Asset')
                     ->modalHeading('Assign Asset')
+                    ->modalWidth(MaxWidth::SevenExtraLarge)
                     ->successNotificationTitle('Asset Assigned Successfully')
                     ->after(function ($record) {
                         $this->handleAssetAssignment($record);
@@ -228,6 +230,7 @@ class UsageHistoryRelationManager extends RelationManager
             ->actions([
                 Tables\Actions\EditAction::make()
                     ->modalHeading('Edit Usage History')
+                    ->modalWidth(MaxWidth::SevenExtraLarge)
                     ->successNotificationTitle('Usage History Updated Successfully')
                     ->after(function ($record) {
                         $this->handleAssetUpdate($record);
