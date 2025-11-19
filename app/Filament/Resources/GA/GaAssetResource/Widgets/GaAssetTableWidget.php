@@ -13,7 +13,8 @@ class GaAssetTableWidget extends TableWidget
 {
     protected static ?string $heading = 'GA Assets Summary';
 
-    // protected int | string | array $columnSpan = 'full';
+    protected int|string|array $columnSpan = 'full';
+
     protected static ?int $sort = 2;
 
     public static function canView(): bool

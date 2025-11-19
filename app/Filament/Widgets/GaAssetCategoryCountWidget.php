@@ -9,7 +9,7 @@ use Filament\Widgets\TableWidget as BaseWidget;
 
 class GaAssetCategoryCountWidget extends BaseWidget
 {
-    protected static ?int $sort = 2;
+    protected static ?int $sort = 3;
 
     public static function canView(): bool
     {
