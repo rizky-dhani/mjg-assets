@@ -96,8 +96,20 @@ class GaAssetResource extends Resource
                         }
                     })
                     ->dehydrateStateUsing(fn ($state) => $state ? (int) str_replace('.', '', $state) : null),
+                Select::make('asset_condition')
+                    ->label('Condition')
+                    ->live()
+                    ->options([
+                        'New' => 'New',
+                        'First Hand' => 'First Hand',
+                        'Used' => 'Used',
+                        'Defect' => 'Defect',
+                        'Disposed' => 'Disposed',
+                    ])
+                    ->required(),
                 TextInput::make('asset_sell_price')
                     ->label('Sell Price')
+                    ->columnSpanFull()
                     ->prefix('Rp')
                     ->reactive()
                     ->formatStateUsing(fn ($state) => $state ? number_format($state, 0, ',', '.') : '')
@@ -112,16 +124,6 @@ class GaAssetResource extends Resource
                     })
                     ->dehydrateStateUsing(fn ($state) => $state ? (int) str_replace('.', '', $state) : null)
                     ->hidden(fn (callable $get): bool => $get('asset_condition') !== 'Disposed'),
-                Select::make('asset_condition')
-                    ->label('Condition')
-                    ->options([
-                        'New' => 'New',
-                        'First Hand' => 'First Hand',
-                        'Used' => 'Used',
-                        'Defect' => 'Defect',
-                        'Disposed' => 'Disposed',
-                    ])
-                    ->required(),
                 Textarea::make('asset_notes')
                     ->label('History/Notes')
                     ->maxLength(500)
