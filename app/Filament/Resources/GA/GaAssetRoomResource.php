@@ -3,11 +3,9 @@
 namespace App\Filament\Resources\GA;
 
 use App\Filament\Resources\GA\GaAssetRoomResource\Pages;
-use App\Models\GA\GaAssetLocation;
 use App\Models\GA\GaAssetRoom;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -22,9 +20,11 @@ class GaAssetRoomResource extends Resource
 
     protected static ?string $navigationGroup = 'General Affairs';
 
-    protected static ?string $navigationParentItem = 'Locations';
+    protected static ?string $navigationParentItem = 'Assets';
 
     protected static ?string $slug = 'general-affairs/asset-rooms';
+
+    protected static ?int $sort = 2;
 
     protected static ?string $navigationLabel = 'Rooms';
 
