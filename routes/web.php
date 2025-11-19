@@ -8,6 +8,10 @@ use Spatie\Browsershot\Browsershot;
 // For IT assets
 Route::get('itd/public/asset-detail/{assetId}', ITAssetDetail::class)
     ->name('itd.assets.show');
+// Redirect old IT asset detail URLs to the new one
+Route::get('public/it-assets/details/{assetId}', function ($assetId) {
+    return redirect()->route('itd.assets.show', ['assetId' => $assetId]);
+})->name('assets.show');
 // For GA assets
 Route::get('general-affairs/public/asset-detail/{assetId}', GaAssetDetail::class)
     ->name('general-affairs.assets.show');

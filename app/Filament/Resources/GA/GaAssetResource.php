@@ -304,6 +304,40 @@ class GaAssetResource extends Resource
                             return redirect()->route('assets.bulk-export-pdf.export');
                         })
                         ->deselectRecordsAfterCompletion(),
+                    Tables\Actions\BulkAction::make('regenerate_qr_codes')
+                        ->label('Regenerate QR Codes')
+                        ->icon('heroicon-o-arrow-path')
+                        ->requiresConfirmation()
+                        ->deselectRecordsAfterCompletion()
+                        ->action(function ($records) {
+                            $updatedCount = 0;
+
+                            foreach ($records as $record) {
+                                // Generate QR code using the new route
+                                $route = route('general-affairs.assets.show', ['assetId' => $record->assetId]);
+
+                                // Generate QR Code
+                                $qr = new \Milon\Barcode\DNS2D;
+                                $qrCodeImage = base64_decode($qr->getBarcodePNG($route, 'QRCODE,H'));
+                                $path = 'assets/'.$record->assetId.'.png';
+
+                                // Store the QR code image
+                                \Illuminate\Support\Facades\Storage::disk('public')->put($path, $qrCodeImage);
+
+                                // Update the record with the new QR code path
+                                $record->barcode = $path;
+                                $record->save();
+
+                                $updatedCount++;
+                            }
+
+                            // Show success notification
+                            \Filament\Notifications\Notification::make()
+                                ->title('QR Codes Regenerated')
+                                ->success()
+                                ->body("Successfully regenerated QR codes for {$updatedCount} asset(s).")
+                                ->send();
+                        }),
                 ]),
             ]);
     }

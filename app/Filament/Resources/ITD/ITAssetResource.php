@@ -64,7 +64,7 @@ class ITAssetResource extends Resource
                         // Fetch the remarks from the selected category
                         $category = ITAssetCategory::find($state);
                         $set('asset_remarks', $category?->remarks ?? '');
-                    }),     
+                    }),
                 DatePicker::make('asset_year_bought')
                     ->label('Asset Year')
                     ->native(false)
@@ -170,8 +170,8 @@ class ITAssetResource extends Resource
                 TextColumn::make('asset_user_id')
                     ->label('User')
                     ->getStateUsing(fn ($record) => $record->employee ? "{$record->employee->name}" : 'N/A')
-                    ->searchable(query: fn (Builder $query, string $search): Builder => 
-                        $query->whereHas('employee', fn (Builder $query) => 
+                    ->searchable(query: fn (Builder $query, string $search): Builder =>
+                        $query->whereHas('employee', fn (Builder $query) =>
                             $query->where('name', 'like', "%{$search}%")
                         )
                     )
@@ -248,7 +248,7 @@ class ITAssetResource extends Resource
                 Tables\Actions\ViewAction::make(),
 
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make()    
+                Tables\Actions\DeleteAction::make()
                     ->modalHeading('Are you sure you want to delete this asset?')
                     ->modalDescription('This action cannot be undone.')
                     ->successNotificationTitle('Asset deleted successfully.')
@@ -283,6 +283,37 @@ class ITAssetResource extends Resource
                             return redirect()->route('assets.bulk-export-pdf.export');
                         })
                         ->deselectRecordsAfterCompletion(),
+                    Tables\Actions\BulkAction::make('regenerate_qr_codes')
+                        ->label('Regenerate QR Codes')
+                        ->icon('heroicon-o-arrow-path')
+                        ->requiresConfirmation()
+                        ->deselectRecordsAfterCompletion()
+                        ->action(function ($records) {
+                            $updatedCount = 0;
+
+                            foreach ($records as $record) {
+                                // Generate QR code using the new route
+                                $route = route('itd.assets.show', ['assetId' => $record->assetId]);
+
+                                // Generate QR Code
+                                $qr = new \Milon\Barcode\DNS2D;
+                                $qrCodeImage = base64_decode($qr->getBarcodePNG($route, 'QRCODE,H'));
+                                $path = 'assets/'.$record->assetId.'.png';
+
+                                // Store the QR code image
+                                \Illuminate\Support\Facades\Storage::disk('public')->put($path, $qrCodeImage);
+
+                                // Update the record with the new QR code path
+                                $record->barcode = $path;
+                                $record->save();
+
+                                $updatedCount++;
+                            }
+
+                            // Show success notification
+                            Notification::make()
+                                ->successNotificationTitle('Successfully regenerated QR codes for '.{$updatedCount}.' asset(s).');
+                        }),
                     ]),
             ]);
     }
@@ -361,12 +392,12 @@ class ITAssetResource extends Resource
         if (!$categoryId) {
             return false;
         }
-        
+
         $category = ITAssetCategory::find($categoryId);
         if (!$category) {
             return false;
         }
-        
+
         return $category->code === '009' || strtoupper($category->name) === 'NETWORKING';
     }
 }
