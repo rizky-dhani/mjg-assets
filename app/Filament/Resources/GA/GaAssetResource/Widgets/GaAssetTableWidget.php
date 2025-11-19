@@ -107,6 +107,6 @@ class GaAssetTableWidget extends TableWidget
             ->bulkActions([
                 //
             ])
-            ->defaultSort('assets_count', 'desc');
+            ->defaultSort('name', 'asc');
     }
 }
