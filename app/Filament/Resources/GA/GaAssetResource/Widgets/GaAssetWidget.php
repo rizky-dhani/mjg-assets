@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\GA\GaAssetResource\Widgets;
 
 use App\Filament\Resources\GA\GaAssetResource;
+use App\Models\GA\GaAsset;
 use App\Models\GA\GaAssetCategory;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
@@ -94,22 +95,22 @@ class GaAssetWidget extends BaseWidget
         // return $stats;
 
         // New implementation showing total, available, and in-use GA Assets
-        $totalAssets = \App\Models\GA\GaAsset::count();
-        $inUseAssets = \App\Models\GA\GaAsset::whereNotNull('asset_user_id')->count();
-        $availableAssets = \App\Models\GA\GaAsset::whereNull('asset_user_id')->count();
+        $totalAssets = GaAsset::count();
+        $inUseAssets = GaAsset::whereNotNull('asset_user_id')->count();
+        $availableAssets = GaAsset::whereNull('asset_user_id')->count();
 
         return [
             Stat::make('Total', $totalAssets)
                 ->description('All assets')
                 ->color('primary')
                 ->icon('heroicon-o-computer-desktop')
-                ->url(ITAssetResource::getUrl('index')),
+                ->url(GaAssetResource::getUrl('index')),
 
             Stat::make('Available', $availableAssets)
                 ->description('Not assigned')
                 ->color('success')
                 ->icon('heroicon-o-check-circle')
-                ->url(ITAssetResource::getUrl('index', [
+                ->url(GaAssetResource::getUrl('index', [
                     'tableFilters' => [
                         'asset_user_id' => [
                             'available' => 'true',
@@ -122,7 +123,7 @@ class GaAssetWidget extends BaseWidget
                 ->description('Assigned to users')
                 ->color('warning')
                 ->icon('heroicon-o-user')
-                ->url(ITAssetResource::getUrl('index', [
+                ->url(GaAssetResource::getUrl('index', [
                     'tableFilters' => [
                         'asset_user_id' => [
                             'available' => 'false',
