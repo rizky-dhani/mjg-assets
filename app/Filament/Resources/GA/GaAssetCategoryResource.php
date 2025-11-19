@@ -69,7 +69,9 @@ class GaAssetCategoryResource extends Resource
                     ->limit(50),
                 Tables\Columns\TextColumn::make('asset_count')
                     ->label('Asset Count')
-                    ->counts('assets')
+                    ->getStateUsing(function ($record) {
+                        return $record->assets()->count();
+                    })
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Created At')
