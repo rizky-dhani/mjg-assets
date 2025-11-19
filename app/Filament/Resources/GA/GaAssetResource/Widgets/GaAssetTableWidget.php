@@ -57,8 +57,7 @@ class GaAssetTableWidget extends TableWidget
                                 'in_use' => 'false',
                             ],
                         ],
-                    ]))
-                    ->weight('semibold'),
+                    ])),
 
                 Tables\Columns\TextColumn::make('in_use_count')
                     ->label('In Use')
@@ -80,8 +79,7 @@ class GaAssetTableWidget extends TableWidget
                                 'in_use' => 'true',
                             ],
                         ],
-                    ]))
-                    ->weight('semibold'),
+                    ])),
 
                 Tables\Columns\TextColumn::make('total_count')
                     ->label('Total')
@@ -98,8 +96,17 @@ class GaAssetTableWidget extends TableWidget
                                 'value' => $record['id'],
                             ],
                         ],
-                    ]))
-                    ->weight('semibold'),
-            ]);
+                    ])),
+            ])
+            ->filters([
+                //
+            ])
+            ->actions([
+                //
+            ])
+            ->bulkActions([
+                //
+            ])
+            ->defaultSort('assets_count', 'desc');
     }
 }
