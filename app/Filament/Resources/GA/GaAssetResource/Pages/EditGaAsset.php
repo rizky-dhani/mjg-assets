@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\GA\GaAssetResource\Pages;
 
 use App\Filament\Resources\GA\GaAssetResource;
-use Filament\Actions;
+use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 
 class EditGaAsset extends EditRecord
@@ -13,7 +13,8 @@ class EditGaAsset extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            DeleteAction::make()
+                ->successNotificationTitle('Asset successfully deleted'),
         ];
     }
 }

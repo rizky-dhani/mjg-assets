@@ -2,41 +2,38 @@
 
 namespace App\Filament\Resources\GA;
 
-use Filament\Tables;
-use App\Models\GA\GaAsset;
-use App\Models\Employee;
-use Filament\Forms\Form;
-use Filament\Tables\Table;
-use App\Models\GA\GaAssetCategory;
-use App\Models\GA\GaAssetLocation;
-use Filament\Infolists\Infolist;
-use Filament\Resources\Resource;
-use Filament\Support\Colors\Color;
-use Filament\Forms\Components\Grid;
-use Filament\Tables\Filters\Filter;
-use Filament\Forms\Components\Select;
-use Filament\Tables\Filters\Indicator;
-use Filament\Forms\Components\Checkbox;
-use Filament\Forms\Components\Textarea;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Forms\Components\TextInput;
-use Filament\Tables\Actions\ActionGroup;
-use Filament\Forms\Components\DatePicker;
-use Filament\Tables\Filters\SelectFilter;
-use Illuminate\Database\Eloquent\Builder;
-use Filament\Infolists\Components\Section;
-use Filament\Infolists\Components\TextEntry;
 use App\Filament\Resources\GA\GaAssetResource\Pages;
 use App\Filament\Resources\GA\GaAssetResource\RelationManagers\UsageHistoryRelationManager;
+use App\Models\GA\GaAsset;
+use App\Models\GA\GaAssetCategory;
+use Filament\Forms\Components\Checkbox;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Form;
+use Filament\Infolists\Components\Section;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Infolist;
+use Filament\Resources\Resource;
+use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class GaAssetResource extends Resource
 {
-
     protected static ?string $model = GaAsset::class;
+
     protected static ?string $navigationGroup = 'General Affairs';
+
     protected static ?string $navigationLabel = 'Assets';
 
     protected static ?string $slug = 'general-affairs/assets';
+
     protected static ?string $navigationIcon = 'heroicon-o-tv';
 
     public static function form(Form $form): Form
@@ -70,7 +67,7 @@ class GaAssetResource extends Resource
                     ->closeOnDateSelection()
                     ->default(now())
                     ->required(),
-                Grid::make(4)
+                Grid::make(3)
                     ->schema([
                         TextInput::make('asset_brand')
                             ->label('Brand')
@@ -83,11 +80,6 @@ class GaAssetResource extends Resource
                             ->label('Serial Number')
                             ->maxLength(100)
                             ->afterStateUpdated(fn ($state, callable $set) => $set('asset_serial_number', strtoupper($state))),
-                        TextInput::make('asset_port')
-                            ->label('Port')
-                            ->maxLength(36)
-                            ->afterStateUpdated(fn ($state, callable $set) => $set('asset_port', strtoupper($state)))
-                            ->visible(fn (callable $get) => static::isNetworkingCategory($get('asset_category_id'))),
                     ]),
                 TextInput::make('asset_price')
                     ->label('Price')
@@ -104,6 +96,22 @@ class GaAssetResource extends Resource
                         }
                     })
                     ->dehydrateStateUsing(fn ($state) => $state ? (int) str_replace('.', '', $state) : null),
+                TextInput::make('asset_sell_price')
+                    ->label('Sell Price')
+                    ->prefix('Rp')
+                    ->reactive()
+                    ->formatStateUsing(fn ($state) => $state ? number_format($state, 0, ',', '.') : '')
+                    ->afterStateUpdated(function ($state, callable $set) {
+                        if ($state) {
+                            // Remove any existing formatting first
+                            $cleanValue = preg_replace('/[^0-9]/', '', $state);
+                            // Format the number with thousand separators
+                            $formattedValue = number_format((int) $cleanValue, 0, ',', '.');
+                            $set('asset_sell_price', $formattedValue);
+                        }
+                    })
+                    ->dehydrateStateUsing(fn ($state) => $state ? (int) str_replace('.', '', $state) : null)
+                    ->hidden(fn (callable $get): bool => $get('asset_condition') !== 'Disposed'),
                 Select::make('asset_condition')
                     ->label('Condition')
                     ->options([
@@ -124,29 +132,13 @@ class GaAssetResource extends Resource
                     ->autosize()
                     ->reactive()
                     ->columnSpanFull(),
-                TextInput::make('asset_sell_price')
-                    ->label('Sell Price')
-                    ->prefix('Rp')
-                    ->reactive()
-                    ->formatStateUsing(fn ($state) => $state ? number_format($state, 0, ',', '.') : '')
-                    ->afterStateUpdated(function ($state, callable $set) {
-                        if ($state) {
-                            // Remove any existing formatting first
-                            $cleanValue = preg_replace('/[^0-9]/', '', $state);
-                            // Format the number with thousand separators
-                            $formattedValue = number_format((int) $cleanValue, 0, ',', '.');
-                            $set('asset_sell_price', $formattedValue);
-                        }
-                    })
-                    ->dehydrateStateUsing(fn ($state) => $state ? (int) str_replace('.', '', $state) : null)
-                    ->hidden(fn (callable $get): bool => $get('asset_condition') !== 'Disposed'),
             ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(fn(Builder $query) => $query->orderByDesc('created_at'))
+            ->modifyQueryUsing(fn (Builder $query) => $query->orderByDesc('created_at'))
             ->emptyStateHeading('No Assets Found')
             ->columns([
                 TextColumn::make('asset_name')
@@ -160,11 +152,6 @@ class GaAssetResource extends Resource
                 TextColumn::make('asset_serial_number')
                     ->label('Serial Number')
                     ->getStateUsing(fn ($record) => $record->asset_serial_number ? strtoupper($record->asset_serial_number) : 'N/A')
-                    ->searchable()
-                    ->sortable(),
-                TextColumn::make('asset_port')
-                    ->label('Port')
-                    ->getStateUsing(fn ($record) => $record->asset_port ? strtoupper($record->asset_port) : 'N/A')
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('asset_year_bought')
@@ -183,10 +170,8 @@ class GaAssetResource extends Resource
                 TextColumn::make('asset_user_id')
                     ->label('User')
                     ->getStateUsing(fn ($record) => $record->employee ? "{$record->employee->name}" : 'N/A')
-                    ->searchable(query: fn (Builder $query, string $search): Builder =>
-                        $query->whereHas('employee', fn (Builder $query) =>
-                            $query->where('name', 'like', "%{$search}%")
-                        )
+                    ->searchable(query: fn (Builder $query, string $search): Builder => $query->whereHas('employee', fn (Builder $query) => $query->where('name', 'like', "%{$search}%")
+                    )
                     )
                     ->sortable(),
                 TextColumn::make('position')
@@ -196,15 +181,17 @@ class GaAssetResource extends Resource
                         if ($latestUsage && $latestUsage->usage_end_date) {
                             return 'N/A';
                         }
+
                         return $latestUsage && $latestUsage->position ? $latestUsage->position->name : 'N/A';
                     })
                     ->sortable()
                     ->searchable(false),
                 TextColumn::make('pic_id')
                     ->label('Created By')
-                    ->formatStateUsing(function ($record){
+                    ->formatStateUsing(function ($record) {
                         $initial = $record->user->employee->initial ?? '';
-                        $signature = $initial . ' ' . strtoupper($record->created_at->format('d M Y'));
+                        $signature = $initial.' '.strtoupper($record->created_at->format('d M Y'));
+
                         return $signature;
                     })
                     ->sortable()
@@ -249,7 +236,7 @@ class GaAssetResource extends Resource
                         }
 
                         return empty($indicators) ? null : implode(', ', $indicators);
-                    })
+                    }),
             ])
             ->actions([
                 Tables\Actions\Action::make('Detail')
@@ -293,10 +280,11 @@ class GaAssetResource extends Resource
                         ->action(function ($records) {
                             $ids = $records->pluck('id')->toArray();
                             session(['export_asset_ids' => $ids]);
+
                             return redirect()->route('assets.bulk-export-pdf.export');
                         })
                         ->deselectRecordsAfterCompletion(),
-                    ]),
+                ]),
             ]);
     }
 
@@ -332,7 +320,7 @@ class GaAssetResource extends Resource
                             ->label('Category'),
                         TextEntry::make('asset_price')
                             ->label('Price')
-                            ->formatStateUsing(fn ($state) => $state ? 'Rp. ' . number_format($state, 0, ',', '.') : 'N/A'),
+                            ->formatStateUsing(fn ($state) => $state ? 'Rp. '.number_format($state, 0, ',', '.') : 'N/A'),
                         TextEntry::make('asset_condition')
                             ->label('Condition'),
                         TextEntry::make('location.name')
@@ -355,7 +343,7 @@ class GaAssetResource extends Resource
     public static function getRelations(): array
     {
         return [
-            UsageHistoryRelationManager::class
+            UsageHistoryRelationManager::class,
         ];
     }
 

@@ -2,36 +2,35 @@
 
 namespace App\Filament\Resources\GA;
 
-use Filament\Forms;
-use Filament\Tables;
-use Filament\Forms\Form;
-use Filament\Tables\Table;
-use Filament\Resources\Resource;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Section;
-use Filament\Forms\Components\TextInput;
+use App\Filament\Resources\GA\GaAssetMaintenanceResource\Pages;
 use App\Models\GA\GaAssetMaintenance;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\TimePicker;
-use App\Filament\Resources\GA\GaAssetMaintenanceResource\Pages;
+use Filament\Forms\Form;
+use Filament\Resources\Resource;
+use Filament\Tables;
+use Filament\Tables\Table;
 
 class GaAssetMaintenanceResource extends Resource
 {
     protected static ?string $model = GaAssetMaintenance::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-wrench-screwdriver';
-    protected static ?string $navigationGroup = 'General Affairs';
-    protected static ?string $navigationParentItem = 'Assets';
-    protected static ?string $slug = 'general-affairs/asset-maintenance';
-    protected static ?string $navigationLabel = 'Asset Maintenance';
-    protected static ?string $modelLabel = 'Asset Maintenance';
-    protected static ?string $pluralModelLabel = 'Asset Maintenances';
 
-    public static function canViewAny(): bool
-    {
-        // Only users with division can access this resource
-        return auth()->user()->division && auth()->user()->division->initial === 'GA';
-    }
+    protected static ?string $navigationGroup = 'General Affairs';
+
+    protected static ?string $navigationParentItem = 'Assets';
+
+    protected static ?string $slug = 'general-affairs/asset-maintenance';
+
+    protected static ?string $navigationLabel = 'Asset Maintenance';
+
+    protected static ?string $modelLabel = 'Asset Maintenance';
+
+    protected static ?string $pluralModelLabel = 'Asset Maintenances';
 
     public static function form(Form $form): Form
     {
@@ -108,12 +107,15 @@ class GaAssetMaintenanceResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->successNotificationTitle('Asset Maintenance successfully updated'),
+                Tables\Actions\DeleteAction::make()
+                    ->successNotificationTitle('Asset Maintenance successfully deleted'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->successNotificationTitle('Selected Asset Maintenance successfully deleted'),
                 ]),
             ]);
     }
@@ -129,8 +131,6 @@ class GaAssetMaintenanceResource extends Resource
     {
         return [
             'index' => Pages\ListGaAssetMaintenances::route('/'),
-            'create' => Pages\CreateGaAssetMaintenance::route('/create'),
-            'edit' => Pages\EditGaAssetMaintenance::route('/{record}/edit'),
         ];
     }
 }

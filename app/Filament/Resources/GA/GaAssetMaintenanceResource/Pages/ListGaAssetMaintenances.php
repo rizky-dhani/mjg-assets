@@ -13,7 +13,8 @@ class ListGaAssetMaintenances extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            Actions\CreateAction::make()
+                ->successNotificationTitle('Asset Maintenance successfully created'),
         ];
     }
 }

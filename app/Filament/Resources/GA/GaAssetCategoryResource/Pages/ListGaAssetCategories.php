@@ -13,7 +13,8 @@ class ListGaAssetCategories extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            Actions\CreateAction::make()
+                ->successNotificationTitle('Asset Category successfully created'),
         ];
     }
 }

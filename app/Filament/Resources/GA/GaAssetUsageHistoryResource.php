@@ -2,36 +2,33 @@
 
 namespace App\Filament\Resources\GA;
 
-use Filament\Forms;
-use Filament\Tables;
-use Filament\Forms\Form;
-use Filament\Tables\Table;
-use Filament\Resources\Resource;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Section;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\DatePicker;
-use App\Models\GA\GaAssetUsageHistory;
 use App\Filament\Resources\GA\GaAssetUsageHistoryResource\Pages;
+use App\Models\GA\GaAssetUsageHistory;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Form;
+use Filament\Resources\Resource;
+use Filament\Tables;
+use Filament\Tables\Table;
 
 class GaAssetUsageHistoryResource extends Resource
 {
     protected static ?string $model = GaAssetUsageHistory::class;
+
     protected static ?string $slug = 'general-affairs/usage-histories';
+
     protected static ?string $navigationIcon = 'heroicon-o-clock';
+
     protected static ?string $navigationGroup = 'General Affairs';
+
     protected static ?string $navigationParentItem = 'Assets';
 
     protected static ?string $navigationLabel = 'Usage History';
-    protected static ?string $modelLabel = 'Asset Usage History';
-    protected static ?string $pluralModelLabel = 'Asset Usage Histories';
 
-    public static function canViewAny(): bool
-    {
-        // Only users with division can access this resource
-        return auth()->user()->division && auth()->user()->division->initial === 'GA';
-    }
+    protected static ?string $modelLabel = 'Asset Usage History';
+
+    protected static ?string $pluralModelLabel = 'Asset Usage Histories';
 
     public static function form(Form $form): Form
     {
@@ -96,12 +93,15 @@ class GaAssetUsageHistoryResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->successNotificationTitle('Asset Usage History successfully updated'),
+                Tables\Actions\DeleteAction::make()
+                    ->successNotificationTitle('Asset Usage History successfully deleted'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->successNotificationTitle('Selected Asset Usage History successfully deleted'),
                 ]),
             ]);
     }

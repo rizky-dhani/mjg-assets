@@ -2,16 +2,15 @@
 
 namespace App\Filament\Resources\GA;
 
-use Filament\Forms;
-use Filament\Tables;
-use Filament\Forms\Form;
-use Filament\Tables\Table;
-use Filament\Resources\Resource;
+use App\Filament\Resources\GA\GaAssetCategoryResource\Pages;
 use App\Models\GA\GaAssetCategory;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use App\Filament\Resources\GA\GaAssetCategoryResource\Pages;
+use Filament\Forms\Form;
+use Filament\Resources\Resource;
+use Filament\Tables;
+use Filament\Tables\Table;
 
 class GaAssetCategoryResource extends Resource
 {
@@ -20,17 +19,16 @@ class GaAssetCategoryResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static ?string $navigationGroup = 'General Affairs';
-    protected static ?string $navigationParentItem = 'Assets';
-    protected static ?string $slug = 'general-affairs/asset-categories';
-    protected static ?string $navigationLabel = 'Asset Category';
-    protected static ?string $modelLabel = 'Asset Category';
-    protected static ?string $pluralModelLabel = 'Asset Categories';
 
-    public static function canViewAny(): bool
-    {
-        // Only users with division can access this resource
-        return auth()->user()->division && auth()->user()->division->initial === 'GA';
-    }
+    protected static ?string $navigationParentItem = 'Assets';
+
+    protected static ?string $slug = 'general-affairs/asset-categories';
+
+    protected static ?string $navigationLabel = 'Asset Category';
+
+    protected static ?string $modelLabel = 'Asset Category';
+
+    protected static ?string $pluralModelLabel = 'Asset Categories';
 
     public static function form(Form $form): Form
     {
@@ -84,12 +82,15 @@ class GaAssetCategoryResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->successNotificationTitle('Asset Category successfully updated'),
+                Tables\Actions\DeleteAction::make()
+                    ->successNotificationTitle('Asset Category successfully deleted'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->successNotificationTitle('Selected Asset Categories successfully deleted'),
                 ]),
             ]);
     }
@@ -105,8 +106,6 @@ class GaAssetCategoryResource extends Resource
     {
         return [
             'index' => Pages\ListGaAssetCategories::route('/'),
-            'create' => Pages\CreateGaAssetCategory::route('/create'),
-            'edit' => Pages\EditGaAssetCategory::route('/{record}/edit'),
         ];
     }
 }
