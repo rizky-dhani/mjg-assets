@@ -40,12 +40,6 @@ class GaAssetResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('asset_name')
-                    ->label('Asset Name')
-                    ->required()
-                    ->columnSpanFull()
-                    ->maxLength(255)
-                    ->afterStateUpdated(fn ($state, callable $set) => $set('asset_name', strtoupper($state))),
                 Select::make('asset_category_id')
                     ->label('Category')
                     ->relationship('category', 'name')
@@ -79,6 +73,7 @@ class GaAssetResource extends Resource
                         TextInput::make('asset_serial_number')
                             ->label('Serial Number')
                             ->maxLength(100)
+                            ->default('0000')
                             ->afterStateUpdated(fn ($state, callable $set) => $set('asset_serial_number', strtoupper($state))),
                     ]),
                 TextInput::make('asset_price')
@@ -143,10 +138,6 @@ class GaAssetResource extends Resource
             ->modifyQueryUsing(fn (Builder $query) => $query->orderByDesc('created_at'))
             ->emptyStateHeading('No Assets Found')
             ->columns([
-                TextColumn::make('asset_name')
-                    ->label('Asset Name')
-                    ->searchable()
-                    ->sortable(),
                 TextColumn::make('asset_code')
                     ->label('Asset Code')
                     ->searchable()
@@ -297,8 +288,6 @@ class GaAssetResource extends Resource
                 Section::make('Asset Details')
                     ->columns(4)
                     ->schema([
-                        TextEntry::make('asset_name')
-                            ->label('Asset Name'),
                         TextEntry::make('asset_code')
                             ->label('Asset Code'),
                         TextEntry::make('asset_serial_number')

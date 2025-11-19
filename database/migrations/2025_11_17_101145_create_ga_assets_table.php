@@ -19,10 +19,10 @@ return new class extends Migration
             $table->year('asset_year_bought');
             $table->string('asset_brand');
             $table->string('asset_model');
-            $table->string('asset_serial_number');
+            $table->string('asset_serial_number')->nullable();
             $table->foreignId('asset_category_id')->constrained('ga_asset_categories')->cascadeOnUpdate()->cascadeOnDelete();
-            $table->enum('asset_condition', ['New','First Hand','Used','Defect','Disposed']);
-            $table->integer('asset_price');
+            $table->enum('asset_condition', ['New', 'First Hand', 'Used', 'Defect', 'Disposed']);
+            $table->integer('asset_price')->nullable();
             $table->integer('asset_sell_price')->nullable();
             $table->text('asset_notes')->nullable();
             $table->text('asset_remarks')->nullable();
