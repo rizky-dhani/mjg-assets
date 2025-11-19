@@ -312,7 +312,7 @@ class ITAssetResource extends Resource
 
                             // Show success notification
                             Notification::make()
-                                ->successNotificationTitle('Successfully regenerated QR codes for '.{$updatedCount}.' asset(s).');
+                                ->successNotificationTitle('Successfully regenerated QR codes for '.{$updatedCount}.' asset(s).')
                         }),
                     ]),
             ]);
