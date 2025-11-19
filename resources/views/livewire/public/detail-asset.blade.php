@@ -1,9 +1,15 @@
 <div>
     <div class="mb-4">
         @auth
-            <a href="{{ route('filament.admin.resources.it-assets.view', $asset->assetId) }}" class="btn btn-primary mb-2">
-                <i class="fa-solid fa-arrow-left"></i> {{ __('Back') }}
-            </a>
+            @if(auth()->user()->division->initial === 'IT')
+                <a href="{{ route('filament.admin.resources.itd.assets.view', $asset->assetId) }}" class="btn btn-primary mb-2">
+                    <i class="fa-solid fa-arrow-left"></i> {{ __('Back') }}
+                </a>
+            @else
+                <a href="{{ route('filament.admin.resources.general-affairs.assets.view', $asset->assetId) }}" class="btn btn-primary mb-2">
+                    <i class="fa-solid fa-arrow-left"></i> {{ __('Back') }}
+                </a>
+            @endif
         @endauth
         <div class="d-flex justify-content-center">
             <img src="{{ asset('storage/' . $asset->barcode) }}" alt="Barcode" class="img-fluid" style="height: 128px;">

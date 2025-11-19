@@ -37,7 +37,7 @@ class ITAssetMaintenanceResource extends Resource
 
     protected static ?int $navigationSort = 2;
 
-    protected static ?string $slug = 'it-asset-maintenance-log';
+    protected static ?string $slug = 'itd/asset-maintenance-log';
 
     protected static ?string $navigationParentItem = 'Assets';
 

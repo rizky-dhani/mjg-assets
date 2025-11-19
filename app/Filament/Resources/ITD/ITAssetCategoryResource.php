@@ -21,7 +21,7 @@ class ITAssetCategoryResource extends Resource
     protected static ?string $model = ITAssetCategory::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-    protected static ?string $slug = 'it-asset-categories';
+    protected static ?string $slug = 'itd/asset-categories';
 
     public static function canViewAny(): bool
     {

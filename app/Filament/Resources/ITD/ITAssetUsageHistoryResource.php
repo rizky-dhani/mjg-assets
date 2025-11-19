@@ -31,7 +31,7 @@ class ITAssetUsageHistoryResource extends Resource
     protected static ?string $navigationLabel = 'Usage History';
     protected static ?string $modelLabel = 'Asset Usage History';
     protected static ?string $pluralModelLabel = 'Asset Usage Histories';
-    protected static ?string $slug = 'it-asset-usage-histories';
+    protected static ?string $slug = 'itd/asset-usage-histories';
     protected static ?int $navigationSort = 1;
     public static function getBreadcrumb(): string
     {

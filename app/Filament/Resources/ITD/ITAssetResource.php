@@ -34,7 +34,7 @@ class ITAssetResource extends Resource
 
     protected static ?string $model = ITAsset::class;
     protected static ?string $navigationLabel = 'Assets';
-    protected static ?string $slug = 'it-assets';
+    protected static ?string $slug = 'itd/assets';
 
     protected static ?string $navigationIcon = 'heroicon-o-tv';
     protected static ?string $navigationGroup = ' ITD';

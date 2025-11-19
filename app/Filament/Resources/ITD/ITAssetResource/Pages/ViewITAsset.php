@@ -2,20 +2,22 @@
 
 namespace App\Filament\Resources\ITD\ITAssetResource\Pages;
 
+use App\Filament\Resources\ITD\ITAssetResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ViewRecord;
-use App\Filament\Resources\ITD\ITAssetResource;
 
 class ViewITAsset extends ViewRecord
 {
     protected static string $resource = ITAssetResource::class;
+
     protected static ?string $title = 'View Asset';
+
     protected function getHeaderActions(): array
     {
         return [
             Actions\Action::make('refresh')
                 ->label('Refresh')
-                ->action(fn ($record) => redirect()->route('filament.admin.resources.it-assets.view', ['record' => $record->assetId]))
+                ->action(fn ($record) => redirect()->route('filament.admin.resources.itd.assets.view', ['record' => $record->assetId]))
                 ->color('gray'),
             Actions\Action::make('asset_detail')
                 ->label('Detail')
