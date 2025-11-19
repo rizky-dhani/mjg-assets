@@ -2,46 +2,46 @@
 
 namespace App\Filament\Resources\ITD;
 
-use Filament\Tables;
-use App\Models\IT\ITAsset;
-use App\Models\Employee;
-use Filament\Forms\Form;
-use Filament\Tables\Table;
-use App\Models\IT\ITAssetCategory;
-use App\Models\IT\ITAssetLocation;
-use Filament\Infolists\Infolist;
-use Filament\Resources\Resource;
-use Filament\Support\Colors\Color;
-use Filament\Forms\Components\Grid;
-use Filament\Tables\Filters\Filter;
-use Filament\Forms\Components\Select;
-use Filament\Tables\Filters\Indicator;
-use Filament\Forms\Components\Checkbox;
-use Filament\Forms\Components\Textarea;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Forms\Components\TextInput;
-use Filament\Tables\Actions\ActionGroup;
-use Filament\Forms\Components\DatePicker;
-use Filament\Tables\Filters\SelectFilter;
-use Illuminate\Database\Eloquent\Builder;
-use Filament\Infolists\Components\Section;
-use Filament\Infolists\Components\TextEntry;
 use App\Filament\Resources\ITD\ITAssetResource\Pages;
 use App\Filament\Resources\ITD\ITAssetResource\RelationManagers\UsageHistoryRelationManager;
+use App\Models\IT\ITAsset;
+use App\Models\IT\ITAssetCategory;
+use Filament\Forms\Components\Checkbox;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Form;
+use Filament\Infolists\Components\Section;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Infolist;
+use Filament\Notifications\Notification;
+use Filament\Resources\Resource;
+use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class ITAssetResource extends Resource
 {
-
     protected static ?string $model = ITAsset::class;
+
     protected static ?string $navigationLabel = 'Assets';
+
     protected static ?string $slug = 'itd/assets';
 
     protected static ?string $navigationIcon = 'heroicon-o-tv';
+
     protected static ?string $navigationGroup = ' ITD';
+
     public static function getBreadcrumb(): string
     {
         return 'Assets';
     }
+
     public static function form(Form $form): Form
     {
         return $form
@@ -133,7 +133,7 @@ class ITAssetResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(fn(Builder $query) => $query->orderByDesc('created_at'))
+            ->modifyQueryUsing(fn (Builder $query) => $query->orderByDesc('created_at'))
             ->emptyStateHeading('No Assets Found')
             ->columns([
                 TextColumn::make('asset_name')
@@ -170,10 +170,8 @@ class ITAssetResource extends Resource
                 TextColumn::make('asset_user_id')
                     ->label('User')
                     ->getStateUsing(fn ($record) => $record->employee ? "{$record->employee->name}" : 'N/A')
-                    ->searchable(query: fn (Builder $query, string $search): Builder =>
-                        $query->whereHas('employee', fn (Builder $query) =>
-                            $query->where('name', 'like', "%{$search}%")
-                        )
+                    ->searchable(query: fn (Builder $query, string $search): Builder => $query->whereHas('employee', fn (Builder $query) => $query->where('name', 'like', "%{$search}%")
+                    )
                     )
                     ->sortable(),
                 TextColumn::make('position')
@@ -183,15 +181,17 @@ class ITAssetResource extends Resource
                         if ($latestUsage && $latestUsage->usage_end_date) {
                             return 'N/A';
                         }
+
                         return $latestUsage && $latestUsage->position ? $latestUsage->position->name : 'N/A';
                     })
                     ->sortable()
                     ->searchable(false),
                 TextColumn::make('pic_id')
                     ->label('Created By')
-                    ->formatStateUsing(function ($record){
+                    ->formatStateUsing(function ($record) {
                         $initial = $record->user->employee->initial ?? '';
-                        $signature = $initial . ' ' . strtoupper($record->created_at->format('d M Y'));
+                        $signature = $initial.' '.strtoupper($record->created_at->format('d M Y'));
+
                         return $signature;
                     })
                     ->sortable()
@@ -236,7 +236,7 @@ class ITAssetResource extends Resource
                         }
 
                         return empty($indicators) ? null : implode(', ', $indicators);
-                    })
+                    }),
             ])
             ->actions([
                 Tables\Actions\Action::make('Detail')
@@ -280,6 +280,7 @@ class ITAssetResource extends Resource
                         ->action(function ($records) {
                             $ids = $records->pluck('id')->toArray();
                             session(['export_asset_ids' => $ids]);
+
                             return redirect()->route('assets.bulk-export-pdf.export');
                         })
                         ->deselectRecordsAfterCompletion(),
@@ -312,9 +313,12 @@ class ITAssetResource extends Resource
 
                             // Show success notification
                             Notification::make()
-                                ->successNotificationTitle('Successfully regenerated QR codes for '.{$updatedCount}.' asset(s).')
+                                ->title('QR Codes Regenerated')
+                                ->success()
+                                ->body("Successfully regenerated QR codes for {$updatedCount} asset(s).")
+                                ->send();
                         }),
-                    ]),
+                ]),
             ]);
     }
 
@@ -350,7 +354,7 @@ class ITAssetResource extends Resource
                             ->label('Category'),
                         TextEntry::make('asset_price')
                             ->label('Price')
-                            ->formatStateUsing(fn ($state) => $state ? 'Rp. ' . number_format($state, 0, ',', '.') : 'N/A'),
+                            ->formatStateUsing(fn ($state) => $state ? 'Rp. '.number_format($state, 0, ',', '.') : 'N/A'),
                         TextEntry::make('asset_condition')
                             ->label('Condition'),
                         TextEntry::make('location.name')
@@ -373,7 +377,7 @@ class ITAssetResource extends Resource
     public static function getRelations(): array
     {
         return [
-            UsageHistoryRelationManager::class
+            UsageHistoryRelationManager::class,
         ];
     }
 
@@ -389,12 +393,12 @@ class ITAssetResource extends Resource
 
     public static function isNetworkingCategory(?int $categoryId): bool
     {
-        if (!$categoryId) {
+        if (! $categoryId) {
             return false;
         }
 
         $category = ITAssetCategory::find($categoryId);
-        if (!$category) {
+        if (! $category) {
             return false;
         }
 

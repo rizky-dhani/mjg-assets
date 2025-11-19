@@ -16,6 +16,7 @@ use Filament\Forms\Form;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
@@ -332,7 +333,7 @@ class GaAssetResource extends Resource
                             }
 
                             // Show success notification
-                            \Filament\Notifications\Notification::make()
+                            Notification::make()
                                 ->title('QR Codes Regenerated')
                                 ->success()
                                 ->body("Successfully regenerated QR codes for {$updatedCount} asset(s).")
