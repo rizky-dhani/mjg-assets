@@ -43,4 +43,9 @@ class GaAssetUsageHistory extends Model
     {
         return $this->belongsTo(\App\Models\Employee\EmployeePosition::class, 'position_id');
     }
+
+    public function room()
+    {
+        return $this->belongsTo(GaAssetRoom::class, 'room_id');
+    }
 }

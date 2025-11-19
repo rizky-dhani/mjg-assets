@@ -179,6 +179,33 @@ class GaAssetResource extends Resource
                     })
                     ->sortable()
                     ->searchable(false),
+                TextColumn::make('latest_position')
+                    ->label('Latest Position')
+                    ->getStateUsing(function ($record) {
+                        // Get the latest usage history
+                        $latestUsage = $record->usageHistory()->latest('created_at')->first();
+
+                        if (! $latestUsage) {
+                            return 'No history';
+                        }
+
+                        $locationName = $latestUsage->location->name ?? 'Unknown Location';
+                        $roomName = $latestUsage->room->name ?? null;
+
+                        // If the usage history location is different from asset location, show both location and room
+                        if ($record->asset_location_id && $latestUsage->asset_location_id != $record->asset_location_id) {
+                            if ($roomName) {
+                                return $locationName.' - '.$roomName;
+                            }
+
+                            return $locationName;
+                        }
+
+                        // If the locations are the same, only show the room name
+                        return $roomName ?? 'No room specified';
+                    })
+                    ->sortable(false)
+                    ->searchable(false),
                 TextColumn::make('pic_id')
                     ->label('Created By')
                     ->formatStateUsing(function ($record) {
@@ -236,7 +263,7 @@ class GaAssetResource extends Resource
                     ->label('Detail')
                     ->color('warning')
                     ->icon('heroicon-o-information-circle')
-                    ->url(fn ($record) => route('assets.show', ['assetId' => $record->assetId]))
+                    ->url(fn ($record) => route('general-affairs.assets.show', ['assetId' => $record->assetId]))
                     ->openUrlInNewTab(),
                 Tables\Actions\ViewAction::make(),
 

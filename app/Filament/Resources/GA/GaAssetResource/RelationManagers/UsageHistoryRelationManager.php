@@ -4,6 +4,7 @@ namespace App\Filament\Resources\GA\GaAssetResource\RelationManagers;
 
 use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
@@ -44,6 +45,7 @@ class UsageHistoryRelationManager extends RelationManager
                     ->relationship('location', 'name', fn ($query) => $query->orderBy('created_at', 'asc'))
                     ->searchable()
                     ->default(fn () => \App\Models\GA\GaAssetLocation::where('name', 'Head Office')->value('id'))
+                    ->live() // Add live() to enable dependent fields
                     ->createOptionModalHeading('Add New Location')
                     ->createOptionForm([
                         Hidden::make('locationId')
@@ -56,16 +58,42 @@ class UsageHistoryRelationManager extends RelationManager
                     ])
                     ->preload()
                     ->required(),
+                Select::make('room_id')
+                    ->label('Room')
+                    ->relationship('room', 'name', function ($query, $get) {
+                        // Only show rooms from the selected location
+                        $locationId = $get('asset_location_id');
+                        if ($locationId) {
+                            $query->where('location_id', $locationId);
+                        }
+                        return $query;
+                    })
+                    ->searchable()
+                    ->preload()
+                    ->createOptionModalHeading('Add New Room')
+                    ->createOptionForm([
+                        Forms\Components\TextInput::make('name')
+                            ->label('Room Name')
+                            ->required()
+                            ->maxLength(255),
+                        Select::make('location_id')
+                            ->label('Location')
+                            ->relationship('location', 'name')
+                            ->required()
+                            ->preload()
+                            ->searchable(),
+                    ])
+                    ->afterStateUpdated(fn ($state, callable $set) => $set('room_id', $state)),
                 Section::make('Employee Assignment')
                     ->columns(3)
                     ->visible(function () {
                         $ownerRecord = $this->getOwnerRecord();
-                        $assetCode = $ownerRecord->asset_code ?? null;
+                        $categoryCode = $ownerRecord->category->code ?? null;
 
                         // Define the array of codes where the section should be hidden
                         $codesToHide = ['009', '015', '016']; // You can customize this list
 
-                        return $assetCode && !in_array(strtoupper($assetCode), $codesToHide);
+                        return $categoryCode && ! in_array(strtoupper($categoryCode), $codesToHide);
                     })
                     ->schema([
                         Select::make('employee_id')
@@ -141,19 +169,22 @@ class UsageHistoryRelationManager extends RelationManager
                             ])
                             ->preload(),
                     ]),
-                TextInput::make('usage_quantity')
-                    ->label('Quantity')
-                    ->required()
-                    ->numeric()
-                    ->minValue(1),
-                DatePicker::make('usage_start_date')
-                    ->label('Start Date')
-                    ->default(now())
-                    ->required(),
-                DatePicker::make('usage_end_date')
-                    ->label('End Date'),
-                Hidden::make('usageId')
-                    ->default(fn () => (string) Str::orderedUuid()),
+                Grid::make(3)
+                    ->schema([
+                        TextInput::make('usage_quantity')
+                            ->label('Quantity')
+                            ->required()
+                            ->numeric()
+                            ->minValue(1),
+                        DatePicker::make('usage_start_date')
+                            ->label('Start Date')
+                            ->default(now())
+                            ->required(),
+                        DatePicker::make('usage_end_date')
+                            ->label('End Date'),
+                        Hidden::make('usageId')
+                            ->default(fn () => (string) Str::orderedUuid()),
+                    ]),
             ]);
     }
 

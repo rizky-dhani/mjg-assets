@@ -21,7 +21,7 @@ class ViewGaAsset extends ViewRecord
                 ->color('gray'),
             Actions\Action::make('asset_detail')
                 ->label('Detail')
-                ->url(fn ($record) => route('assets.show', ['assetId' => $record->assetId]))
+                ->url(fn ($record) => route('general-affairs.assets.show', ['assetId' => $record->assetId]))
                 ->color('warning'),
             Actions\EditAction::make(),
         ];

@@ -3,12 +3,11 @@
 namespace App\Livewire\Public;
 
 use App\Models\GA\GaAsset;
-use App\Models\IT\ITAsset;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
-class DetailAsset extends Component
+class GaAssetDetail extends Component
 {
     public $asset;
 
@@ -16,18 +15,18 @@ class DetailAsset extends Component
 
     public function mount($assetId)
     {
-        if (auth()->user()->division->initial === 'IT') {
-            $this->asset = ITAsset::where('assetId', $assetId)->first();
-        } else {
-            $this->asset = GaAsset::where('assetId', $assetId)->first();
-        }
+        $this->asset = GaAsset::where('assetId', $assetId)->first();
     }
 
-    #[Title('Detail Asset')]
+    #[Title('GA Asset Detail')]
     #[Layout('components.layouts.public')]
     public function render()
     {
-        return view('livewire.public.detail-asset', [
+        if (! $this->asset) {
+            abort(404);
+        }
+
+        return view('livewire.public.general-affairs-asset-detail', [
             'asset' => $this->asset,
         ]);
     }

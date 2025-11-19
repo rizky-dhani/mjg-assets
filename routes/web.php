@@ -1,11 +1,17 @@
 <?php
 
-use App\Livewire\Public\DetailAsset;
+use App\Livewire\Public\GaAssetDetail;
+use App\Livewire\Public\ITAssetDetail;
 use Illuminate\Support\Facades\Route;
 use Spatie\Browsershot\Browsershot;
 
-Route::get('public/it-assets/details/{assetId}', DetailAsset::class)
-    ->name('assets.show');
+// For IT assets
+Route::get('itd/public/asset-detail/{assetId}', ITAssetDetail::class)
+    ->name('itd.assets.show');
+// For GA assets
+Route::get('general-affairs/public/asset-detail/{assetId}', GaAssetDetail::class)
+    ->name('general-affairs.assets.show');
+
 Route::get('/assets/bulk-export-pdf/export', function () {
     $ids = session()->get('export_asset_ids', []);
 
