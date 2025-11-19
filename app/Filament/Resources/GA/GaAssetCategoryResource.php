@@ -67,6 +67,10 @@ class GaAssetCategoryResource extends Resource
                 Tables\Columns\TextColumn::make('remarks')
                     ->label('Remarks')
                     ->limit(50),
+                Tables\Columns\TextColumn::make('asset_count')
+                    ->label('Asset Count')
+                    ->counts('assets')
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Created At')
                     ->dateTime()

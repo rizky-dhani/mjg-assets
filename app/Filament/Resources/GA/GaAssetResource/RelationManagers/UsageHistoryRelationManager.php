@@ -3,28 +3,30 @@
 namespace App\Filament\Resources\GA\GaAssetResource\RelationManagers;
 
 use Filament\Forms;
-use Filament\Tables;
-use Filament\Forms\Form;
-use Filament\Tables\Table;
-use Illuminate\Support\Str;
-use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Section;
-use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\DatePicker;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Filament\Resources\GA\GaAssetUsageHistoryResource;
+use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Str;
 
 class UsageHistoryRelationManager extends RelationManager
 {
     protected static string $relationship = 'usageHistory';
+
     public function isReadOnly(): bool
     {
         return false;
     }
+
     protected static bool $isLazy = true;
+
     public function form(Form $form): Form
     {
         return $form
@@ -32,7 +34,7 @@ class UsageHistoryRelationManager extends RelationManager
                 Select::make('asset_id')
                     ->label('Asset')
                     ->relationship('asset', 'asset_name')
-                    ->getOptionLabelFromRecordUsing(fn ($record) => $record->asset_code.' - '.$record->asset_name)
+                    ->getOptionLabelFromRecordUsing(fn ($record) => $record->asset_code.' - '.$record->category->name)
                     ->default(fn ($context) => $this->getOwnerRecord()->id)
                     ->searchable()
                     ->preload()
@@ -50,12 +52,21 @@ class UsageHistoryRelationManager extends RelationManager
                             ->label('Location Name')
                             ->required()
                             ->maxLength(255)
-                            ->afterStateUpdated(fn ($state, callable $set) => $set('name', ucwords($state)))
+                            ->afterStateUpdated(fn ($state, callable $set) => $set('name', ucwords($state))),
                     ])
                     ->preload()
                     ->required(),
                 Section::make('Employee Assignment')
                     ->columns(3)
+                    ->visible(function () {
+                        $ownerRecord = $this->getOwnerRecord();
+                        $assetCode = $ownerRecord->asset_code ?? null;
+
+                        // Define the array of codes where the section should be hidden
+                        $codesToHide = ['009', '015', '016']; // You can customize this list
+
+                        return $assetCode && !in_array(strtoupper($assetCode), $codesToHide);
+                    })
                     ->schema([
                         Select::make('employee_id')
                             ->label('Assign To...')
@@ -94,7 +105,7 @@ class UsageHistoryRelationManager extends RelationManager
                                 Forms\Components\TextInput::make('name')
                                     ->label('Department Name')
                                     ->required()
-                                    ->maxLength(255)
+                                    ->maxLength(255),
                             ])
                             ->preload(),
                         Select::make('division_id')
@@ -112,7 +123,7 @@ class UsageHistoryRelationManager extends RelationManager
                                 Forms\Components\TextInput::make('initial')
                                     ->label('Initial')
                                     ->required()
-                                    ->maxLength(3)
+                                    ->maxLength(3),
                             ])
                             ->preload(),
                         Select::make('position_id')
@@ -126,10 +137,15 @@ class UsageHistoryRelationManager extends RelationManager
                                 Forms\Components\TextInput::make('name')
                                     ->label('Position Name')
                                     ->required()
-                                    ->maxLength(255)
+                                    ->maxLength(255),
                             ])
-                            ->preload()
+                            ->preload(),
                     ]),
+                TextInput::make('usage_quantity')
+                    ->label('Quantity')
+                    ->required()
+                    ->numeric()
+                    ->minValue(1),
                 DatePicker::make('usage_start_date')
                     ->label('Start Date')
                     ->default(now())
@@ -211,7 +227,7 @@ class UsageHistoryRelationManager extends RelationManager
                                     $record->asset->save();
                                 }
                             }
-                    }),
+                        }),
                 ]),
             ]);
     }
@@ -241,7 +257,7 @@ class UsageHistoryRelationManager extends RelationManager
      */
     private function handleAssetAssignment($record)
     {
-        if (!$record->asset) {
+        if (! $record->asset) {
             return;
         }
 
@@ -299,11 +315,11 @@ class UsageHistoryRelationManager extends RelationManager
      */
     private function handleAssetUpdate($record)
     {
-        if (!$record->asset) {
+        if (! $record->asset) {
             return;
         }
 
-        if (!is_null($record->usage_end_date)) {
+        if (! is_null($record->usage_end_date)) {
             // If usage has ended, move asset to Head Office and clear user
             $this->moveAssetToHeadOffice($record->asset);
         } else {
@@ -320,7 +336,7 @@ class UsageHistoryRelationManager extends RelationManager
      */
     private function handleUsageHistoryDeletion($record)
     {
-        if (!$record->asset) {
+        if (! $record->asset) {
             return;
         }
 
@@ -356,6 +372,6 @@ class UsageHistoryRelationManager extends RelationManager
             ->orderByDesc('id')
             ->first();
 
-        return !$latestUsage || $record->usage_start_date >= $latestUsage->usage_start_date;
+        return ! $latestUsage || $record->usage_start_date >= $latestUsage->usage_start_date;
     }
 }
