@@ -26,11 +26,11 @@ class GaAssetRoomResource extends Resource
 
     protected static ?int $sort = 2;
 
-    protected static ?string $navigationLabel = 'Rooms';
+    protected static ?string $navigationLabel = 'Asset Rooms';
 
-    protected static ?string $modelLabel = 'Room';
+    protected static ?string $modelLabel = 'Asset Room';
 
-    protected static ?string $pluralModelLabel = 'Rooms';
+    protected static ?string $pluralModelLabel = 'Asset Rooms';
 
     public static function form(Form $form): Form
     {
