@@ -21,6 +21,8 @@ class ITAssetWidget extends BaseWidget
 
     protected function getStats(): array
     {
+        // Commenting out original category-based stats
+        /*
         $stats = [];
         // Get categories with asset counts using Eloquent and sort them
         $categoriesWithCounts = ITAssetCategory::withCount([
@@ -90,5 +92,45 @@ class ITAssetWidget extends BaseWidget
         }
 
         return $stats;
+        */
+
+        // New implementation showing total, available, and in-use IT Assets
+        $totalAssets = \App\Models\IT\ITAsset::count();
+        $inUseAssets = \App\Models\IT\ITAsset::whereNotNull('asset_user_id')->count();
+        $availableAssets = \App\Models\IT\ITAsset::whereNull('asset_user_id')->count();
+
+        return [
+            Stat::make('Total', $totalAssets)
+                ->description('All assets')
+                ->color('primary')
+                ->icon('heroicon-o-computer-desktop')
+                ->url(ITAssetResource::getUrl('index')),
+
+            Stat::make('Available', $availableAssets)
+                ->description('Not assigned')
+                ->color('success')
+                ->icon('heroicon-o-check-circle')
+                ->url(ITAssetResource::getUrl('index', [
+                    'tableFilters' => [
+                        'asset_user_id' => [
+                            'available' => 'true',
+                            'in_use' => 'false',
+                        ],
+                    ],
+                ])),
+
+            Stat::make('In Use', $inUseAssets)
+                ->description('Assigned to users')
+                ->color('warning')
+                ->icon('heroicon-o-user')
+                ->url(ITAssetResource::getUrl('index', [
+                    'tableFilters' => [
+                        'asset_user_id' => [
+                            'available' => 'false',
+                            'in_use' => 'true',
+                        ],
+                    ],
+                ])),
+        ];
     }
 }
