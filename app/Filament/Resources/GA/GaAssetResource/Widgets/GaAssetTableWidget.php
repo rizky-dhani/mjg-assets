@@ -100,8 +100,6 @@ class GaAssetTableWidget extends TableWidget
                         ],
                     ]))
                     ->weight('semibold'),
-            ])
-            ->paginated(false)
-            ->striped();
+            ]);
     }
 }
