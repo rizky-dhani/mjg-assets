@@ -4,7 +4,6 @@ namespace App\Filament\Resources\GA\GaAssetResource\RelationManagers;
 
 use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
@@ -31,6 +30,7 @@ class UsageHistoryRelationManager extends RelationManager
     public function form(Form $form): Form
     {
         return $form
+            ->columns(3)
             ->schema([
                 Select::make('asset_id')
                     ->label('Asset')
@@ -66,6 +66,7 @@ class UsageHistoryRelationManager extends RelationManager
                         if ($locationId) {
                             $query->where('location_id', $locationId);
                         }
+
                         return $query;
                     })
                     ->searchable()
@@ -169,22 +170,19 @@ class UsageHistoryRelationManager extends RelationManager
                             ])
                             ->preload(),
                     ]),
-                Grid::make(3)
-                    ->schema([
-                        TextInput::make('usage_quantity')
-                            ->label('Quantity')
-                            ->required()
-                            ->numeric()
-                            ->minValue(1),
-                        DatePicker::make('usage_start_date')
-                            ->label('Start Date')
-                            ->default(now())
-                            ->required(),
-                        DatePicker::make('usage_end_date')
-                            ->label('End Date'),
-                        Hidden::make('usageId')
-                            ->default(fn () => (string) Str::orderedUuid()),
-                    ]),
+                TextInput::make('usage_quantity')
+                    ->label('Quantity')
+                    ->required()
+                    ->numeric()
+                    ->minValue(1),
+                DatePicker::make('usage_start_date')
+                    ->label('Start Date')
+                    ->default(now())
+                    ->required(),
+                DatePicker::make('usage_end_date')
+                    ->label('End Date'),
+                Hidden::make('usageId')
+                    ->default(fn () => (string) Str::orderedUuid()),
             ]);
     }
 
