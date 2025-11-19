@@ -24,7 +24,7 @@ return new class extends Migration
             $table->date('usage_start_date');
             $table->date('usage_end_date')->nullable();
             $table->timestamps();
-            
+
         });
     }
 
