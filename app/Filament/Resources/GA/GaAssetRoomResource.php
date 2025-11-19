@@ -37,6 +37,7 @@ class GaAssetRoomResource extends Resource
         return $form
             ->schema([
                 Section::make('Room Information')
+                    ->columns(2)
                     ->schema([
                         TextInput::make('name')
                             ->label('Room Name')
