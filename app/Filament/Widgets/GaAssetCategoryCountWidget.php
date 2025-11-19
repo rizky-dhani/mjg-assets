@@ -9,8 +9,6 @@ use Filament\Widgets\TableWidget as BaseWidget;
 
 class GaAssetCategoryCountWidget extends BaseWidget
 {
-    6
-
     public static function canView(): bool
     {
         $user = auth()->user();
