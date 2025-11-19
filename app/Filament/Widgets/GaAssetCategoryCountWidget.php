@@ -9,6 +9,8 @@ use Filament\Widgets\TableWidget as BaseWidget;
 
 class GaAssetCategoryCountWidget extends BaseWidget
 {
+    protected static ?int $sort = 2;
+
     public static function canView(): bool
     {
         $user = auth()->user();
@@ -35,7 +37,7 @@ class GaAssetCategoryCountWidget extends BaseWidget
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('assets_count')
-                    ->label('Asset Count')
+                    ->label('Quantity Total')
                     ->numeric()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: false),

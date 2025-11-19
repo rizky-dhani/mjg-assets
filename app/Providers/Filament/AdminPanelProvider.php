@@ -4,6 +4,8 @@ namespace App\Providers\Filament;
 
 use Althinect\FilamentSpatieRolesPermissions\FilamentSpatieRolesPermissionsPlugin;
 use App\Filament\Pages\Auth\CustomLogin;
+use App\Filament\Resources\GA\GaAssetResource\Widgets\GaAssetDoughnutWidget;
+use App\Filament\Resources\GA\GaAssetResource\Widgets\GaAssetTableWidget;
 use App\Filament\Resources\GA\GaAssetResource\Widgets\GaAssetWidget;
 use App\Filament\Resources\ITD\ITAssetResource\Widgets\ITAssetDoughnutWidget;
 use App\Filament\Resources\ITD\ITAssetResource\Widgets\ITAssetTableWidget;
@@ -74,6 +76,8 @@ class AdminPanelProvider extends PanelProvider
                 ITAssetDoughnutWidget::class,
                 ITAssetTableWidget::class,
                 GaAssetWidget::class,
+                GaAssetDoughnutWidget::class,
+                GaAssetTableWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,

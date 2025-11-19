@@ -12,7 +12,7 @@ class GaAssetWidget extends BaseWidget
 {
     protected static ?string $pollingInterval = null;
 
-    protected static ?int $sort = 2;
+    protected static ?int $sort = 1;
 
     protected ?string $heading = 'Assets';
 
