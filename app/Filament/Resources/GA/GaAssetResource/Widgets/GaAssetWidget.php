@@ -23,74 +23,112 @@ class GaAssetWidget extends BaseWidget
 
     protected function getStats(): array
     {
-        $stats = [];
-        // Get categories with asset counts using Eloquent and sort them
-        $categoriesWithCounts = GaAssetCategory::withCount([
-            'assets as total_assets_count',
-            'assets as in_use_assets_count' => function ($query) {
-                $query->whereNotNull('asset_user_id');
-            },
-            'assets as available_assets_count' => function ($query) {
-                $query->whereNull('asset_user_id');
-            },
-        ])
-            ->orderByDesc('total_assets_count')
-            ->get();
+        // $stats = [];
+        // // Get categories with asset counts using Eloquent and sort them
+        // $categoriesWithCounts = GaAssetCategory::withCount([
+        //     'assets as total_assets_count',
+        //     'assets as in_use_assets_count' => function ($query) {
+        //         $query->whereNotNull('asset_user_id');
+        //     },
+        //     'assets as available_assets_count' => function ($query) {
+        //         $query->whereNull('asset_user_id');
+        //     },
+        // ])
+        //     ->orderByDesc('total_assets_count')
+        //     ->get();
 
-        foreach ($categoriesWithCounts as $category) {
-            // Use the counted values from withCount for efficiency
-            $totalAssets = $category->total_assets_count;
-            $inUseAssets = $category->in_use_assets_count;
-            $availableAssets = $category->available_assets_count;
+        // foreach ($categoriesWithCounts as $category) {
+        //     // Use the counted values from withCount for efficiency
+        //     $totalAssets = $category->total_assets_count;
+        //     $inUseAssets = $category->in_use_assets_count;
+        //     $availableAssets = $category->available_assets_count;
 
-            // Available stat with category in label
-            $stats[] = Stat::make("{$category->name}", $availableAssets)
-                ->description('Available')
+        //     // Available stat with category in label
+        //     $stats[] = Stat::make("{$category->name}", $availableAssets)
+        //         ->description('Available')
+        //         ->color('success')
+        //         ->icon('heroicon-o-check-circle')
+        //         ->url(GaAssetResource::getUrl('index', [
+        //             'tableFilters' => [
+        //                 'category_id' => [
+        //                     'value' => $category->id,
+        //                 ],
+        //                 'asset_user_id' => [
+        //                     'available' => 'true',
+        //                     'in_use' => 'false',
+        //                 ],
+        //             ],
+        //         ]));
+
+        //     // In Use stat with category in label
+        //     $stats[] = Stat::make("{$category->name}", $inUseAssets)
+        //         ->description('In use')
+        //         ->color('danger')
+        //         ->icon('heroicon-o-user')
+        //         ->url(GaAssetResource::getUrl('index', [
+        //             'tableFilters' => [
+        //                 'category_id' => [
+        //                     'value' => $category->id,
+        //                 ],
+        //                 'asset_user_id' => [
+        //                     'available' => 'false',
+        //                     'in_use' => 'true',
+        //                 ],
+        //             ],
+        //         ]));
+
+        //     // Total stat with category in label
+        //     $stats[] = Stat::make("{$category->name}", $totalAssets)
+        //         ->description('Total')
+        //         ->color('primary')
+        //         ->icon('heroicon-o-computer-desktop')
+        //         ->url(GaAssetResource::getUrl('index', [
+        //             'tableFilters' => [
+        //                 'category_id' => [
+        //                     'value' => $category->id,
+        //                 ],
+        //             ],
+        //         ]));
+        // }
+
+        // return $stats;
+
+        // New implementation showing total, available, and in-use GA Assets
+        $totalAssets = \App\Models\GA\GaAsset::count();
+        $inUseAssets = \App\Models\GA\GaAsset::whereNotNull('asset_user_id')->count();
+        $availableAssets = \App\Models\GA\GaAsset::whereNull('asset_user_id')->count();
+
+        return [
+            Stat::make('Total', $totalAssets)
+                ->description('All assets')
+                ->color('primary')
+                ->icon('heroicon-o-computer-desktop')
+                ->url(ITAssetResource::getUrl('index')),
+
+            Stat::make('Available', $availableAssets)
+                ->description('Not assigned')
                 ->color('success')
                 ->icon('heroicon-o-check-circle')
-                ->url(GaAssetResource::getUrl('index', [
+                ->url(ITAssetResource::getUrl('index', [
                     'tableFilters' => [
-                        'category_id' => [
-                            'value' => $category->id,
-                        ],
                         'asset_user_id' => [
                             'available' => 'true',
                             'in_use' => 'false',
                         ],
                     ],
-                ]));
+                ])),
 
-            // In Use stat with category in label
-            $stats[] = Stat::make("{$category->name}", $inUseAssets)
-                ->description('In use')
-                ->color('danger')
+            Stat::make('In Use', $inUseAssets)
+                ->description('Assigned to users')
+                ->color('warning')
                 ->icon('heroicon-o-user')
-                ->url(GaAssetResource::getUrl('index', [
+                ->url(ITAssetResource::getUrl('index', [
                     'tableFilters' => [
-                        'category_id' => [
-                            'value' => $category->id,
-                        ],
                         'asset_user_id' => [
                             'available' => 'false',
                             'in_use' => 'true',
                         ],
                     ],
-                ]));
-
-            // Total stat with category in label
-            $stats[] = Stat::make("{$category->name}", $totalAssets)
-                ->description('Total')
-                ->color('primary')
-                ->icon('heroicon-o-computer-desktop')
-                ->url(GaAssetResource::getUrl('index', [
-                    'tableFilters' => [
-                        'category_id' => [
-                            'value' => $category->id,
-                        ],
-                    ],
-                ]));
-        }
-
-        return $stats;
+                ])),
     }
 }
