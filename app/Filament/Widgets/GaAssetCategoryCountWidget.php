@@ -9,7 +9,7 @@ use Filament\Widgets\TableWidget as BaseWidget;
 
 class GaAssetCategoryCountWidget extends BaseWidget
 {
-    protected int|string|array $columnSpan = 'full';
+    6
 
     public static function canView(): bool
     {

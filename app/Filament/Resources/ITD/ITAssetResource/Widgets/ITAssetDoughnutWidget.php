@@ -2,13 +2,13 @@
 
 namespace App\Filament\Resources\ITD\ITAssetResource\Widgets;
 
-use Filament\Widgets\ChartWidget;
-use Illuminate\Support\Facades\Auth;
 use App\Models\IT\ITAssetCategory;
+use Filament\Widgets\ChartWidget;
 
 class ITAssetDoughnutWidget extends ChartWidget
 {
-    protected static ?string $heading = 'IT Assets Distribution (Doughnut)';
+    protected static ?string $heading = 'IT Assets Distribution';
+
     protected static ?int $sort = 3;
 
     public static function canView(): bool
