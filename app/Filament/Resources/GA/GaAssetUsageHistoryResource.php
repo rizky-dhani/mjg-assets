@@ -117,8 +117,6 @@ class GaAssetUsageHistoryResource extends Resource
     {
         return [
             'index' => Pages\ListGaAssetUsageHistories::route('/'),
-            'create' => Pages\CreateGaAssetUsageHistory::route('/create'),
-            'edit' => Pages\EditGaAssetUsageHistory::route('/{record}/edit'),
         ];
     }
 }

@@ -2,47 +2,54 @@
 
 namespace App\Filament\Resources\ITD;
 
-use Carbon\Carbon;
-use Filament\Forms;
-use Filament\Tables;
-use App\Models\IT\ITAsset;
-use App\Models\Employee;
-use Filament\Forms\Form;
-use Filament\Tables\Table;
-use Filament\Resources\Resource;
-use App\Models\IT\ITAssetMaintenance;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Section;
-use Filament\Forms\Components\Textarea;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\TimePicker;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\ITD\ITAssetMaintenanceResource\Pages;
-use App\Filament\Resources\ITD\ITAssetMaintenanceResource\RelationManagers;
+use App\Models\Employee;
+use App\Models\IT\ITAsset;
+use App\Models\IT\ITAssetMaintenance;
+use Carbon\Carbon;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\TimePicker;
+use Filament\Forms\Form;
+use Filament\Resources\Resource;
+use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class ITAssetMaintenanceResource extends Resource
 {
     protected static ?string $model = ITAssetMaintenance::class;
+
     protected static ?string $navigationLabel = 'Maintenance Log';
+
     protected static ?string $modelLabel = 'Asset Maintenance Log';
+
     protected static ?string $pluralModelLabel = 'Asset Maintenance Logs';
 
     public static function canViewAny(): bool
     {
         return auth()->user()?->hasRole('Super Admin') ?? false;
     }
+
     protected static ?int $navigationSort = 2;
+
     protected static ?string $slug = 'it-asset-maintenance-log';
+
     protected static ?string $navigationParentItem = 'Assets';
+
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+
     protected static ?string $navigationGroup = ' ITD';
+
     public static function getBreadcrumb(): string
     {
         return 'Asset Maintenance Log';
-    }    
+    }
+
     public static function form(Form $form): Form
     {
         return $form
@@ -59,6 +66,7 @@ class ITAssetMaintenanceResource extends Resource
                             ->relationship('asset', 'asset_code')
                             ->getOptionLabelFromRecordUsing(function ($record) {
                                 $userInitial = $record->employee?->initial ?? 'N/A';
+
                                 return "{$record->asset_code} - {$userInitial} - {$record->asset_name}";
                             })
                             ->afterStateUpdated(function ($set, $state) {
@@ -130,8 +138,8 @@ class ITAssetMaintenanceResource extends Resource
                             ->required()
                             ->seconds(false)
                             ->closeOnDateSelection(),
-                            ])
-                
+                    ]),
+
             ]);
     }
 
@@ -195,9 +203,6 @@ class ITAssetMaintenanceResource extends Resource
     {
         return [
             'index' => Pages\ListITAssetMaintenances::route('/'),
-            'create' => Pages\CreateITAssetMaintenance::route('/create'),
-            'edit' => Pages\EditITAssetMaintenance::route('/{record}/edit'),
         ];
     }
-
 }
