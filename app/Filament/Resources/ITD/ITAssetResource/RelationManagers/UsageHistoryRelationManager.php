@@ -7,6 +7,8 @@ use Filament\Tables;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
+use App\Models\Employee\Employee;
+use App\Models\IT\ITAssetLocation;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
@@ -14,8 +16,8 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\DatePicker;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Filament\Resources\ITD\ITAssetUsageHistoryResource;
 use Filament\Resources\RelationManagers\RelationManager;
+use App\Filament\Resources\ITD\ITAssetUsageHistoryResource;
 
 class UsageHistoryRelationManager extends RelationManager
 {
@@ -41,7 +43,7 @@ class UsageHistoryRelationManager extends RelationManager
                     ->label('Location')
                     ->relationship('location', 'name', fn ($query) => $query->orderBy('created_at', 'asc'))
                     ->searchable()
-                    ->default(fn () => \App\Models\ITAssetLocation::where('name', 'Head Office')->value('id'))
+                    ->default(fn () => ITAssetLocation::where('name', 'Head Office')->value('id'))
                     ->createOptionModalHeading('Add New Location')
                     ->createOptionForm([
                         Hidden::make('locationId')
@@ -74,12 +76,12 @@ class UsageHistoryRelationManager extends RelationManager
                                     ->label('Initial')
                                     ->required()
                                     ->maxLength(3)
-                                    ->unique(\App\Models\Employee\Employee::class, 'initial', ignoreRecord: true),
+                                    ->unique(Employee::class, 'initial', ignoreRecord: true),
                                 Forms\Components\TextInput::make('employee_number')
                                     ->label('Employee Number')
                                     ->required()
                                     ->maxLength(10)
-                                    ->unique(\App\Models\Employee\Employee::class, 'employee_number', ignoreRecord: true),
+                                    ->unique(Employee::class, 'employee_number', ignoreRecord: true),
                             ])
                             ->preload()
                             ->columnSpanFull(),
