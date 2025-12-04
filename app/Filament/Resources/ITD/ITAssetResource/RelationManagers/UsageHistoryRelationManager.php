@@ -223,7 +223,7 @@ class UsageHistoryRelationManager extends RelationManager
      */
     private function getHeadOfficeLocation()
     {
-        return \App\Models\ITAssetLocation::where('name', 'Head Office')->first();
+        return ITAssetLocation::where('name', 'Head Office')->first();
     }
 
     /**
