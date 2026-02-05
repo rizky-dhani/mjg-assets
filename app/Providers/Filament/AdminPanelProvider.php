@@ -2,7 +2,6 @@
 
 namespace App\Providers\Filament;
 
-use Althinect\FilamentSpatieRolesPermissions\FilamentSpatieRolesPermissionsPlugin;
 use App\Filament\Pages\Auth\CustomLogin;
 use App\Filament\Resources\GA\GaAssetResource\Widgets\GaAssetDoughnutWidget;
 use App\Filament\Resources\GA\GaAssetResource\Widgets\GaAssetTableWidget;
@@ -21,7 +20,7 @@ use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
-use Filament\Support\Enums\MaxWidth;
+use Filament\Support\Enums\Width;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -42,7 +41,7 @@ class AdminPanelProvider extends PanelProvider
             ->loginRouteSlug('login')
             ->profile()
             ->defaultThemeMode(ThemeMode::Light)
-            ->maxContentWidth(MaxWidth::Full)
+            ->maxContentWidth(Width::Full)
             ->brandName('MJG Asset Management')
             ->brandLogo(asset('assets/images/LOGO-MEDQUEST-HD.png'))
             ->brandLogoHeight('2rem')
@@ -63,7 +62,7 @@ class AdminPanelProvider extends PanelProvider
                     ->label('User Management'),
             ])
             ->plugins([
-                FilamentSpatieRolesPermissionsPlugin::make(),
+                //
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')

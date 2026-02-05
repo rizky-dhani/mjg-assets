@@ -8,7 +8,7 @@ use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
+use Filament\Schemas\Schema;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Support\Enums\MaxWidth;
 use Filament\Tables;
@@ -28,7 +28,7 @@ class UsageHistoryRelationManager extends RelationManager
 
     protected static bool $isLazy = true;
 
-    public function form(Form $form): Form
+    public function form(Schema $form): Schema
     {
         return $form
             ->columns(3)

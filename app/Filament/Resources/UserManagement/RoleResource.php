@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\UserManagement;
 
 use Filament\Tables;
-use Filament\Forms\Form;
+use Filament\Schemas\Schema;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use Spatie\Permission\Models\Role;
@@ -14,8 +14,8 @@ use App\Filament\Resources\UserManagement\RoleResource\Pages;
 class RoleResource extends Resource
 {
     protected static ?string $model = Role::class;
-    protected static ?string $navigationGroup = 'User Management';
-    protected static ?string $navigationIcon = 'heroicon-o-lock-closed';
+    protected static string | \UnitEnum | null $navigationGroup = 'User Management';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-lock-closed';
     public static function shouldRegisterNavigation(): bool
     {
         return auth()->user()->hasRole('Super Admin');
@@ -24,7 +24,7 @@ class RoleResource extends Resource
     {
         return auth()->user()->hasRole(['Super Admin']);
     }
-    public static function form(Form $form): Form
+    public static function form(Schema $form): Schema
     {
         return $form
             ->schema([

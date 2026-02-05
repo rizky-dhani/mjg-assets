@@ -7,7 +7,7 @@ use Filament\Widgets\ChartWidget;
 
 class GaAssetDoughnutWidget extends ChartWidget
 {
-    protected static ?string $heading = 'GA Assets Distribution';
+    protected ?string $heading = 'GA Assets Distribution';
 
     protected static ?int $sort = 3;
 

@@ -5,7 +5,7 @@
 *   **Framework:** Laravel ^12.0
 *   **Libraries:**
     *   Filament ^3.3
-    *   althinect/filament-spatie-roles-permissions ^2.3
+    *   spatie/laravel-permission ^6.0
     *   maatwebsite/excel ^3.1
     *   milon/barcode ^12.0
     *   spatie/browsershot ^5.0

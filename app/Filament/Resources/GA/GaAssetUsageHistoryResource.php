@@ -7,7 +7,7 @@ use App\Models\GA\GaAssetUsageHistory;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Form;
+use Filament\Schemas\Schema;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -18,9 +18,9 @@ class GaAssetUsageHistoryResource extends Resource
 
     protected static ?string $slug = 'general-affairs/usage-histories';
 
-    protected static ?string $navigationIcon = 'heroicon-o-clock';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-clock';
 
-    protected static ?string $navigationGroup = 'General Affairs';
+    protected static string | \UnitEnum | null $navigationGroup = 'General Affairs';
 
     protected static ?string $navigationParentItem = 'Assets';
 
@@ -30,7 +30,7 @@ class GaAssetUsageHistoryResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Asset Usage Histories';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $form): Schema
     {
         return $form
             ->schema([

@@ -7,7 +7,7 @@ use Filament\Widgets\ChartWidget;
 
 class ITAssetDoughnutWidget extends ChartWidget
 {
-    protected static ?string $heading = 'IT Assets Distribution';
+    protected ?string $heading = 'IT Assets Distribution';
 
     protected static ?int $sort = 3;
 

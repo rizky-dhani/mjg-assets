@@ -4,7 +4,7 @@ namespace App\Filament\Resources\ITD;
 
 use Filament\Forms;
 use Filament\Tables;
-use Filament\Forms\Form;
+use Filament\Schemas\Schema;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use App\Models\IT\ITAssetUsageHistory;
@@ -20,8 +20,8 @@ use App\Filament\Resources\ITD\ITAssetUsageHistoryResource\RelationManagers;
 class ITAssetUsageHistoryResource extends Resource
 {
     protected static ?string $model = ITAssetUsageHistory::class;
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-    protected static ?string $navigationGroup = ' ITD';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \UnitEnum | null $navigationGroup = ' ITD';
     protected static ?string $navigationParentItem = 'Assets';
 
     public static function canViewAny(): bool
@@ -38,7 +38,7 @@ class ITAssetUsageHistoryResource extends Resource
         return 'Asset Usage History';
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $form): Schema
     {
         return $form
             ->schema([

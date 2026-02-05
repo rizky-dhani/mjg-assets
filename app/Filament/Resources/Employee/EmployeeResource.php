@@ -5,7 +5,7 @@ namespace App\Filament\Resources\Employee;
 use Filament\Forms;
 use Filament\Tables;
 use App\Models\Employee\Employee;
-use Filament\Forms\Form;
+use Filament\Schemas\Schema;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Select;
@@ -19,15 +19,15 @@ class EmployeeResource extends Resource
 {
     protected static ?string $model = Employee::class;
     
-    protected static ?string $navigationIcon = 'heroicon-o-credit-card';
-    protected static ?string $navigationGroup = 'User Management';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-credit-card';
+    protected static string | \UnitEnum | null $navigationGroup = 'User Management';
 
     public static function canViewAny(): bool
     {
         // Only allow users with Super Admin role or employees with division
         return auth()->user()?->hasRole('Super Admin') ?? false;
     }
-    public static function form(Form $form): Form
+    public static function form(Schema $form): Schema
     {
         return $form
             ->schema([

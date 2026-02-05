@@ -4,7 +4,7 @@ namespace App\Filament\Resources\Employee;
 
 use Filament\Forms;
 use Filament\Tables;
-use Filament\Forms\Form;
+use Filament\Schemas\Schema;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
 use App\Models\Employee\EmployeeDivision;
@@ -24,16 +24,16 @@ class EmployeeDivisionResource extends Resource
 {
     protected static ?string $model = EmployeeDivision::class;
     protected static ?string $navigationLabel = 'Divisions';
-    protected static ?string $navigationIcon = 'heroicon-o-users';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-users';
     protected static ?string $navigationParentItem = 'Employees';
-    protected static ?string $navigationGroup = 'User Management';
+    protected static string | \UnitEnum | null $navigationGroup = 'User Management';
 
     public static function canViewAny(): bool
     {
         return auth()->user()?->hasRole('Super Admin') ?? false;
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $form): Schema
     {
         return $form
             ->schema([

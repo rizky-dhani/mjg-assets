@@ -4,7 +4,7 @@ namespace App\Filament\Resources\ITD;
 
 use Filament\Forms;
 use Filament\Tables;
-use Filament\Forms\Form;
+use Filament\Schemas\Schema;
 use Filament\Tables\Table;
 use App\Models\IT\ITAssetCategory;
 use Filament\Resources\Resource;
@@ -20,7 +20,7 @@ class ITAssetCategoryResource extends Resource
 {
     protected static ?string $model = ITAssetCategory::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $slug = 'itd/asset-categories';
 
     public static function canViewAny(): bool
@@ -29,12 +29,12 @@ class ITAssetCategoryResource extends Resource
     }
     protected static ?int $navigationSort = 3;
     protected static ?string $navigationParentItem = 'Assets';
-    protected static ?string $navigationGroup = ' ITD';
+    protected static string | \UnitEnum | null $navigationGroup = ' ITD';
     protected static ?string $navigationLabel = 'Categories';
     protected static ?string $modelLabel = 'Asset Category';
     protected static ?string $pluralModelLabel = 'Asset Categories';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $form): Schema
     {
         return $form
             ->schema([

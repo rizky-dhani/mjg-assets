@@ -4,7 +4,7 @@ namespace App\Filament\Resources\Employee\EmployeeDepartmentResource\RelationMan
 
 use Filament\Forms;
 use Filament\Tables;
-use Filament\Forms\Form;
+use Filament\Schemas\Schema;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
@@ -20,7 +20,7 @@ class DivisionRelationManager extends RelationManager
         return false;
     }
     protected static bool $isLazy = true;
-    public function form(Form $form): Form
+    public function form(Schema $form): Schema
     {
         return $form
             ->schema([

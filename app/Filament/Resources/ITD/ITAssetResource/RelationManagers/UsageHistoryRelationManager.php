@@ -4,7 +4,7 @@ namespace App\Filament\Resources\ITD\ITAssetResource\RelationManagers;
 
 use Filament\Forms;
 use Filament\Tables;
-use Filament\Forms\Form;
+use Filament\Schemas\Schema;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
 use App\Models\Employee\Employee;
@@ -27,7 +27,7 @@ class UsageHistoryRelationManager extends RelationManager
         return false;
     }
     protected static bool $isLazy = true;
-    public function form(Form $form): Form
+    public function form(Schema $form): Schema
     {
         return $form
             ->schema([

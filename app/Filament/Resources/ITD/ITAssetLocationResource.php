@@ -4,7 +4,7 @@ namespace App\Filament\Resources\ITD;
 
 use Filament\Forms;
 use Filament\Tables;
-use Filament\Forms\Form;
+use Filament\Schemas\Schema;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
 use App\Models\IT\ITAssetLocation;
@@ -21,19 +21,19 @@ class ITAssetLocationResource extends Resource
 {
     protected static ?string $model = ITAssetLocation::class;
     protected static ?string $slug = 'itd/asset-locations';
-    protected static ?string $navigationGroup = ' ITD';
+    protected static string | \UnitEnum | null $navigationGroup = ' ITD';
     protected static ?string $navigationLabel = 'Locations';
 
     public static function canViewAny(): bool
     {
         return auth()->user()?->hasRole('Super Admin') ?? false;
     }
-    protected static ?string $navigationIcon = 'heroicon-o-map-pin';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-map-pin';
     protected static ?string $navigationParentItem = 'Assets';
     protected static ?string $modelLabel = 'Asset Location';
     protected static ?string $pluralModelLabel = 'Asset Locations';
     protected static ?int $navigationSort = 4;
-    public static function form(Form $form): Form
+    public static function form(Schema $form): Schema
     {
         return $form
             ->schema([

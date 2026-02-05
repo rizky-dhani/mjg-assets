@@ -6,7 +6,7 @@ use App\Filament\Resources\GA\GaAssetLocationResource\Pages;
 use App\Models\GA\GaAssetLocation;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
+use Filament\Schemas\Schema;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -15,9 +15,9 @@ class GaAssetLocationResource extends Resource
 {
     protected static ?string $model = GaAssetLocation::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-map-pin';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-map-pin';
 
-    protected static ?string $navigationGroup = 'General Affairs';
+    protected static string | \UnitEnum | null $navigationGroup = 'General Affairs';
 
     protected static ?string $navigationParentItem = 'Assets';
 
@@ -29,7 +29,7 @@ class GaAssetLocationResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Asset Locations';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $form): Schema
     {
         return $form
             ->schema([

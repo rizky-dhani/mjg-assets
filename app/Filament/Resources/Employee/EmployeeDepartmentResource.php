@@ -2,12 +2,10 @@
 
 namespace App\Filament\Resources\Employee;
 
-use Filament\Forms;
 use Filament\Tables;
-use Filament\Forms\Form;
+use Filament\Schemas\Schema;
 use Filament\Tables\Table;
 use App\Models\Employee\EmployeeDivision;
-use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use App\Models\Employee\EmployeeDepartment;
 use Filament\Support\Enums\FontWeight;
@@ -24,17 +22,17 @@ use App\Filament\Resources\Employee\EmployeeDepartmentResource\RelationManagers;
 class EmployeeDepartmentResource extends Resource
 {
     protected static ?string $model = EmployeeDepartment::class;
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $navigationLabel = 'Departments';
     protected static ?string $navigationParentItem = 'Employees';
-    protected static ?string $navigationGroup = 'User Management';
+    protected static string | \UnitEnum | null $navigationGroup = 'User Management';
 
     public static function canViewAny(): bool
     {
         return auth()->user()?->hasRole('Super Admin') ?? false;
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $form): Schema
     {
         return $form
             ->schema([
@@ -76,7 +74,7 @@ class EmployeeDepartmentResource extends Resource
                 ]),
             ]);
     }
-    public static function infolist(Infolist $infolist): Infolist
+    public static function infolist(Schema $infolist): Schema
     {
         return $infolist
             ->schema([

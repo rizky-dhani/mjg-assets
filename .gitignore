@@ -26,4 +26,7 @@ Homestead.yaml
 Thumbs.db
 boost.json
 .vscode/mcp.json
-/.github/*
+.github
+.gemini
+GEMINI.md
+AGENTS.md

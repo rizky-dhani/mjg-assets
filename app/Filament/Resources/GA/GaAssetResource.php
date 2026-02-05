@@ -12,10 +12,9 @@ use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
+use Filament\Schemas\Schema;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
-use Filament\Infolists\Infolist;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -29,15 +28,15 @@ class GaAssetResource extends Resource
 {
     protected static ?string $model = GaAsset::class;
 
-    protected static ?string $navigationGroup = 'General Affairs';
+    protected static string | \UnitEnum | null $navigationGroup = 'General Affairs';
 
     protected static ?string $navigationLabel = 'Assets';
 
     protected static ?string $slug = 'general-affairs/assets';
 
-    protected static ?string $navigationIcon = 'heroicon-o-tv';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-tv';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $form): Schema
     {
         return $form
             ->schema([
@@ -343,7 +342,7 @@ class GaAssetResource extends Resource
             ]);
     }
 
-    public static function infolist(Infolist $infolist): Infolist
+    public static function infolist(Schema $infolist): Schema
     {
         return $infolist
             ->schema([

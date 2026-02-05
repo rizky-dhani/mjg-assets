@@ -7,7 +7,7 @@ use App\Models\GA\GaAssetRoom;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
+use Filament\Schemas\Schema;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -16,9 +16,9 @@ class GaAssetRoomResource extends Resource
 {
     protected static ?string $model = GaAssetRoom::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-building-office';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-building-office';
 
-    protected static ?string $navigationGroup = 'General Affairs';
+    protected static string | \UnitEnum | null $navigationGroup = 'General Affairs';
 
     protected static ?string $navigationParentItem = 'Assets';
 
@@ -32,7 +32,7 @@ class GaAssetRoomResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Asset Rooms';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $form): Schema
     {
         return $form
             ->schema([
