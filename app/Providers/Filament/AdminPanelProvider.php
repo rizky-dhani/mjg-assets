@@ -35,7 +35,7 @@ class AdminPanelProvider extends PanelProvider
         return $panel
             ->default()
             ->id('admin')
-            ->path('')
+            ->path('/dashboard')
             ->spa()
             ->login(CustomLogin::class)
             ->loginRouteSlug('login')
