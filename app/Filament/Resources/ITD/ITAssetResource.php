@@ -143,6 +143,11 @@ class ITAssetResource extends Resource
                     ->label('Asset Code')
                     ->searchable()
                     ->sortable(),
+                TextColumn::make('location.name')
+                    ->label('Location')
+                    ->getStateUsing(fn ($record) => $record->location ? $record->location->name : 'N/A')
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('asset_serial_number')
                     ->label('Serial Number')
                     ->getStateUsing(fn ($record) => $record->asset_serial_number ? strtoupper($record->asset_serial_number) : 'N/A')
