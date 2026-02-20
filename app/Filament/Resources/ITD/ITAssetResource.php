@@ -6,6 +6,13 @@ use App\Filament\Resources\ITD\ITAssetResource\Pages;
 use App\Filament\Resources\ITD\ITAssetResource\RelationManagers\UsageHistoryRelationManager;
 use App\Models\IT\ITAsset;
 use App\Models\IT\ITAssetCategory;
+use Filament\Actions\Action;
+use Filament\Actions\BulkAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Grid;
@@ -17,6 +24,8 @@ use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Grid as ComponentsGrid;
+use Filament\Schemas\Components\Section as ComponentsSection;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
@@ -72,7 +81,7 @@ class ITAssetResource extends Resource
                     ->closeOnDateSelection()
                     ->default(now())
                     ->required(),
-                Grid::make(4)
+                ComponentsGrid::make(4)
                     ->schema([
                         TextInput::make('asset_brand')
                             ->label('Brand')
@@ -243,16 +252,16 @@ class ITAssetResource extends Resource
                     }),
             ])
             ->actions([
-                Tables\Actions\Action::make('Detail')
+                Action::make('Detail')
                     ->label('Detail')
                     ->color('warning')
                     ->icon('heroicon-o-information-circle')
                     ->url(fn ($record) => route('assets.show', ['assetId' => $record->assetId]))
                     ->openUrlInNewTab(),
-                Tables\Actions\ViewAction::make(),
+                ViewAction::make(),
 
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make()
+                EditAction::make(),
+                DeleteAction::make()
                     ->modalHeading('Are you sure you want to delete this asset?')
                     ->modalDescription('This action cannot be undone.')
                     ->successNotificationTitle('Asset deleted successfully.')
@@ -265,8 +274,8 @@ class ITAssetResource extends Resource
                     }),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make()
+                BulkActionGroup::make([
+                    DeleteBulkAction::make()
                         ->modalHeading('Are you sure you want to delete these assets?')
                         ->modalDescription('This action cannot be undone.')
                         ->successNotificationTitle('Assets deleted successfully.')
@@ -278,7 +287,7 @@ class ITAssetResource extends Resource
                                 }
                             }
                         }),
-                    Tables\Actions\BulkAction::make('export_pdf')
+                    BulkAction::make('export_pdf')
                         ->label('Export to PDF')
                         ->icon('heroicon-o-document-arrow-down')->icon('heroicon-o-document-arrow-down')
                         ->action(function ($records) {
@@ -288,7 +297,7 @@ class ITAssetResource extends Resource
                             return redirect()->route('assets.bulk-export-pdf.export');
                         })
                         ->deselectRecordsAfterCompletion(),
-                    Tables\Actions\BulkAction::make('regenerate_qr_codes')
+                    BulkAction::make('regenerate_qr_codes')
                         ->label('Regenerate QR Codes')
                         ->icon('heroicon-o-arrow-path')
                         ->requiresConfirmation()
@@ -330,7 +339,7 @@ class ITAssetResource extends Resource
     {
         return $infolist
             ->schema([
-                Section::make('Asset Details')
+                ComponentsSection::make('Asset Details')
                     ->columns(4)
                     ->schema([
                         TextEntry::make('asset_name')
