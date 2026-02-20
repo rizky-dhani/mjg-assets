@@ -8,10 +8,9 @@ use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Schemas\Schema;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Schemas\Schema;
 use Filament\Support\Enums\MaxWidth;
-use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -218,7 +217,7 @@ class UsageHistoryRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make()
+                Actions\CreateAction::make()
                     ->label('Assign Asset')
                     ->modalHeading('Assign Asset')
                     ->modalWidth(MaxWidth::SevenExtraLarge)
@@ -228,14 +227,14 @@ class UsageHistoryRelationManager extends RelationManager
                     }),
             ])
             ->actions([
-                Tables\Actions\EditAction::make()
+                Actions\EditAction::make()
                     ->modalHeading('Edit Usage History')
                     ->modalWidth(MaxWidth::SevenExtraLarge)
                     ->successNotificationTitle('Usage History Updated Successfully')
                     ->after(function ($record) {
                         $this->handleAssetUpdate($record);
                     }),
-                Tables\Actions\DeleteAction::make()
+                Actions\DeleteAction::make()
                     ->modalHeading('Are you sure you want to delete this usage history?')
                     ->modalDescription('This action cannot be undone.')
                     ->successNotificationTitle('Usage history deleted successfully.')
@@ -245,8 +244,8 @@ class UsageHistoryRelationManager extends RelationManager
                     }),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make()
+                Actions\BulkActionGroup::make([
+                    Actions\DeleteBulkAction::make()
                         ->modalHeading('Are you sure you want to delete these usage histories?')
                         ->modalDescription('This action cannot be undone.')
                         ->successNotificationTitle('Usage histories deleted successfully.')

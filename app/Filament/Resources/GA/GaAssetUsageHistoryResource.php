@@ -7,8 +7,8 @@ use App\Models\GA\GaAssetUsageHistory;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
-use Filament\Schemas\Schema;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
 
@@ -18,9 +18,9 @@ class GaAssetUsageHistoryResource extends Resource
 
     protected static ?string $slug = 'general-affairs/usage-histories';
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-clock';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-clock';
 
-    protected static string | \UnitEnum | null $navigationGroup = 'General Affairs';
+    protected static string|\UnitEnum|null $navigationGroup = 'General Affairs';
 
     protected static ?string $navigationParentItem = 'Assets';
 
@@ -93,14 +93,14 @@ class GaAssetUsageHistoryResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make()
+                Actions\EditAction::make()
                     ->successNotificationTitle('Asset Usage History successfully updated'),
-                Tables\Actions\DeleteAction::make()
+                Actions\DeleteAction::make()
                     ->successNotificationTitle('Asset Usage History successfully deleted'),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make()
+                Actions\BulkActionGroup::make([
+                    Actions\DeleteBulkAction::make()
                         ->successNotificationTitle('Selected Asset Usage History successfully deleted'),
                 ]),
             ]);

@@ -2,36 +2,38 @@
 
 namespace App\Filament\Resources\ITD;
 
-use Filament\Forms;
-use Filament\Tables;
-use Filament\Schemas\Schema;
-use Filament\Tables\Table;
-use App\Models\IT\ITAssetCategory;
-use Filament\Resources\Resource;
-use Filament\Forms\Components\Textarea;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Forms\Components\TextInput;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\ITD\ITAssetCategoryResource\Pages;
-use App\Filament\Resources\ITD\ITAssetCategoryResource\RelationManagers;
+use App\Models\IT\ITAssetCategory;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
 
 class ITAssetCategoryResource extends Resource
 {
     protected static ?string $model = ITAssetCategory::class;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
+
     protected static ?string $slug = 'itd/asset-categories';
 
     public static function canViewAny(): bool
     {
         return auth()->user()?->hasRole('Super Admin') ?? false;
     }
+
     protected static ?int $navigationSort = 3;
+
     protected static ?string $navigationParentItem = 'Assets';
-    protected static string | \UnitEnum | null $navigationGroup = ' ITD';
+
+    protected static string|\UnitEnum|null $navigationGroup = ' ITD';
+
     protected static ?string $navigationLabel = 'Categories';
+
     protected static ?string $modelLabel = 'Asset Category';
+
     protected static ?string $pluralModelLabel = 'Asset Categories';
 
     public static function form(Schema $form): Schema
@@ -74,16 +76,16 @@ class ITAssetCategoryResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make()
+                Actions\EditAction::make(),
+                Actions\DeleteAction::make()
                     ->modalHeading('Are you sure you want to delete this category?')
                     ->modalDescription('This action cannot be undone.')
                     ->successNotificationTitle('Category deleted successfully.')
                     ->requiresConfirmation(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make()
+                Actions\BulkActionGroup::make([
+                    Actions\DeleteBulkAction::make()
                         ->modalHeading('Are you sure you want to delete these categories?')
                         ->modalDescription('This action cannot be undone.')
                         ->successNotificationTitle('Categories deleted successfully.')
@@ -98,5 +100,4 @@ class ITAssetCategoryResource extends Resource
             'index' => Pages\ManageITAssetCategories::route('/'),
         ];
     }
-
 }

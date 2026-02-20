@@ -2,31 +2,28 @@
 
 namespace App\Filament\Resources\Employee;
 
-use Filament\Forms;
-use Filament\Tables;
-use Filament\Schemas\Schema;
-use Filament\Tables\Table;
-use Illuminate\Support\Str;
-use App\Models\Employee\EmployeeDivision;
-use Filament\Resources\Resource;
-use Filament\Forms\Components\Grid;
-use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\Select;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Forms\Components\TextInput;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\Employee\EmployeeDivisionResource\Pages;
-use App\Filament\Resources\Employee\EmployeeDivisionResource\RelationManagers;
+use App\Models\Employee\EmployeeDivision;
+use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Collection;
 
 class EmployeeDivisionResource extends Resource
 {
     protected static ?string $model = EmployeeDivision::class;
+
     protected static ?string $navigationLabel = 'Divisions';
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-users';
+
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-users';
+
     protected static ?string $navigationParentItem = 'Employees';
-    protected static string | \UnitEnum | null $navigationGroup = 'User Management';
+
+    protected static string|\UnitEnum|null $navigationGroup = 'User Management';
 
     public static function canViewAny(): bool
     {
@@ -67,13 +64,13 @@ class EmployeeDivisionResource extends Resource
                     ->label('Department')
                     ->searchable()
                     ->sortable()
-                    ->getStateUsing(fn ($record) => $record->department ? "{$record->department->name}" : 'N/A')
+                    ->getStateUsing(fn ($record) => $record->department ? "{$record->department->name}" : 'N/A'),
             ])
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\Action::make('addDepartment')
+                Actions\Action::make('addDepartment')
                     ->label('Department')
                     ->icon('heroicon-o-plus')
                     ->color('dark')
@@ -92,16 +89,16 @@ class EmployeeDivisionResource extends Resource
                     ->modalButton('Add to Department')
                     ->modalSubmitAction(fn ($action) => $action->color('primary'))
                     ->successNotificationTitle('Division added to Department successfully'),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make()
+                Actions\EditAction::make(),
+                Actions\DeleteAction::make()
                     ->modalHeading('Are you sure you want to delete this division?')
                     ->modalDescription('This action cannot be undone.')
                     ->successNotificationTitle('Division deleted successfully.')
                     ->requiresConfirmation(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\BulkAction::make('addToDepartment')
+                Actions\BulkActionGroup::make([
+                    Actions\BulkAction::make('addToDepartment')
                         ->label('Add To Department...')
                         ->icon('heroicon-o-plus')
                         ->form([
@@ -120,7 +117,7 @@ class EmployeeDivisionResource extends Resource
                         ->deselectRecordsAfterCompletion()
                         ->modalHeading('Add Selected Divisions to Department')
                         ->successNotificationTitle('Divisions added to department successfully.'),
-                    Tables\Actions\DeleteBulkAction::make()
+                    Actions\DeleteBulkAction::make()
                         ->modalHeading('Are you sure you want to delete these divisions?')
                         ->modalDescription('This action cannot be undone.')
                         ->successNotificationTitle('Divisions deleted successfully.')

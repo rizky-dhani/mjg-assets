@@ -7,8 +7,8 @@ use App\Models\User;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Schemas\Schema;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
 
@@ -16,9 +16,9 @@ class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-user';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-user';
 
-    protected static string | \UnitEnum | null $navigationGroup = 'User Management';
+    protected static string|\UnitEnum|null $navigationGroup = 'User Management';
 
     public static function canViewAny(): bool
     {
@@ -85,22 +85,22 @@ class UserResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make()
+                Actions\EditAction::make()
                     ->successNotificationTitle('User updated successfully'),
-                Tables\Actions\DeleteAction::make()
+                Actions\DeleteAction::make()
                     ->modalHeading('Are you sure you want to delete this user?')
                     ->modalDescription('This action cannot be undone.')
                     ->successNotificationTitle('User deleted successfully')
                     ->requiresConfirmation(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make()
+                Actions\BulkActionGroup::make([
+                    Actions\DeleteBulkAction::make()
                         ->modalHeading('Are you sure you want to delete these users?')
                         ->modalDescription('This action cannot be undone.')
                         ->successNotificationTitle('Selected User(s) deleted successfully')
                         ->requiresConfirmation(),
-                    Tables\Actions\BulkAction::make('updateDivision')
+                    Actions\BulkAction::make('updateDivision')
                         ->label('Update Division')
                         ->icon('heroicon-o-arrows-right-left')
                         ->form([

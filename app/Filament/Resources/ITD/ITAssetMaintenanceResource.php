@@ -13,9 +13,8 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\TimePicker;
-use Filament\Schemas\Schema;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -41,9 +40,9 @@ class ITAssetMaintenanceResource extends Resource
 
     protected static ?string $navigationParentItem = 'Assets';
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static string | \UnitEnum | null $navigationGroup = ' ITD';
+    protected static string|\UnitEnum|null $navigationGroup = ' ITD';
 
     public static function getBreadcrumb(): string
     {
@@ -173,17 +172,17 @@ class ITAssetMaintenanceResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\DeleteAction::make()
+                Actions\EditAction::make(),
+                Actions\ViewAction::make(),
+                Actions\DeleteAction::make()
                     ->modalHeading('Are you sure you want to delete this maintenance log?')
                     ->modalDescription('This action cannot be undone.')
                     ->successNotificationTitle('Maintenance log deleted successfully.')
                     ->requiresConfirmation(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make()
+                Actions\BulkActionGroup::make([
+                    Actions\DeleteBulkAction::make()
                         ->modalHeading('Are you sure you want to delete these maintenance logs?')
                         ->modalDescription('This action cannot be undone.')
                         ->successNotificationTitle('Maintenance logs deleted successfully.')

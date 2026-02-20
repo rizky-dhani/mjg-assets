@@ -7,8 +7,8 @@ use App\Models\GA\GaAssetCategory;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use Filament\Schemas\Schema;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
 
@@ -16,9 +16,9 @@ class GaAssetCategoryResource extends Resource
 {
     protected static ?string $model = GaAssetCategory::class;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static string | \UnitEnum | null $navigationGroup = 'General Affairs';
+    protected static string|\UnitEnum|null $navigationGroup = 'General Affairs';
 
     protected static ?string $navigationParentItem = 'Assets';
 
@@ -88,14 +88,14 @@ class GaAssetCategoryResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make()
+                Actions\EditAction::make()
                     ->successNotificationTitle('Asset Category successfully updated'),
-                Tables\Actions\DeleteAction::make()
+                Actions\DeleteAction::make()
                     ->successNotificationTitle('Asset Category successfully deleted'),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make()
+                Actions\BulkActionGroup::make([
+                    Actions\DeleteBulkAction::make()
                         ->successNotificationTitle('Selected Asset Categories successfully deleted'),
                 ]),
             ]);

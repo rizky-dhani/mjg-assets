@@ -2,37 +2,42 @@
 
 namespace App\Filament\Resources\ITD;
 
-use Filament\Forms;
-use Filament\Tables;
-use Filament\Schemas\Schema;
-use Filament\Tables\Table;
-use Filament\Resources\Resource;
-use App\Models\IT\ITAssetUsageHistory;
-use Filament\Forms\Components\Select;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Forms\Components\DatePicker;
-use Filament\Tables\Filters\SelectFilter;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\ITD\ITAssetUsageHistoryResource\Pages;
-use App\Filament\Resources\ITD\ITAssetUsageHistoryResource\RelationManagers;
+use App\Models\IT\ITAssetUsageHistory;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Select;
+use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class ITAssetUsageHistoryResource extends Resource
 {
     protected static ?string $model = ITAssetUsageHistory::class;
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
-    protected static string | \UnitEnum | null $navigationGroup = ' ITD';
+
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
+
+    protected static string|\UnitEnum|null $navigationGroup = ' ITD';
+
     protected static ?string $navigationParentItem = 'Assets';
 
     public static function canViewAny(): bool
     {
         return auth()->user()?->hasRole('Super Admin') ?? false;
     }
+
     protected static ?string $navigationLabel = 'Usage History';
+
     protected static ?string $modelLabel = 'Asset Usage History';
+
     protected static ?string $pluralModelLabel = 'Asset Usage Histories';
+
     protected static ?string $slug = 'itd/asset-usage-histories';
+
     protected static ?int $navigationSort = 1;
+
     public static function getBreadcrumb(): string
     {
         return 'Asset Usage History';
@@ -114,14 +119,14 @@ class ITAssetUsageHistoryResource extends Resource
                     ->getOptionLabelFromRecordUsing(fn ($record) => $record->initial.' - '.$record->name),
             ])
             ->actions([
-                Tables\Actions\Action::make('view_asset')
+                Actions\Action::make('view_asset')
                     ->label('View Asset')
                     ->icon('heroicon-o-eye')
                     ->color('dark')
                     ->url(fn ($record) => route('filament.admin.resources.it-assets.view', ['record' => $record->asset->assetId])),
-                    // ->openUrlInNewTab(),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make()
+                // ->openUrlInNewTab(),
+                Actions\EditAction::make(),
+                Actions\DeleteAction::make()
                     ->modalHeading('Are you sure you want to delete this usage history?')
                     ->modalDescription('This action cannot be undone.')
                     ->successNotificationTitle('Usage history deleted successfully.')
@@ -142,8 +147,8 @@ class ITAssetUsageHistoryResource extends Resource
                     }),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make()
+                Actions\BulkActionGroup::make([
+                    Actions\DeleteBulkAction::make()
                         ->modalHeading('Are you sure you want to delete these usage histories?')
                         ->modalDescription('This action cannot be undone.')
                         ->successNotificationTitle('Usage histories deleted successfully.')

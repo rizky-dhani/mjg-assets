@@ -3,23 +3,23 @@
 namespace App\Filament\Resources\Employee\EmployeeDepartmentResource\RelationManagers;
 
 use Filament\Forms;
-use Filament\Tables;
-use Filament\Schemas\Schema;
-use Filament\Tables\Table;
-use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
 
 class DivisionRelationManager extends RelationManager
 {
     protected static string $relationship = 'division';
+
     public function isReadOnly(): bool
     {
         return false;
     }
+
     protected static bool $isLazy = true;
+
     public function form(Schema $form): Schema
     {
         return $form
@@ -31,7 +31,7 @@ class DivisionRelationManager extends RelationManager
                 TextInput::make('initial')
                     ->label('Initial')
                     ->required()
-                    ->maxLength(3)
+                    ->maxLength(3),
             ]);
     }
 
@@ -48,14 +48,14 @@ class DivisionRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\Action::make('assignDivision')
+                Actions\Action::make('assignDivision')
                     ->label('Assign Division')
                     ->icon('heroicon-o-plus')
                     ->action(function (array $data, $livewire) {
                         $selectedDivisions = $data['divisions'] ?? [];
                         $departmentId = $livewire->getOwnerRecord()->id;
 
-                        if (!empty($selectedDivisions)) {
+                        if (! empty($selectedDivisions)) {
                             // Update each selected division's department_id
                             foreach ($selectedDivisions as $divisionId) {
                                 \App\Models\Employee\EmployeeDivision::where('id', $divisionId)
@@ -76,24 +76,24 @@ class DivisionRelationManager extends RelationManager
                     ->modalHeading('Assign Division')
                     ->modalButton('Assign')
                     ->successNotificationTitle('Division(s) assigned successfully.'),
-                Tables\Actions\CreateAction::make()
+                Actions\CreateAction::make()
                     ->modalHeading('Create New Division')
-                    ->successNotificationTitle('Division created successfully.')
+                    ->successNotificationTitle('Division created successfully.'),
             ])
             ->actions([
-                Tables\Actions\EditAction::make()
+                Actions\EditAction::make()
                     ->label('Edit')
                     ->modalHeading('Edit Division')
                     ->successNotificationTitle('Division updated successfully.'),
-                Tables\Actions\DeleteAction::make()
+                Actions\DeleteAction::make()
                     ->modalHeading('Are you sure you want to delete this division?')
                     ->modalButton('Delete Division')
                     ->successNotificationTitle('Division deleted successfully.')
                     ->requiresConfirmation(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make()
+                Actions\BulkActionGroup::make([
+                    Actions\DeleteBulkAction::make()
                         ->modalHeading('Are you sure you want to delete these divisions?')
                         ->modalButton('Delete Divisions')
                         ->successNotificationTitle('Divisions deleted successfully.')

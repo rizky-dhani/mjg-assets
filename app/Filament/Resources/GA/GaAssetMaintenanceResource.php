@@ -9,8 +9,8 @@ use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\TimePicker;
-use Filament\Schemas\Schema;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
 
@@ -18,9 +18,9 @@ class GaAssetMaintenanceResource extends Resource
 {
     protected static ?string $model = GaAssetMaintenance::class;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-wrench-screwdriver';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-wrench-screwdriver';
 
-    protected static string | \UnitEnum | null $navigationGroup = 'General Affairs';
+    protected static string|\UnitEnum|null $navigationGroup = 'General Affairs';
 
     protected static ?string $navigationParentItem = 'Assets';
 
@@ -107,14 +107,14 @@ class GaAssetMaintenanceResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make()
+                Actions\EditAction::make()
                     ->successNotificationTitle('Asset Maintenance successfully updated'),
-                Tables\Actions\DeleteAction::make()
+                Actions\DeleteAction::make()
                     ->successNotificationTitle('Asset Maintenance successfully deleted'),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make()
+                Actions\BulkActionGroup::make([
+                    Actions\DeleteBulkAction::make()
                         ->successNotificationTitle('Selected Asset Maintenance successfully deleted'),
                 ]),
             ]);

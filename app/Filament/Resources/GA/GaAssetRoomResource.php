@@ -7,8 +7,8 @@ use App\Models\GA\GaAssetRoom;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Schemas\Schema;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
 
@@ -16,9 +16,9 @@ class GaAssetRoomResource extends Resource
 {
     protected static ?string $model = GaAssetRoom::class;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-building-office';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-building-office';
 
-    protected static string | \UnitEnum | null $navigationGroup = 'General Affairs';
+    protected static string|\UnitEnum|null $navigationGroup = 'General Affairs';
 
     protected static ?string $navigationParentItem = 'Assets';
 
@@ -70,14 +70,14 @@ class GaAssetRoomResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make()
+                Actions\EditAction::make()
                     ->successNotificationTitle('Room successfully updated'),
-                Tables\Actions\DeleteAction::make()
+                Actions\DeleteAction::make()
                     ->successNotificationTitle('Room successfully deleted'),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make()
+                Actions\BulkActionGroup::make([
+                    Actions\DeleteBulkAction::make()
                         ->successNotificationTitle('Selected rooms successfully deleted'),
                 ]),
             ]);

@@ -2,34 +2,31 @@
 
 namespace App\Filament\Resources\Employee;
 
-use Filament\Forms;
-use Filament\Tables;
-use Filament\Schemas\Schema;
-use Filament\Tables\Table;
-use Illuminate\Support\Str;
-use App\Models\Employee\EmployeePosition;
-use Filament\Resources\Resource;
-use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\Select;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Forms\Components\TextInput;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\Employee\EmployeePositionResource\Pages;
-use App\Filament\Resources\Employee\EmployeePositionResource\RelationManagers;
+use App\Models\Employee\EmployeePosition;
+use Filament\Forms\Components\TextInput;
+use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
 
 class EmployeePositionResource extends Resource
 {
     protected static ?string $model = EmployeePosition::class;
+
     protected static ?string $navigationLabel = 'Positions';
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-user-circle';
+
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-user-circle';
+
     protected static ?string $navigationParentItem = 'Employees';
-    protected static string | \UnitEnum | null $navigationGroup = 'User Management';
+
+    protected static string|\UnitEnum|null $navigationGroup = 'User Management';
 
     public static function canViewAny(): bool
     {
         return auth()->user()?->hasRole('Super Admin') ?? false;
     }
+
     public static function form(Schema $form): Schema
     {
         return $form
@@ -55,16 +52,16 @@ class EmployeePositionResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make()
+                Actions\EditAction::make(),
+                Actions\DeleteAction::make()
                     ->modalHeading('Are you sure you want to delete this position?')
                     ->modalDescription('This action cannot be undone.')
                     ->successNotificationTitle('Position deleted successfully.')
                     ->requiresConfirmation(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make()
+                Actions\BulkActionGroup::make([
+                    Actions\DeleteBulkAction::make()
                         ->modalHeading('Are you sure you want to delete these positions?')
                         ->modalDescription('This action cannot be undone.')
                         ->successNotificationTitle('Positions deleted successfully.')

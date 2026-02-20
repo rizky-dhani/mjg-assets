@@ -2,37 +2,41 @@
 
 namespace App\Filament\Resources\ITD;
 
-use Filament\Forms;
-use Filament\Tables;
+use App\Filament\Resources\ITD\ITAssetLocationResource\Pages;
+use App\Models\IT\ITAssetLocation;
+use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\TextInput;
+use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
-use App\Models\IT\ITAssetLocation;
-use Filament\Resources\Resource;
-use Filament\Forms\Components\Hidden;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Forms\Components\TextInput;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Filament\Resources\ITD\ITAssetLocationResource\Pages;
-use App\Filament\Resources\ITD\ITAssetLocationResource\RelationManagers;
 
 class ITAssetLocationResource extends Resource
 {
     protected static ?string $model = ITAssetLocation::class;
+
     protected static ?string $slug = 'itd/asset-locations';
-    protected static string | \UnitEnum | null $navigationGroup = ' ITD';
+
+    protected static string|\UnitEnum|null $navigationGroup = ' ITD';
+
     protected static ?string $navigationLabel = 'Locations';
 
     public static function canViewAny(): bool
     {
         return auth()->user()?->hasRole('Super Admin') ?? false;
     }
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-map-pin';
+
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-map-pin';
+
     protected static ?string $navigationParentItem = 'Assets';
+
     protected static ?string $modelLabel = 'Asset Location';
+
     protected static ?string $pluralModelLabel = 'Asset Locations';
+
     protected static ?int $navigationSort = 4;
+
     public static function form(Schema $form): Schema
     {
         return $form
@@ -60,16 +64,16 @@ class ITAssetLocationResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make()
+                Actions\EditAction::make(),
+                Actions\DeleteAction::make()
                     ->modalHeading('Are you sure you want to delete this location?')
                     ->modalDescription('This action cannot be undone.')
                     ->successNotificationTitle('Location deleted successfully.')
                     ->requiresConfirmation(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make()
+                Actions\BulkActionGroup::make([
+                    Actions\DeleteBulkAction::make()
                         ->modalHeading('Are you sure you want to delete these locations?')
                         ->modalDescription('This action cannot be undone.')
                         ->successNotificationTitle('Locations deleted successfully.')
@@ -84,5 +88,4 @@ class ITAssetLocationResource extends Resource
             'index' => Pages\ManageITAssetLocations::route('/'),
         ];
     }
-
 }

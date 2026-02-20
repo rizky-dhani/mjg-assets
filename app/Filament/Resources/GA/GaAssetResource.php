@@ -12,12 +12,11 @@ use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use Filament\Schemas\Schema;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
@@ -28,13 +27,13 @@ class GaAssetResource extends Resource
 {
     protected static ?string $model = GaAsset::class;
 
-    protected static string | \UnitEnum | null $navigationGroup = 'General Affairs';
+    protected static string|\UnitEnum|null $navigationGroup = 'General Affairs';
 
     protected static ?string $navigationLabel = 'Assets';
 
     protected static ?string $slug = 'general-affairs/assets';
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-tv';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-tv';
 
     public static function form(Schema $form): Schema
     {
@@ -259,16 +258,16 @@ class GaAssetResource extends Resource
                     }),
             ])
             ->actions([
-                Tables\Actions\Action::make('Detail')
+                Actions\Action::make('Detail')
                     ->label('Detail')
                     ->color('warning')
                     ->icon('heroicon-o-information-circle')
                     ->url(fn ($record) => route('general-affairs.assets.show', ['assetId' => $record->assetId]))
                     ->openUrlInNewTab(),
-                Tables\Actions\ViewAction::make(),
+                Actions\ViewAction::make(),
 
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make()
+                Actions\EditAction::make(),
+                Actions\DeleteAction::make()
                     ->modalHeading('Are you sure you want to delete this asset?')
                     ->modalDescription('This action cannot be undone.')
                     ->successNotificationTitle('Asset deleted successfully.')
@@ -281,8 +280,8 @@ class GaAssetResource extends Resource
                     }),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make()
+                Actions\BulkActionGroup::make([
+                    Actions\DeleteBulkAction::make()
                         ->modalHeading('Are you sure you want to delete these assets?')
                         ->modalDescription('This action cannot be undone.')
                         ->successNotificationTitle('Assets deleted successfully.')
@@ -294,7 +293,7 @@ class GaAssetResource extends Resource
                                 }
                             }
                         }),
-                    Tables\Actions\BulkAction::make('export_pdf')
+                    Actions\BulkAction::make('export_pdf')
                         ->label('Export to PDF')
                         ->icon('heroicon-o-document-arrow-down')
                         ->action(function ($records) {
@@ -304,7 +303,7 @@ class GaAssetResource extends Resource
                             return redirect()->route('assets.bulk-export-pdf.export');
                         })
                         ->deselectRecordsAfterCompletion(),
-                    Tables\Actions\BulkAction::make('regenerate_qr_codes')
+                    Actions\BulkAction::make('regenerate_qr_codes')
                         ->label('Regenerate QR Codes')
                         ->icon('heroicon-o-arrow-path')
                         ->requiresConfirmation()

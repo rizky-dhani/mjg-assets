@@ -6,8 +6,8 @@ use App\Filament\Resources\GA\GaAssetLocationResource\Pages;
 use App\Models\GA\GaAssetLocation;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
-use Filament\Schemas\Schema;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
 
@@ -15,9 +15,9 @@ class GaAssetLocationResource extends Resource
 {
     protected static ?string $model = GaAssetLocation::class;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-map-pin';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-map-pin';
 
-    protected static string | \UnitEnum | null $navigationGroup = 'General Affairs';
+    protected static string|\UnitEnum|null $navigationGroup = 'General Affairs';
 
     protected static ?string $navigationParentItem = 'Assets';
 
@@ -56,14 +56,14 @@ class GaAssetLocationResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make()
+                Actions\EditAction::make()
                     ->successNotificationTitle('Asset Location successfully updated'),
-                Tables\Actions\DeleteAction::make()
+                Actions\DeleteAction::make()
                     ->successNotificationTitle('Asset Location successfully deleted'),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make()
+                Actions\BulkActionGroup::make([
+                    Actions\DeleteBulkAction::make()
                         ->successNotificationTitle('Selected Asset Location successfully deleted'),
                 ]),
             ]);
