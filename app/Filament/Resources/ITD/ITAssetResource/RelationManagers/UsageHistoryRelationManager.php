@@ -2,31 +2,32 @@
 
 namespace App\Filament\Resources\ITD\ITAssetResource\RelationManagers;
 
-use Filament\Forms;
-use Filament\Tables;
-use Filament\Schemas\Schema;
-use Filament\Tables\Table;
-use Illuminate\Support\Str;
 use App\Models\Employee\Employee;
 use App\Models\IT\ITAssetLocation;
-use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Section;
-use Filament\Tables\Columns\TextColumn;
+use Filament\Actions;
+use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
 use Filament\Resources\RelationManagers\RelationManager;
-use App\Filament\Resources\ITD\ITAssetUsageHistoryResource;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Str;
 
 class UsageHistoryRelationManager extends RelationManager
 {
     protected static string $relationship = 'usageHistory';
+
     public function isReadOnly(): bool
     {
         return false;
     }
+
     protected static bool $isLazy = true;
+
     public function form(Schema $form): Schema
     {
         return $form
@@ -52,7 +53,7 @@ class UsageHistoryRelationManager extends RelationManager
                             ->label('Location Name')
                             ->required()
                             ->maxLength(255)
-                            ->afterStateUpdated(fn ($state, callable $set) => $set('name', ucwords($state)))
+                            ->afterStateUpdated(fn ($state, callable $set) => $set('name', ucwords($state))),
                     ])
                     ->preload()
                     ->required(),
@@ -96,7 +97,7 @@ class UsageHistoryRelationManager extends RelationManager
                                 Forms\Components\TextInput::make('name')
                                     ->label('Department Name')
                                     ->required()
-                                    ->maxLength(255)
+                                    ->maxLength(255),
                             ])
                             ->preload(),
                         Select::make('division_id')
@@ -114,7 +115,7 @@ class UsageHistoryRelationManager extends RelationManager
                                 Forms\Components\TextInput::make('initial')
                                     ->label('Initial')
                                     ->required()
-                                    ->maxLength(3)
+                                    ->maxLength(3),
                             ])
                             ->preload(),
                         Select::make('position_id')
@@ -128,9 +129,9 @@ class UsageHistoryRelationManager extends RelationManager
                                 Forms\Components\TextInput::make('name')
                                     ->label('Position Name')
                                     ->required()
-                                    ->maxLength(255)
+                                    ->maxLength(255),
                             ])
-                            ->preload()
+                            ->preload(),
                     ]),
                 DatePicker::make('usage_start_date')
                     ->label('Start Date')
@@ -174,7 +175,7 @@ class UsageHistoryRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make()
+                Actions\CreateAction::make()
                     ->label('Assign Asset')
                     ->modalHeading('Assign Asset')
                     ->successNotificationTitle('Asset Assigned Successfully')
@@ -183,13 +184,13 @@ class UsageHistoryRelationManager extends RelationManager
                     }),
             ])
             ->actions([
-                Tables\Actions\EditAction::make()
+                Actions\EditAction::make()
                     ->modalHeading('Edit Usage History')
                     ->successNotificationTitle('Usage History Updated Successfully')
                     ->after(function ($record) {
                         $this->handleAssetUpdate($record);
                     }),
-                Tables\Actions\DeleteAction::make()
+                Actions\DeleteAction::make()
                     ->modalHeading('Are you sure you want to delete this usage history?')
                     ->modalDescription('This action cannot be undone.')
                     ->successNotificationTitle('Usage history deleted successfully.')
@@ -199,8 +200,8 @@ class UsageHistoryRelationManager extends RelationManager
                     }),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make()
+                Actions\BulkActionGroup::make([
+                    Actions\DeleteBulkAction::make()
                         ->modalHeading('Are you sure you want to delete these usage histories?')
                         ->modalDescription('This action cannot be undone.')
                         ->successNotificationTitle('Usage histories deleted successfully.')
@@ -213,7 +214,7 @@ class UsageHistoryRelationManager extends RelationManager
                                     $record->asset->save();
                                 }
                             }
-                    }),
+                        }),
                 ]),
             ]);
     }
@@ -243,7 +244,7 @@ class UsageHistoryRelationManager extends RelationManager
      */
     private function handleAssetAssignment($record)
     {
-        if (!$record->asset) {
+        if (! $record->asset) {
             return;
         }
 
@@ -277,7 +278,7 @@ class UsageHistoryRelationManager extends RelationManager
     private function updateAssetCondition($record)
     {
         $asset = $record->asset;
-        
+
         if ($asset->asset_condition === 'New') {
             // If usage has ended, move to Head Office
             if ($record->usage_end_date !== null) {
@@ -301,11 +302,11 @@ class UsageHistoryRelationManager extends RelationManager
      */
     private function handleAssetUpdate($record)
     {
-        if (!$record->asset) {
+        if (! $record->asset) {
             return;
         }
 
-        if (!is_null($record->usage_end_date)) {
+        if (! is_null($record->usage_end_date)) {
             // If usage has ended, move asset to Head Office and clear user
             $this->moveAssetToHeadOffice($record->asset);
         } else {
@@ -322,7 +323,7 @@ class UsageHistoryRelationManager extends RelationManager
      */
     private function handleUsageHistoryDeletion($record)
     {
-        if (!$record->asset) {
+        if (! $record->asset) {
             return;
         }
 
@@ -358,6 +359,6 @@ class UsageHistoryRelationManager extends RelationManager
             ->orderByDesc('id')
             ->first();
 
-        return !$latestUsage || $record->usage_start_date >= $latestUsage->usage_start_date;
+        return ! $latestUsage || $record->usage_start_date >= $latestUsage->usage_start_date;
     }
 }
