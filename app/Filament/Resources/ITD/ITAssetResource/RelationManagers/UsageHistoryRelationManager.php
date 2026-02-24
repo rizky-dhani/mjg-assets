@@ -58,6 +58,7 @@ class UsageHistoryRelationManager extends RelationManager
                     ->preload()
                     ->required(),
                 Section::make('Employee Assignment')
+                    ->columnSpanFull()
                     ->columns(3)
                     ->schema([
                         Select::make('employee_id')
