@@ -4,7 +4,10 @@ namespace App\Filament\Resources\UserManagement;
 
 use App\Filament\Resources\UserManagement\UserResource\Pages;
 use App\Models\User;
-use Filament\Forms\Components\Section;
+use Filament\Actions;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\EditAction;
+use Filament\Schemas\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
@@ -85,9 +88,9 @@ class UserResource extends Resource
                 //
             ])
             ->actions([
-                Actions\EditAction::make()
+                EditAction::make()
                     ->successNotificationTitle('User updated successfully'),
-                Actions\DeleteAction::make()
+                DeleteAction::make()
                     ->modalHeading('Are you sure you want to delete this user?')
                     ->modalDescription('This action cannot be undone.')
                     ->successNotificationTitle('User deleted successfully')
