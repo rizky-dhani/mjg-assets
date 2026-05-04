@@ -8,12 +8,14 @@ use App\Filament\Resources\ITD\ITAssetResource\RelationManagers\UsageHistoryRela
 use App\Models\IT\ITAsset;
 use App\Models\IT\ITAssetCategory;
 use Filament\Actions\Action;
+use App\Exports\ITD\ITAssetsExport;
 use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
+use Maatwebsite\Excel\Facades\Excel;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Grid;
@@ -157,7 +159,10 @@ class ITAssetResource extends Resource
                     ->label('Location')
                     ->getStateUsing(fn ($record) => $record->location ? $record->location->name : 'N/A')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable(query: fn (Builder $query, string $direction): Builder => $query->orderBy(
+                        \App\Models\IT\ITAssetLocation::select('name')->whereColumn('it_asset_locations.id', 'it_assets.asset_location_id'),
+                        $direction
+                    )),
                 TextColumn::make('asset_serial_number')
                     ->label('Serial Number')
                     ->getStateUsing(fn ($record) => $record->asset_serial_number ? strtoupper($record->asset_serial_number) : 'N/A')
@@ -176,7 +181,10 @@ class ITAssetResource extends Resource
                     ->label('Category')
                     ->getStateUsing(fn ($record) => $record->category ? "{$record->category->name}" : 'N/A')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable(query: fn (Builder $query, string $direction): Builder => $query->orderBy(
+                        ITAssetCategory::select('name')->whereColumn('it_asset_categories.id', 'it_assets.asset_category_id'),
+                        $direction
+                    )),
                 TextColumn::make('asset_condition')
                     ->label('Condition')
                     ->searchable()
@@ -187,7 +195,10 @@ class ITAssetResource extends Resource
                     ->searchable(query: fn (Builder $query, string $search): Builder => $query->whereHas('employee', fn (Builder $query) => $query->where('name', 'like', "%{$search}%")
                     )
                     )
-                    ->sortable(),
+                    ->sortable(query: fn (Builder $query, string $direction): Builder => $query->orderBy(
+                        \App\Models\Employee\Employee::select('name')->whereColumn('employees.id', 'it_assets.asset_user_id'),
+                        $direction
+                    )),
                 TextColumn::make('position')
                     ->label('Position')
                     ->getStateUsing(function ($record) {
@@ -198,7 +209,6 @@ class ITAssetResource extends Resource
 
                         return $latestUsage && $latestUsage->position ? $latestUsage->position->name : 'N/A';
                     })
-                    ->sortable()
                     ->searchable(false),
                 TextColumn::make('pic_id')
                     ->label('Created By')
@@ -208,7 +218,10 @@ class ITAssetResource extends Resource
 
                         return $signature;
                     })
-                    ->sortable()
+                    ->sortable(query: fn (Builder $query, string $direction): Builder => $query->orderBy(
+                        \App\Models\User::select('name')->whereColumn('users.id', 'it_assets.pic_id'),
+                        $direction
+                    ))
                     ->searchable(),
             ])
             ->filters([
@@ -288,9 +301,18 @@ class ITAssetResource extends Resource
                                 }
                             }
                         }),
+                    BulkAction::make('export_selected_excel')
+                        ->label('Export Selected to Excel')
+                        ->icon('heroicon-o-table-cells')
+                        ->action(function ($records) {
+                            $ids = $records->pluck('id')->toArray();
+
+                            return Excel::download(new ITAssetsExport($ids), 'it-assets-selected.xlsx');
+                        })
+                        ->deselectRecordsAfterCompletion(),
                     BulkAction::make('export_pdf')
                         ->label('Export to PDF')
-                        ->icon('heroicon-o-document-arrow-down')->icon('heroicon-o-document-arrow-down')
+                        ->icon('heroicon-o-document-arrow-down')
                         ->action(function ($records) {
                             $ids = $records->pluck('id')->toArray();
                             session(['export_asset_ids' => $ids]);
