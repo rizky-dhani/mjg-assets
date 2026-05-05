@@ -14,7 +14,7 @@ use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Filament\Navigation\MenuItem;
+use Filament\Actions\Action;
 use Filament\Navigation\NavigationGroup;
 use Filament\Pages;
 use Filament\Panel;
@@ -39,7 +39,7 @@ class AdminPanelProvider extends PanelProvider
             ->spa()
             ->login(CustomLogin::class)
             ->loginRouteSlug('login')
-            ->profile()
+            ->profile(isSimple: false)
             ->defaultThemeMode(ThemeMode::Light)
             ->maxContentWidth(Width::Full)
             ->brandName('MJG Asset Management')
@@ -48,7 +48,7 @@ class AdminPanelProvider extends PanelProvider
             ->favicon(asset('assets/images/Medquest-Favicon.png'))
             ->databaseTransactions()
             ->userMenuItems([
-                'profile' => MenuItem::make()->label('Edit Profile'),
+                'profile' => fn (Action $action) => $action->label('Edit Profile'),
             ])
             ->colors([
                 'primary' => Color::Blue,
