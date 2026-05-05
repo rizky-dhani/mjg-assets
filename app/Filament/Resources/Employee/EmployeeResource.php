@@ -63,7 +63,7 @@ class EmployeeResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->defaultSort('employee_number', 'desc')
+            ->defaultSort('created_at', 'desc')
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->label('Employee Name')
