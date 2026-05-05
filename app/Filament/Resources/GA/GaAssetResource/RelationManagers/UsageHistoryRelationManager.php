@@ -191,7 +191,7 @@ class UsageHistoryRelationManager extends RelationManager
         return $table
             ->emptyStateHeading('No Asset Usage History Found')
             ->emptyStateDescription('')
-            ->modifyQueryUsing(fn (Builder $query) => $query->orderByDesc('created_at'))
+            ->defaultSort('created_at', 'desc')
             ->columns([
                 TextColumn::make('employee.name')
                     ->label('Assigned To'),

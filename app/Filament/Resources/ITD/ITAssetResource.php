@@ -144,7 +144,7 @@ class ITAssetResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(fn (Builder $query) => $query->orderByDesc('created_at'))
+            ->defaultSort('created_at', 'desc')
             ->emptyStateHeading('No Assets Found')
             ->columns([
                 TextColumn::make('asset_name')

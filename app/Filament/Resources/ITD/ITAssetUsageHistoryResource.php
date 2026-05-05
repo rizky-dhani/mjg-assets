@@ -82,7 +82,7 @@ class ITAssetUsageHistoryResource extends Resource
     {
         return $table
             ->emptyStateHeading('No Asset Usage History Found')
-            ->modifyQueryUsing(fn (Builder $query) => $query->orderByDesc('created_at'))
+            ->defaultSort('created_at', 'desc')
             ->columns([
                 TextColumn::make('asset.asset_code')
                     ->label('Asset Code')

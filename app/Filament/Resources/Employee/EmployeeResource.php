@@ -11,7 +11,6 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
 
 class EmployeeResource extends Resource
 {
@@ -64,9 +63,7 @@ class EmployeeResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(function (Builder $query) {
-                return $query->orderByDesc('employee_number');
-            })
+            ->defaultSort('employee_number', 'desc')
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->label('Employee Name')
