@@ -6,7 +6,7 @@ use App\Exports\ITD\ITAssetsExport;
 use App\Filament\Resources\ITD\ITAssetResource;
 use App\Models\IT\ITAssetCategory;
 use Filament\Actions;
-use Filament\Forms\Select;
+use Filament\Forms\Components\Select;
 use Filament\Resources\Pages\ListRecords;
 use Maatwebsite\Excel\Facades\Excel;
 

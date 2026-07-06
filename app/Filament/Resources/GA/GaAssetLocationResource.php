@@ -6,7 +6,7 @@ use App\Filament\Resources\GA\GaAssetLocationResource\Pages;
 use App\Models\GA\GaAssetLocation;
 use Filament\Actions;
 use Filament\Schemas\Components\Section;
-use Filament\Forms\TextInput;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables;

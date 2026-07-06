@@ -5,7 +5,7 @@ namespace App\Filament\Resources\Employee\EmployeePositionResource\Pages;
 use App\Filament\Resources\Employee\EmployeePositionResource;
 use App\Imports\EmployeePositionsImport;
 use Filament\Actions;
-use Filament\Forms\FileUpload;
+use Filament\Forms\Components\FileUpload;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ManageRecords;
 use Illuminate\Support\Str;

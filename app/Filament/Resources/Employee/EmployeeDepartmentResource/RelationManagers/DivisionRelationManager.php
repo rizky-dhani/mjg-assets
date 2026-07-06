@@ -4,7 +4,7 @@ namespace App\Filament\Resources\Employee\EmployeeDepartmentResource\RelationMan
 
 use App\Models\Employee\EmployeeDivision;
 use Filament\Forms;
-use Filament\Forms\TextInput;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;

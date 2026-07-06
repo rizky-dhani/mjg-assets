@@ -4,11 +4,11 @@ namespace App\Filament\Resources\GA\GaAssetResource\RelationManagers;
 
 use App\Models\Employee\Employee;
 use App\Models\GA\GaAssetLocation;
-use Filament\Forms\DatePicker;
-use Filament\Forms\Hidden;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Hidden;
 use Filament\Schemas\Components\Section;
-use Filament\Forms\Select;
-use Filament\Forms\TextInput;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
 use Filament\Support\Enums\MaxWidth;
