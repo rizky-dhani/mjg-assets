@@ -5,7 +5,7 @@ namespace App\Filament\Resources\GA;
 use App\Filament\Resources\GA\GaAssetRoomResource\Pages;
 use App\Models\GA\GaAssetRoom;
 use Filament\Actions;
-use Filament\Forms\Section;
+use Filament\Schemas\Components\Section;
 use Filament\Forms\Select;
 use Filament\Forms\TextInput;
 use Filament\Resources\Resource;

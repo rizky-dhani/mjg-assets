@@ -6,7 +6,7 @@ use App\Models\Employee\Employee;
 use App\Models\GA\GaAssetLocation;
 use Filament\Forms\DatePicker;
 use Filament\Forms\Hidden;
-use Filament\Forms\Section;
+use Filament\Schemas\Components\Section;
 use Filament\Forms\Select;
 use Filament\Forms\TextInput;
 use Filament\Resources\RelationManagers\RelationManager;

@@ -6,7 +6,7 @@ use App\Filament\Resources\GA\GaAssetMaintenanceResource\Pages;
 use App\Models\GA\GaAssetMaintenance;
 use Filament\Actions;
 use Filament\Forms\DatePicker;
-use Filament\Forms\Section;
+use Filament\Schemas\Components\Section;
 use Filament\Forms\Select;
 use Filament\Forms\TextInput;
 use Filament\Forms\TimePicker;

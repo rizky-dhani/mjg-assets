@@ -6,7 +6,7 @@ use App\Filament\Resources\GA\GaAssetUsageHistoryResource\Pages;
 use App\Models\GA\GaAssetUsageHistory;
 use Filament\Actions;
 use Filament\Forms\DatePicker;
-use Filament\Forms\Section;
+use Filament\Schemas\Components\Section;
 use Filament\Forms\Select;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;

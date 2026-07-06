@@ -5,7 +5,7 @@ namespace App\Filament\Resources\GA;
 use App\Filament\Resources\GA\GaAssetCategoryResource\Pages;
 use App\Models\GA\GaAssetCategory;
 use Filament\Actions;
-use Filament\Forms\Section;
+use Filament\Schemas\Components\Section;
 use Filament\Forms\Textarea;
 use Filament\Forms\TextInput;
 use Filament\Resources\Resource;
