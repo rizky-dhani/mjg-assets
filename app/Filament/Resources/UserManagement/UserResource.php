@@ -105,6 +105,7 @@ class UserResource extends Resource
                     ->schema([
                         TextInput::make('password')
                             ->label('New Password')
+                            ->default('Medquest.1')
                             ->password()
                             ->revealable()
                             ->required()
