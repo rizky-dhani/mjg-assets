@@ -2,12 +2,17 @@
 
 namespace App\Models\GA;
 
+use App\Models\Employee\Employee;
+use App\Models\Employee\EmployeeDivision;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
 class GaAssetMaintenance extends Model
 {
     protected $guarded = ['id'];
+
     protected $table = 'ga_asset_maintenances';
+
     protected $casts = [
         'maintenance_date' => 'datetime',
     ];
@@ -19,21 +24,21 @@ class GaAssetMaintenance extends Model
 
     public function division()
     {
-        return $this->belongsTo(\App\Models\Employee\EmployeeDivision::class, 'division_id');
+        return $this->belongsTo(EmployeeDivision::class, 'division_id');
     }
 
     public function user()
     {
-        return $this->belongsTo(\App\Models\User::class, 'pic_id');
+        return $this->belongsTo(User::class, 'pic_id');
     }
 
     public function employee()
     {
-        return $this->belongsTo(\App\Models\Employee\Employee::class, 'employee_id');
+        return $this->belongsTo(Employee::class, 'employee_id');
     }
 
     public function reviewer()
     {
-        return $this->belongsTo(\App\Models\Employee\Employee::class, 'reviewer_id');
+        return $this->belongsTo(Employee::class, 'reviewer_id');
     }
 }

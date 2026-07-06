@@ -3,6 +3,9 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Employee\Employee;
+use App\Models\Employee\EmployeeDivision;
+use Database\Factories\UserFactory;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -17,7 +20,7 @@ class User extends Authenticatable implements FilamentUser
         return str_ends_with($this->email, '@medquest.co.id');
     }
 
-    /** @use HasFactory<\Database\Factories\UserFactory> */
+    /** @use HasFactory<UserFactory> */
     use HasFactory, HasRoles, Notifiable;
 
     /**
@@ -57,11 +60,11 @@ class User extends Authenticatable implements FilamentUser
 
     public function division()
     {
-        return $this->belongsTo(\App\Models\Employee\EmployeeDivision::class, 'division_id');
+        return $this->belongsTo(EmployeeDivision::class, 'division_id');
     }
 
     public function employee()
     {
-        return $this->hasOne(\App\Models\Employee\Employee::class, 'user_id');
+        return $this->hasOne(Employee::class, 'user_id');
     }
 }

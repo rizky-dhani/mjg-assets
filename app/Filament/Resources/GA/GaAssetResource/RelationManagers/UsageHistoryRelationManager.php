@@ -2,18 +2,18 @@
 
 namespace App\Filament\Resources\GA\GaAssetResource\RelationManagers;
 
-use Filament\Forms;
-use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\Section;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
+use App\Models\Employee\Employee;
+use App\Models\GA\GaAssetLocation;
+use Filament\Forms\DatePicker;
+use Filament\Forms\Hidden;
+use Filament\Forms\Section;
+use Filament\Forms\Select;
+use Filament\Forms\TextInput;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
 use Filament\Support\Enums\MaxWidth;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 
 class UsageHistoryRelationManager extends RelationManager
@@ -44,13 +44,13 @@ class UsageHistoryRelationManager extends RelationManager
                     ->label('Location')
                     ->relationship('location', 'name', fn ($query) => $query->orderBy('created_at', 'asc'))
                     ->searchable()
-                    ->default(fn () => \App\Models\GA\GaAssetLocation::where('name', 'Head Office')->value('id'))
+                    ->default(fn () => GaAssetLocation::where('name', 'Head Office')->value('id'))
                     ->live() // Add live() to enable dependent fields
                     ->createOptionModalHeading('Add New Location')
                     ->createOptionForm([
                         Hidden::make('locationId')
                             ->default(fn () => (string) Str::orderedUuid()),
-                        Forms\Components\TextInput::make('name')
+                        TextInput::make('name')
                             ->label('Location Name')
                             ->required()
                             ->maxLength(255)
@@ -73,7 +73,7 @@ class UsageHistoryRelationManager extends RelationManager
                     ->preload()
                     ->createOptionModalHeading('Add New Room')
                     ->createOptionForm([
-                        Forms\Components\TextInput::make('name')
+                        TextInput::make('name')
                             ->label('Room Name')
                             ->required()
                             ->maxLength(255),
@@ -106,20 +106,20 @@ class UsageHistoryRelationManager extends RelationManager
                             ->createOptionForm([
                                 Hidden::make('employeeId')
                                     ->default(fn () => (string) Str::orderedUuid()),
-                                Forms\Components\TextInput::make('name')
+                                TextInput::make('name')
                                     ->label('Employee Name')
                                     ->required()
                                     ->maxLength(255),
-                                Forms\Components\TextInput::make('initial')
+                                TextInput::make('initial')
                                     ->label('Initial')
                                     ->required()
                                     ->maxLength(3)
-                                    ->unique(\App\Models\Employee\Employee::class, 'initial', ignoreRecord: true),
-                                Forms\Components\TextInput::make('employee_number')
+                                    ->unique(Employee::class, 'initial', ignoreRecord: true),
+                                TextInput::make('employee_number')
                                     ->label('Employee Number')
                                     ->required()
                                     ->maxLength(10)
-                                    ->unique(\App\Models\Employee\Employee::class, 'employee_number', ignoreRecord: true),
+                                    ->unique(Employee::class, 'employee_number', ignoreRecord: true),
                             ])
                             ->preload()
                             ->columnSpanFull(),
@@ -131,7 +131,7 @@ class UsageHistoryRelationManager extends RelationManager
                             ->createOptionForm([
                                 Hidden::make('departmentId')
                                     ->default(fn () => (string) Str::orderedUuid()),
-                                Forms\Components\TextInput::make('name')
+                                TextInput::make('name')
                                     ->label('Department Name')
                                     ->required()
                                     ->maxLength(255),
@@ -145,11 +145,11 @@ class UsageHistoryRelationManager extends RelationManager
                             ->createOptionForm([
                                 Hidden::make('divisionId')
                                     ->default(fn () => (string) Str::orderedUuid()),
-                                Forms\Components\TextInput::make('name')
+                                TextInput::make('name')
                                     ->label('Division Name')
                                     ->required()
                                     ->maxLength(255),
-                                Forms\Components\TextInput::make('initial')
+                                TextInput::make('initial')
                                     ->label('Initial')
                                     ->required()
                                     ->maxLength(3),
@@ -163,7 +163,7 @@ class UsageHistoryRelationManager extends RelationManager
                             ->createOptionForm([
                                 Hidden::make('positionId')
                                     ->default(fn () => (string) Str::orderedUuid()),
-                                Forms\Components\TextInput::make('name')
+                                TextInput::make('name')
                                     ->label('Position Name')
                                     ->required()
                                     ->maxLength(255),
@@ -268,7 +268,7 @@ class UsageHistoryRelationManager extends RelationManager
      */
     private function getHeadOfficeLocation()
     {
-        return \App\Models\GA\GaAssetLocation::where('name', 'Head Office')->first();
+        return GaAssetLocation::where('name', 'Head Office')->first();
     }
 
     /**

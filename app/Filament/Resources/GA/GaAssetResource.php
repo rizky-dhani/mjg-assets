@@ -2,17 +2,17 @@
 
 namespace App\Filament\Resources\GA;
 
-use Filament\Actions;
 use App\Filament\Resources\GA\GaAssetResource\Pages;
 use App\Filament\Resources\GA\GaAssetResource\RelationManagers\UsageHistoryRelationManager;
 use App\Models\GA\GaAsset;
 use App\Models\GA\GaAssetCategory;
-use Filament\Forms\Components\Checkbox;
-use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\Grid;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\TextInput;
+use Filament\Actions;
+use Filament\Forms\Checkbox;
+use Filament\Forms\DatePicker;
+use Filament\Forms\Grid;
+use Filament\Forms\Select;
+use Filament\Forms\Textarea;
+use Filament\Forms\TextInput;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Notifications\Notification;
@@ -23,6 +23,8 @@ use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Storage;
+use Milon\Barcode\DNS2D;
 
 class GaAssetResource extends Resource
 {
@@ -317,12 +319,12 @@ class GaAssetResource extends Resource
                                 $route = route('general-affairs.assets.show', ['assetId' => $record->assetId]);
 
                                 // Generate QR Code
-                                $qr = new \Milon\Barcode\DNS2D;
+                                $qr = new DNS2D;
                                 $qrCodeImage = base64_decode($qr->getBarcodePNG($route, 'QRCODE,H'));
                                 $path = 'assets/'.$record->assetId.'.png';
 
                                 // Store the QR code image
-                                \Illuminate\Support\Facades\Storage::disk('public')->put($path, $qrCodeImage);
+                                Storage::disk('public')->put($path, $qrCodeImage);
 
                                 // Update the record with the new QR code path
                                 $record->barcode = $path;

@@ -8,12 +8,12 @@ use App\Models\IT\ITAssetCategory;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget;
-use Illuminate\Database\Eloquent\Builder;
 
 class ITAssetTableWidget extends TableWidget
 {
     protected static ?string $heading = 'IT Assets Summary';
-    //protected int | string | array $columnSpan = 'full';
+
+    // protected int | string | array $columnSpan = 'full';
     protected static ?int $sort = 1;
 
     public static function canView(): bool
@@ -36,7 +36,7 @@ class ITAssetTableWidget extends TableWidget
                     ->formatStateUsing(function ($state) {
                         return strtoupper($state);
                     }),
-                
+
                 Tables\Columns\TextColumn::make('available_count')
                     ->label('Available')
                     ->color('success')
@@ -44,6 +44,7 @@ class ITAssetTableWidget extends TableWidget
                         $availableCount = ITAsset::where('asset_category_id', $record->id)
                             ->whereNull('asset_user_id')
                             ->count();
+
                         return $availableCount;
                     })
                     ->url(fn ($record) => ITAssetResource::getUrl('index', [
@@ -66,6 +67,7 @@ class ITAssetTableWidget extends TableWidget
                         $inUseCount = ITAsset::where('asset_category_id', $record->id)
                             ->whereNotNull('asset_user_id')
                             ->count();
+
                         return $inUseCount;
                     })
                     ->url(fn ($record) => ITAssetResource::getUrl('index', [
@@ -87,6 +89,7 @@ class ITAssetTableWidget extends TableWidget
                     ->getStateUsing(function (ITAssetCategory $record) {
                         $totalCount = ITAsset::where('asset_category_id', $record->id)
                             ->count();
+
                         return $totalCount;
                     })
                     ->url(fn ($record) => ITAssetResource::getUrl('index', [

@@ -2,12 +2,12 @@
 
 namespace App\Filament\Resources\GA;
 
-use Filament\Actions;
 use App\Filament\Resources\GA\GaAssetCategoryResource\Pages;
 use App\Models\GA\GaAssetCategory;
-use Filament\Forms\Components\Section;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\TextInput;
+use Filament\Actions;
+use Filament\Forms\Section;
+use Filament\Forms\Textarea;
+use Filament\Forms\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables;

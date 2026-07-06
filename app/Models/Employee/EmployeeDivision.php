@@ -2,6 +2,7 @@
 
 namespace App\Models\Employee;
 
+use App\Models\IT\ITAssetUsageHistory;
 use Illuminate\Database\Eloquent\Model;
 
 class EmployeeDivision extends Model
@@ -12,16 +13,19 @@ class EmployeeDivision extends Model
     {
         return 'divisionId';
     }
+
     public function department()
     {
         return $this->belongsTo(EmployeeDepartment::class, 'department_id');
     }
+
     public function employees()
     {
         return $this->hasMany(Employee::class, 'division_id');
     }
+
     public function usageHistories()
     {
-        return $this->hasMany(\App\Models\IT\ITAssetUsageHistory::class, 'division_id');
+        return $this->hasMany(ITAssetUsageHistory::class, 'division_id');
     }
 }

@@ -4,7 +4,7 @@ namespace App\Filament\Resources\Employee;
 
 use App\Filament\Resources\Employee\EmployeePositionResource\Pages;
 use App\Models\Employee\EmployeePosition;
-use Filament\Forms\Components\TextInput;
+use Filament\Forms\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;

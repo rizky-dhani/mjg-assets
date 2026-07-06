@@ -2,10 +2,10 @@
 
 namespace App\Filament\Resources\Employee\EmployeeDivisionResource\Pages;
 
-use Filament\Actions;
-use Illuminate\Support\Str;
-use Filament\Resources\Pages\ListRecords;
 use App\Filament\Resources\Employee\EmployeeDivisionResource;
+use Filament\Actions;
+use Filament\Resources\Pages\ListRecords;
+use Illuminate\Support\Str;
 
 class ListEmployeeDivisions extends ListRecords
 {
@@ -15,11 +15,12 @@ class ListEmployeeDivisions extends ListRecords
     {
         return [
             Actions\CreateAction::make()
-            ->label('New Employee Division')
-            ->mutateFormDataUsing(function(array $data){
-                $data['divisionId'] = Str::orderedUuid();
-                return $data;
-            }),
+                ->label('New Employee Division')
+                ->mutateFormDataUsing(function (array $data) {
+                    $data['divisionId'] = Str::orderedUuid();
+
+                    return $data;
+                }),
         ];
     }
 }

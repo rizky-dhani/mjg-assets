@@ -2,12 +2,12 @@
 
 namespace App\Filament\Resources\GA;
 
-use Filament\Actions;
 use App\Filament\Resources\GA\GaAssetRoomResource\Pages;
 use App\Models\GA\GaAssetRoom;
-use Filament\Forms\Components\Section;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
+use Filament\Actions;
+use Filament\Forms\Section;
+use Filament\Forms\Select;
+use Filament\Forms\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables;

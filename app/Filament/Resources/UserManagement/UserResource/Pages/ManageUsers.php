@@ -2,8 +2,8 @@
 
 namespace App\Filament\Resources\UserManagement\UserResource\Pages;
 
-use Filament\Actions;
 use App\Filament\Resources\UserManagement\UserResource;
+use Filament\Actions;
 use Filament\Resources\Pages\ManageRecords;
 use Hash;
 use Str;
@@ -16,13 +16,14 @@ class ManageUsers extends ManageRecords
     {
         return [
             Actions\CreateAction::make()
-            ->label('New User')
-            ->mutateFormDataUsing(function(array $data){
-                $data['userId'] = Str::orderedUuid();
-                $data['password'] = Hash::make('Medquest.1');
-                return $data;
-            })
-            ->successNotificationTitle('User created successfully!'),
+                ->label('New User')
+                ->mutateFormDataUsing(function (array $data) {
+                    $data['userId'] = Str::orderedUuid();
+                    $data['password'] = Hash::make('Medquest.1');
+
+                    return $data;
+                })
+                ->successNotificationTitle('User created successfully!'),
         ];
     }
 }

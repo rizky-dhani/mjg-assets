@@ -2,11 +2,14 @@
 
 namespace App\Models\GA;
 
+use App\Models\Employee\Employee;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
 class GaAsset extends Model
 {
     protected $guarded = ['id'];
+
     protected $table = 'ga_assets';
 
     public function getRouteKeyName(): string
@@ -21,12 +24,12 @@ class GaAsset extends Model
 
     public function user()
     {
-        return $this->belongsTo(\App\Models\User::class, 'pic_id');
+        return $this->belongsTo(User::class, 'pic_id');
     }
 
     public function employee()
     {
-        return $this->belongsTo(\App\Models\Employee\Employee::class, 'asset_user_id');
+        return $this->belongsTo(Employee::class, 'asset_user_id');
     }
 
     public function maintenance()

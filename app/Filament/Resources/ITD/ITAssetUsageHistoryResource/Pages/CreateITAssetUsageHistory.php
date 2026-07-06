@@ -3,25 +3,28 @@
 namespace App\Filament\Resources\ITD\ITAssetUsageHistoryResource\Pages;
 
 use App\Filament\Resources\ITD\ITAssetUsageHistoryResource;
-use Filament\Resources\Pages\CreateRecord;
-use Filament\Actions;
 use App\Models\ITAsset;
+use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Support\Str;
 
 class CreateITAssetUsageHistory extends CreateRecord
 {
     protected static string $resource = ITAssetUsageHistoryResource::class;
+
     protected static ?string $title = 'Create Asset Usage History';
+
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         $data['usageId'] = Str::orderedUuid();
+
         return $data;
     }
+
     protected function afterCreate(): void
     {
         $itAssetUsageHistory = $this->record;
         $itAsset = ITAsset::where('id', $itAssetUsageHistory->asset_id)->first();
-        if($itAsset){
+        if ($itAsset) {
             ITAsset::where('id', $itAssetUsageHistory->asset_id)->update([
                 'asset_location_id' => $itAssetUsageHistory->asset_location_id,
                 'asset_user_id' => $itAssetUsageHistory->employee_id,
@@ -42,6 +45,7 @@ class CreateITAssetUsageHistory extends CreateRecord
             }
         }
     }
+
     protected function getRedirectUrl(): string
     {
         return $this->getResource()::getUrl('index');

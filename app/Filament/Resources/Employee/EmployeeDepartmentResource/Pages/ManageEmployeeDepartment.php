@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Employee\EmployeeDepartmentResource\Pages;
 use App\Filament\Resources\Employee\EmployeeDepartmentResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ManageRecords;
+use Illuminate\Support\Str;
 
 class ManageEmployeeDepartment extends ManageRecords
 {
@@ -17,7 +18,8 @@ class ManageEmployeeDepartment extends ManageRecords
                 ->label('New Department')
                 ->mutateFormDataUsing(function (array $data): array {
                     // Set the initial division to 'Head Office' if not set
-                    $data['departmentId'] = \Illuminate\Support\Str::orderedUuid();
+                    $data['departmentId'] = Str::orderedUuid();
+
                     return $data;
                 })
                 ->successNotificationTitle('Department created successfully'),

@@ -4,8 +4,8 @@ namespace App\Filament\Pages\Auth;
 
 use Filament\Auth\Http\Responses\Contracts\LoginResponse;
 use Filament\Auth\Pages\Login as BaseLogin;
-use Filament\Forms\Components\Checkbox;
-use Filament\Forms\Components\TextInput;
+use Filament\Forms\Checkbox;
+use Filament\Forms\TextInput;
 use Filament\Schemas\Components\Component;
 use Filament\Schemas\Schema;
 

@@ -2,11 +2,11 @@
 
 namespace App\Filament\Resources\ITD;
 
-use Filament\Actions;
 use App\Filament\Resources\ITD\ITAssetCategoryResource\Pages;
 use App\Models\IT\ITAssetCategory;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\TextInput;
+use Filament\Actions;
+use Filament\Forms\Textarea;
+use Filament\Forms\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;

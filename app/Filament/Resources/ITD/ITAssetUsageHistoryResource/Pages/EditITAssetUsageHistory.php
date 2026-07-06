@@ -16,6 +16,7 @@ class EditITAssetUsageHistory extends EditRecord
             Actions\DeleteAction::make(),
         ];
     }
+
     protected function afterSave(): void
     {
         if ($this->record->asset) {
@@ -24,6 +25,7 @@ class EditITAssetUsageHistory extends EditRecord
             $this->record->asset->save();
         }
     }
+
     protected function getRedirectUrl(): string
     {
         return route('filament.admin.resources.it-assets.view', [

@@ -9,6 +9,7 @@ use Filament\Resources\Pages\ViewRecord;
 class ViewEmployeeDepartment extends ViewRecord
 {
     protected static string $resource = EmployeeDepartmentResource::class;
+
     protected function getHeaderActions(): array
     {
         return [

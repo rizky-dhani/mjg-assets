@@ -2,39 +2,40 @@
 
 namespace App\Filament\Resources\ITD;
 
-use Filament\Actions;
+use App\Exports\ITD\ITAssetsExport;
 use App\Filament\Resources\ITD\ITAssetResource\Pages;
 use App\Filament\Resources\ITD\ITAssetResource\RelationManagers\UsageHistoryRelationManager;
+use App\Models\Employee\Employee;
 use App\Models\IT\ITAsset;
 use App\Models\IT\ITAssetCategory;
+use App\Models\IT\ITAssetLocation;
+use App\Models\User;
 use Filament\Actions\Action;
-use App\Exports\ITD\ITAssetsExport;
 use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
-use Maatwebsite\Excel\Facades\Excel;
-use Filament\Forms\Components\Checkbox;
-use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\Grid;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\TextInput;
-use Filament\Schemas\Schema;
-use Filament\Infolists\Components\Section;
+use Filament\Forms\Checkbox;
+use Filament\Forms\DatePicker;
+use Filament\Forms\Select;
+use Filament\Forms\Textarea;
+use Filament\Forms\TextInput;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Grid as ComponentsGrid;
 use Filament\Schemas\Components\Section as ComponentsSection;
-use Filament\Tables;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
+use Milon\Barcode\DNS2D;
 
 class ITAssetResource extends Resource
 {
@@ -44,9 +45,9 @@ class ITAssetResource extends Resource
 
     protected static ?string $slug = 'itd/assets';
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-tv';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-tv';
 
-    protected static string | \UnitEnum | null $navigationGroup = ' ITD';
+    protected static string|\UnitEnum|null $navigationGroup = ' ITD';
 
     public static function getBreadcrumb(): string
     {
@@ -160,7 +161,7 @@ class ITAssetResource extends Resource
                     ->getStateUsing(fn ($record) => $record->location ? $record->location->name : 'N/A')
                     ->searchable()
                     ->sortable(query: fn (Builder $query, string $direction): Builder => $query->orderBy(
-                        \App\Models\IT\ITAssetLocation::select('name')->whereColumn('it_asset_locations.id', 'it_assets.asset_location_id'),
+                        ITAssetLocation::select('name')->whereColumn('it_asset_locations.id', 'it_assets.asset_location_id'),
                         $direction
                     )),
                 TextColumn::make('asset_serial_number')
@@ -196,7 +197,7 @@ class ITAssetResource extends Resource
                     )
                     )
                     ->sortable(query: fn (Builder $query, string $direction): Builder => $query->orderBy(
-                        \App\Models\Employee\Employee::select('name')->whereColumn('employees.id', 'it_assets.asset_user_id'),
+                        Employee::select('name')->whereColumn('employees.id', 'it_assets.asset_user_id'),
                         $direction
                     )),
                 TextColumn::make('position')
@@ -219,7 +220,7 @@ class ITAssetResource extends Resource
                         return $signature;
                     })
                     ->sortable(query: fn (Builder $query, string $direction): Builder => $query->orderBy(
-                        \App\Models\User::select('name')->whereColumn('users.id', 'it_assets.pic_id'),
+                        User::select('name')->whereColumn('users.id', 'it_assets.pic_id'),
                         $direction
                     ))
                     ->searchable(),
@@ -333,12 +334,12 @@ class ITAssetResource extends Resource
                                 $route = route('itd.assets.show', ['assetId' => $record->assetId]);
 
                                 // Generate QR Code
-                                $qr = new \Milon\Barcode\DNS2D;
+                                $qr = new DNS2D;
                                 $qrCodeImage = base64_decode($qr->getBarcodePNG($route, 'QRCODE,H'));
                                 $path = 'assets/'.$record->assetId.'.png';
 
                                 // Store the QR code image
-                                \Illuminate\Support\Facades\Storage::disk('public')->put($path, $qrCodeImage);
+                                Storage::disk('public')->put($path, $qrCodeImage);
 
                                 // Update the record with the new QR code path
                                 $record->barcode = $path;

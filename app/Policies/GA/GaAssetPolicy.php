@@ -4,7 +4,6 @@ namespace App\Policies\GA;
 
 use App\Models\GA\GaAsset;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class GaAssetPolicy
 {

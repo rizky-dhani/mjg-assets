@@ -4,9 +4,9 @@ namespace App\Filament\Resources\Employee;
 
 use App\Filament\Resources\Employee\EmployeeResource\Pages;
 use App\Models\Employee\Employee;
-use Filament\Forms\Components\Section;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
+use Filament\Forms\Section;
+use Filament\Forms\Select;
+use Filament\Forms\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables;

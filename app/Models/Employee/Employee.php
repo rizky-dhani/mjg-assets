@@ -2,25 +2,30 @@
 
 namespace App\Models\Employee;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
 class Employee extends Model
 {
     protected $guarded = ['id'];
+
     public function getRouteKeyName(): string
     {
         return 'employeeId';
     }
+
     public function division()
     {
-        return $this->belongsTo(\App\Models\Employee\EmployeeDivision::class);
+        return $this->belongsTo(EmployeeDivision::class);
     }
+
     public function position()
     {
-        return $this->belongsTo(\App\Models\Employee\EmployeePosition::class);
+        return $this->belongsTo(EmployeePosition::class);
     }
+
     public function user()
     {
-        return $this->belongsTo(\App\Models\User::class);
+        return $this->belongsTo(User::class);
     }
 }

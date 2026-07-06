@@ -4,9 +4,9 @@ namespace App\Filament\Resources\Employee;
 
 use App\Filament\Resources\Employee\EmployeeDivisionResource\Pages;
 use App\Models\Employee\EmployeeDivision;
-use Filament\Forms\Components\Grid;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
+use Filament\Forms\Grid;
+use Filament\Forms\Select;
+use Filament\Forms\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;

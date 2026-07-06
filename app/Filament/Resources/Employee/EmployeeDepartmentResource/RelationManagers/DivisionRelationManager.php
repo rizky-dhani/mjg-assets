@@ -2,8 +2,9 @@
 
 namespace App\Filament\Resources\Employee\EmployeeDepartmentResource\RelationManagers;
 
+use App\Models\Employee\EmployeeDivision;
 use Filament\Forms;
-use Filament\Forms\Components\TextInput;
+use Filament\Forms\TextInput;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
@@ -58,7 +59,7 @@ class DivisionRelationManager extends RelationManager
                         if (! empty($selectedDivisions)) {
                             // Update each selected division's department_id
                             foreach ($selectedDivisions as $divisionId) {
-                                \App\Models\Employee\EmployeeDivision::where('id', $divisionId)
+                                EmployeeDivision::where('id', $divisionId)
                                     ->update(['department_id' => $departmentId]);
                             }
                         }
@@ -68,7 +69,7 @@ class DivisionRelationManager extends RelationManager
                             ->label('Select Divisions')
                             ->multiple()
                             ->options(
-                                \App\Models\Employee\EmployeeDivision::query()
+                                EmployeeDivision::query()
                                     ->pluck('name', 'id')
                             )
                             ->required(),

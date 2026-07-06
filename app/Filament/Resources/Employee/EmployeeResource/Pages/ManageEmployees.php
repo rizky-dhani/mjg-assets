@@ -2,10 +2,14 @@
 
 namespace App\Filament\Resources\Employee\EmployeeResource\Pages;
 
-use Filament\Actions;
-use Illuminate\Support\Str;
-use Filament\Resources\Pages\ManageRecords;
 use App\Filament\Resources\Employee\EmployeeResource;
+use App\Imports\EmployeesImport;
+use Filament\Actions;
+use Filament\Forms\FileUpload;
+use Filament\Notifications\Notification;
+use Filament\Resources\Pages\ManageRecords;
+use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ManageEmployees extends ManageRecords
 {
@@ -21,13 +25,14 @@ class ManageEmployees extends ManageRecords
                 ->mutateFormDataUsing(function (array $data): array {
                     // Set the initial division to 'Head Office' if not set
                     $data['employeeId'] = Str::orderedUuid();
+
                     return $data;
                 }),
             Actions\Action::make('importExcel')
                 ->label('Import Excel')
                 ->icon('heroicon-o-arrow-down-tray')
                 ->form([
-                    \Filament\Forms\Components\FileUpload::make('file')
+                    FileUpload::make('file')
                         ->label('Excel File')
                         ->disk('local')
                         // ->acceptedFileTypes(['.xlsx', '.xls'])
@@ -36,17 +41,17 @@ class ManageEmployees extends ManageRecords
                 ->action(function (array $data) {
                     try {
                         $filePath = \Storage::path($data['file']);
-                        \Maatwebsite\Excel\Facades\Excel::import(
-                            new \App\Imports\EmployeesImport,
+                        Excel::import(
+                            new EmployeesImport,
                             $filePath
                         );
-                        \Filament\Notifications\Notification::make()
+                        Notification::make()
                             ->title('Import successful!')
                             ->success()
                             ->send();
                     } catch (\Exception $e) {
-                        \Filament\Notifications\Notification::make()
-                            ->title('Import failed: ' . $e->getMessage())
+                        Notification::make()
+                            ->title('Import failed: '.$e->getMessage())
                             ->danger()
                             ->send();
                     }

@@ -2,11 +2,11 @@
 
 namespace App\Filament\Resources\GA;
 
-use Filament\Actions;
 use App\Filament\Resources\GA\GaAssetLocationResource\Pages;
 use App\Models\GA\GaAssetLocation;
-use Filament\Forms\Components\Section;
-use Filament\Forms\Components\TextInput;
+use Filament\Actions;
+use Filament\Forms\Section;
+use Filament\Forms\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables;

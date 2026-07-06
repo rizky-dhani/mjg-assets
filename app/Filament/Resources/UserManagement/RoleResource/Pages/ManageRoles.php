@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources\UserManagement\RoleResource\Pages;
 
+use App\Filament\Resources\UserManagement\RoleResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ManageRecords;
-use App\Filament\Resources\UserManagement\RoleResource;
 
 class ManageRoles extends ManageRecords
 {

@@ -9,6 +9,7 @@ use Filament\Resources\Pages\ManageRecords;
 class ManageITAssetCategories extends ManageRecords
 {
     protected static string $resource = ITAssetCategoryResource::class;
+
     protected function getHeaderActions(): array
     {
         return [

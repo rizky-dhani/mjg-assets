@@ -4,7 +4,6 @@ namespace App\Policies\GA;
 
 use App\Models\GA\GaAssetUsageHistory;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class GaAssetUsageHistoryPolicy
 {

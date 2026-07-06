@@ -2,6 +2,8 @@
 
 use App\Livewire\Public\GaAssetDetail;
 use App\Livewire\Public\ITAssetDetail;
+use App\Models\GA\GaAsset;
+use App\Models\IT\ITAsset;
 use Illuminate\Support\Facades\Route;
 use Spatie\Browsershot\Browsershot;
 
@@ -25,11 +27,11 @@ Route::get('/assets/bulk-export-pdf/export', function () {
 
     // Check if user has a division or department that indicates GA vs IT
     if ($user && $user->division->initial === 'GA') {
-        $assets = \App\Models\GA\GaAsset::whereIn('id', $ids)->get();
+        $assets = GaAsset::whereIn('id', $ids)->get();
         $filename = 'GA-ASSETS-'.now()->format('Y-m-d').'.pdf';
     } else {
         // Default to IT assets or if user is from IT department
-        $assets = \App\Models\IT\ITAsset::whereIn('id', $ids)->get();
+        $assets = ITAsset::whereIn('id', $ids)->get();
         $filename = 'IT-ASSETS-'.now()->format('Y-m-d').'.pdf';
     }
 

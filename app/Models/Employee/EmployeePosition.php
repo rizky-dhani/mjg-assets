@@ -2,6 +2,7 @@
 
 namespace App\Models\Employee;
 
+use App\Models\IT\ITAssetUsageHistory;
 use Illuminate\Database\Eloquent\Model;
 
 class EmployeePosition extends Model
@@ -22,8 +23,9 @@ class EmployeePosition extends Model
     {
         return $this->hasMany(Employee::class, 'position_id');
     }
+
     public function usageHistories()
     {
-        return $this->hasMany(\App\Models\IT\ITAssetUsageHistory::class, 'position_id');
+        return $this->hasMany(ITAssetUsageHistory::class, 'position_id');
     }
 }

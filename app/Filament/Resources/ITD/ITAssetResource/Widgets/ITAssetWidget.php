@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\ITD\ITAssetResource\Widgets;
 
 use App\Filament\Resources\ITD\ITAssetResource;
+use App\Models\IT\ITAsset;
 use App\Models\IT\ITAssetCategory;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
@@ -95,9 +96,9 @@ class ITAssetWidget extends BaseWidget
         */
 
         // New implementation showing total, available, and in-use IT Assets
-        $totalAssets = \App\Models\IT\ITAsset::count();
-        $inUseAssets = \App\Models\IT\ITAsset::whereNotNull('asset_user_id')->count();
-        $availableAssets = \App\Models\IT\ITAsset::whereNull('asset_user_id')->count();
+        $totalAssets = ITAsset::count();
+        $inUseAssets = ITAsset::whereNotNull('asset_user_id')->count();
+        $availableAssets = ITAsset::whereNull('asset_user_id')->count();
 
         return [
             Stat::make('Total', $totalAssets)
