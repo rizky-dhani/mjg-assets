@@ -2,12 +2,12 @@
 
 namespace App\Filament\Pages\Auth;
 
-use Filament\Forms\Components\TextInput;
+use Filament\Auth\Http\Responses\Contracts\LoginResponse;
 use Filament\Auth\Pages\Login as BaseLogin;
 use Filament\Forms\Components\Checkbox;
-use Filament\Auth\Http\Responses\Contracts\LoginResponse;
-use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Component;
+use Filament\Schemas\Schema;
 
 class CustomLogin extends BaseLogin
 {
@@ -21,7 +21,7 @@ class CustomLogin extends BaseLogin
     public function mount(): void
     {
         parent::mount();
-        
+
         // Pre-fill demo credentials (remove in production)
         $this->form->fill([
             'email' => '',
@@ -56,6 +56,7 @@ class CustomLogin extends BaseLogin
         return TextInput::make('password')
             ->label('Password')
             ->password()
+            ->revealable()
             ->required()
             ->extraInputAttributes(['tabindex' => 2])
             ->placeholder('Enter your password');
@@ -73,6 +74,7 @@ class CustomLogin extends BaseLogin
             return parent::authenticate();
         } catch (\Exception $exception) {
             $this->addError('data.email', 'Invalid credentials.');
+
             return null;
         }
     }
