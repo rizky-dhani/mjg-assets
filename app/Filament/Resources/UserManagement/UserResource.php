@@ -3,17 +3,22 @@
 namespace App\Filament\Resources\UserManagement;
 
 use App\Filament\Resources\UserManagement\UserResource\Pages;
+use App\Models\Employee\EmployeeDivision;
 use App\Models\User;
 use Filament\Actions;
+use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
-use Filament\Schemas\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Hash;
 
 class UserResource extends Resource
 {
@@ -33,6 +38,7 @@ class UserResource extends Resource
         return $form
             ->schema([
                 Section::make('User Information')
+                    ->columnSpanFull()
                     ->schema([
                         TextInput::make('name')
                             ->label('Full Name')
@@ -90,6 +96,31 @@ class UserResource extends Resource
             ->actions([
                 EditAction::make()
                     ->successNotificationTitle('User updated successfully'),
+                Action::make('resetPassword')
+                    ->label('Reset Password')
+                    ->icon(Heroicon::Key)
+                    ->color('warning')
+                    ->modalHeading('Reset User Password')
+                    ->modalDescription('Enter a new password for this user.')
+                    ->schema([
+                        TextInput::make('password')
+                            ->label('New Password')
+                            ->password()
+                            ->revealable()
+                            ->required()
+                            ->minLength(8)
+                            ->dehydrateStateUsing(fn (string $state): string => Hash::make($state)),
+                    ])
+                    ->action(function (array $data, User $record): void {
+                        $record->update(['password' => $data['password']]);
+
+                        Notification::make()
+                            ->title('Password reset successfully')
+                            ->success()
+                            ->send();
+                    })
+                    ->requiresConfirmation()
+                    ->modalSubmitActionLabel('Reset Password'),
                 DeleteAction::make()
                     ->modalHeading('Are you sure you want to delete this user?')
                     ->modalDescription('This action cannot be undone.')
@@ -109,7 +140,7 @@ class UserResource extends Resource
                         ->form([
                             Select::make('division_id')
                                 ->label('New Division')
-                                ->options(\App\Models\Employee\EmployeeDivision::pluck('name', 'id'))
+                                ->options(EmployeeDivision::pluck('name', 'id'))
                                 ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
                                 ->preload()
                                 ->searchable()
