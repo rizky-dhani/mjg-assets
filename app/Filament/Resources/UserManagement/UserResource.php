@@ -100,28 +100,15 @@ class UserResource extends Resource
                     ->label('Reset Password')
                     ->icon(Heroicon::Key)
                     ->color('warning')
-                    ->modalHeading('Reset User Password')
-                    ->modalDescription('Enter a new password for this user.')
-                    ->schema([
-                        TextInput::make('password')
-                            ->label('New Password')
-                            ->default('Medquest.1')
-                            ->password()
-                            ->revealable()
-                            ->required()
-                            ->minLength(8)
-                            ->dehydrateStateUsing(fn (string $state): string => Hash::make($state)),
-                    ])
-                    ->action(function (array $data, User $record): void {
-                        $record->update(['password' => $data['password']]);
+                    ->requiresConfirmation()
+                    ->action(function (User $record): void {
+                        $record->update(['password' => Hash::make('Medquest.1')]);
 
                         Notification::make()
-                            ->title('Password reset successfully')
+                            ->title('Password reset to default successfully')
                             ->success()
                             ->send();
-                    })
-                    ->requiresConfirmation()
-                    ->modalSubmitActionLabel('Reset Password'),
+                    }),
                 DeleteAction::make()
                     ->modalHeading('Are you sure you want to delete this user?')
                     ->modalDescription('This action cannot be undone.')
