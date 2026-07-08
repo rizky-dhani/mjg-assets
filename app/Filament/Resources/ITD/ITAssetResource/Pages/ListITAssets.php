@@ -19,8 +19,6 @@ class ListITAssets extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make()
-                ->label('New Asset'),
             Actions\Action::make('export_excel')
                 ->label('Export to Excel')
                 ->icon('heroicon-o-document-arrow-down')
@@ -38,6 +36,8 @@ class ListITAssets extends ListRecords
                         'it-assets.xlsx'
                     );
                 }),
+            Actions\CreateAction::make()
+                ->label('New Asset'),
         ];
     }
 }
