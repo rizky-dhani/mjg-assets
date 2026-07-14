@@ -88,6 +88,7 @@ class UsageHistoryRelationManager extends RelationManager
                     ->afterStateUpdated(fn ($state, callable $set) => $set('room_id', $state)),
                 Section::make('Employee Assignment')
                     ->columns(3)
+                    ->columnSpanFull()
                     ->visible(function () {
                         $ownerRecord = $this->getOwnerRecord();
                         $categoryCode = $ownerRecord->category->code ?? null;
