@@ -71,6 +71,7 @@ class GaAssetResource extends Resource
                         TextInput::make('asset_model')
                             ->label('Model')
                             ->maxLength(100)
+                            ->required()
                             ->afterStateUpdated(fn ($state, callable $set) => $set('asset_model', strtoupper($state))),
                         TextInput::make('asset_serial_number')
                             ->label('Serial Number')
