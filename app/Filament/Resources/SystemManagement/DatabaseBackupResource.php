@@ -98,7 +98,7 @@ class DatabaseBackupResource extends Resource
                     ]),
             ])
             ->actions([
-                Tables\Actions\Action::make('download')
+                Action::make('download')
                     ->label('Download')
                     ->icon('heroicon-o-arrow-down-tray')
                     ->color('success')
