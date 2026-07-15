@@ -99,7 +99,9 @@ class DatabaseBackupService
         $username = escapeshellarg($config['username']);
         $password = $config['password'];
 
-        $command = 'mysqldump';
+        $mysqldumpPath = $this->findMysqldump();
+
+        $command = escapeshellarg($mysqldumpPath);
         $command .= " --host={$host}";
         $command .= " --port={$port}";
         $command .= " --user={$username}";
@@ -118,6 +120,41 @@ class DatabaseBackupService
         $command .= ' > '.escapeshellarg($tempPath);
 
         return $command;
+    }
+
+    protected function findMysqldump(): string
+    {
+        // 1. Explicit .env override
+        $envPath = env('DB_BACKUP_MYSQLDUMP_PATH');
+        if ($envPath && file_exists($envPath)) {
+            return $envPath;
+        }
+
+        // 2. Check system PATH
+        $which = strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' ? 'where' : 'which';
+        exec($which.' mysqldump 2>&1', $output, $exitCode);
+        if ($exitCode === 0 && ! empty($output[0]) && file_exists($output[0])) {
+            return trim($output[0]);
+        }
+
+        // 3. Windows: scan common locations (Laragon, XAMPP, MySQL default install)
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            $candidates = glob('C:/laragon/bin/mysql/*/bin/mysqldump.exe')
+                + glob('C:/laragon/bin/mariadb/*/bin/mysqldump.exe')
+                + glob('C:/xampp/mysql/bin/mysqldump.exe')
+                + glob('C:/Program Files/MySQL/*/bin/mysqldump.exe')
+                + glob('C:/Program Files/MariaDB/*/bin/mysqldump.exe');
+
+            foreach ($candidates as $path) {
+                if (file_exists($path)) {
+                    return $path;
+                }
+            }
+        }
+
+        throw new \RuntimeException(
+            'mysqldump not found. Set DB_BACKUP_MYSQLDUMP_PATH in .env to the full path of mysqldump.'
+        );
     }
 
     public function deleteBackup(DatabaseBackup $backup): bool
