@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Filament\Resources\GA;
+use App\Exports\GA\GaAssetsExport;
 
 use App\Filament\Resources\GA\GaAssetResource\Pages;
 use App\Filament\Resources\GA\GaAssetResource\RelationManagers\UsageHistoryRelationManager;
@@ -25,6 +26,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Storage;
 use Milon\Barcode\DNS2D;
+use Maatwebsite\Excel\Facades\Excel;
 
 class GaAssetResource extends Resource
 {
@@ -305,6 +307,18 @@ class GaAssetResource extends Resource
                             session(['export_asset_ids' => $ids]);
 
                             return redirect()->route('assets.bulk-export-pdf.export');
+                        })
+                        ->deselectRecordsAfterCompletion(),
+                    Actions\BulkAction::make('export_excel')
+                        ->label('Export to Excel')
+                        ->icon('heroicon-o-document-arrow-down')
+                        ->action(function ($records) {
+                            $ids = $records->pluck('id')->toArray();
+
+                            return Excel::download(
+                                new GaAssetsExport($ids),
+                                'ga_assets_export.xlsx'
+                            );
                         })
                         ->deselectRecordsAfterCompletion(),
                     Actions\BulkAction::make('regenerate_qr_codes')
