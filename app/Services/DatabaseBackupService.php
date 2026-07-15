@@ -1,0 +1,121 @@
+<?php
+
+namespace App\Services;
+
+use App\Models\DatabaseBackup;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
+
+class DatabaseBackupService
+{
+    public function createBackup(DatabaseBackup $backup): bool
+    {
+        $backup->update([
+            'status' => 'pending',
+            'started_at' => now(),
+        ]);
+
+        try {
+            $config = config('database.connections.'.config('database.default'));
+
+            $filename = $backup->filename;
+            $disk = Storage::disk($backup->disk);
+            $directory = 'database_backups';
+
+            if (! $disk->exists($directory)) {
+                $disk->makeDirectory($directory);
+            }
+
+            $path = $directory.'/'.$filename;
+            $tempPath = storage_path('app/'.$path);
+
+            // Ensure temp directory exists
+            $tempDir = dirname($tempPath);
+            if (! is_dir($tempDir)) {
+                mkdir($tempDir, 0755, true);
+            }
+
+            // Build mysqldump command
+            $command = $this->buildMysqldumpCommand($config, $tempPath);
+
+            // Execute backup
+            $output = [];
+            $exitCode = 0;
+            exec($command.' 2>&1', $output, $exitCode);
+
+            // Check if backup file exists and has content (exit code may be non-zero due to warnings)
+            if (! file_exists($tempPath) || filesize($tempPath) === 0) {
+                if ($exitCode !== 0) {
+                    throw new \RuntimeException('mysqldump failed (exit code '.$exitCode.'): '.implode("\n", $output));
+                }
+                throw new \RuntimeException('Backup file was not created or is empty');
+            }
+
+
+            $size = filesize($tempPath);
+
+            // Store to disk
+            $disk->put($path, file_get_contents($tempPath));
+
+            // Clean up temp file
+            File::delete($tempPath);
+
+            $backup->update([
+                'status' => 'completed',
+                'path' => $path,
+                'size' => $size,
+                'completed_at' => now(),
+            ]);
+
+            return true;
+
+        } catch (\Exception $e) {
+            $backup->update([
+                'status' => 'failed',
+                'error_message' => $e->getMessage(),
+                'completed_at' => now(),
+            ]);
+
+            return false;
+        }
+    }
+
+    protected function buildMysqldumpCommand(array $config, string $tempPath): string
+    {
+        $host = escapeshellarg($config['host']);
+        $port = escapeshellarg($config['port'] ?? '3306');
+        $database = escapeshellarg($config['database']);
+        $username = escapeshellarg($config['username']);
+        $password = $config['password'];
+
+        $command = 'mysqldump';
+        $command .= " --host={$host}";
+        $command .= " --port={$port}";
+        $command .= " --user={$username}";
+
+        if (! empty($password)) {
+            $command .= ' --password='.escapeshellarg($password);
+        }
+
+        $command .= ' --single-transaction';
+        $command .= ' --routines';
+        $command .= ' --triggers';
+        $command .= ' --events';
+        $command .= ' --quick';
+        $command .= ' --lock-tables=false';
+        $command .= " {$database}";
+        $command .= ' > '.escapeshellarg($tempPath);
+
+        return $command;
+    }
+
+    public function deleteBackup(DatabaseBackup $backup): bool
+    {
+        if ($backup->status === 'completed' && Storage::disk($backup->disk)->exists($backup->path)) {
+            Storage::disk($backup->disk)->delete($backup->path);
+        }
+
+        return $backup->delete();
+    }
+}

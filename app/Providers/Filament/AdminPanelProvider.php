@@ -60,6 +60,8 @@ class AdminPanelProvider extends PanelProvider
                     ->label(' General Affairs'),
                 NavigationGroup::make()
                     ->label('User Management'),
+                NavigationGroup::make()
+                    ->label('System Management'),
             ])
             ->plugins([
                 //
