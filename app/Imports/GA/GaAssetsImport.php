@@ -62,7 +62,7 @@ class GaAssetsImport implements ToModel, WithHeadingRow
 
     public function headingRow(): int
     {
-        return 10;
+        return 9;
     }
 
     private function extractCategoryCode(string $assetCode): ?string
