@@ -39,17 +39,27 @@ class DatabaseBackupService
             // Build mysqldump command
             $command = $this->buildMysqldumpCommand($config, $tempPath);
 
-            // Execute backup
+            // Execute backup — stderr goes to a separate file to keep the dump clean
+            $stderrPath = $tempPath.'.stderr';
+            $command .= ' 2>'.escapeshellarg($stderrPath);
+
             $output = [];
             $exitCode = 0;
-            exec($command.' 2>&1', $output, $exitCode);
+            exec($command, $output, $exitCode);
 
-            // Check if backup file exists and has content (exit code may be non-zero due to warnings)
+            // Capture any stderr output
+            $stderrContent = '';
+            if (file_exists($stderrPath)) {
+                $stderrContent = file_get_contents($stderrPath);
+                File::delete($stderrPath);
+            }
+
             if (! file_exists($tempPath) || filesize($tempPath) === 0) {
+                $errorMsg = $stderrContent ?: 'Unknown error';
                 if ($exitCode !== 0) {
-                    throw new \RuntimeException('mysqldump failed (exit code '.$exitCode.'): '.implode("\n", $output));
+                    throw new \RuntimeException('mysqldump failed (exit code '.$exitCode.'): '.$errorMsg);
                 }
-                throw new \RuntimeException('Backup file was not created or is empty');
+                throw new \RuntimeException('Backup file was not created or is empty: '.$errorMsg);
             }
 
 
