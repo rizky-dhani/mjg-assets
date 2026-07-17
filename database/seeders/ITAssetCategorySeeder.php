@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\ITAssetCategory;
+use App\Models\IT\ITAssetCategory;
 use Illuminate\Database\Seeder;
 
 class ITAssetCategorySeeder extends Seeder

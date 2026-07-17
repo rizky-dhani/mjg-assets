@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\ITAssetLocation;
+use App\Models\IT\ITAssetLocation;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 

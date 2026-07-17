@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\EmployeeDivision;
+use App\Models\Employee\EmployeeDivision;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
