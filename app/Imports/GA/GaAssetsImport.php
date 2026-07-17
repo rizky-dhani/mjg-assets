@@ -40,7 +40,7 @@ class GaAssetsImport implements ToModel, WithHeadingRow
             $code = $categoryCode ?? $this->generateCategoryCode();
             $name = $sheetCategoryName !== ''
                 ? $sheetCategoryName
-                : strtoupper(explode(' ', $itemName)[0] ?? 'UNCATEGORIZED');
+                : strtoupper(explode(' ', trim($itemName))[0] ?: 'UNCATEGORIZED');
 
             $category = GaAssetCategory::create([
                 'code' => $code,
