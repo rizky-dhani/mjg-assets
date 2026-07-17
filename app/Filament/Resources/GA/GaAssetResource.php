@@ -364,6 +364,7 @@ class GaAssetResource extends Resource
         return $infolist
             ->schema([
                 Section::make('Asset Details')
+                    ->columnSpanFull()
                     ->columns(4)
                     ->schema([
                         TextEntry::make('asset_code')
