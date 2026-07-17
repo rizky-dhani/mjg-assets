@@ -13,7 +13,7 @@ HeadingRowFormatter::default('none');
 
 class GaAssetsImport implements ToModel, WithHeadingRow
 {
-    public function model(array $row): GaAsset
+    public function model(array $row): ?GaAsset
     {
         $assetCode = trim($row['asset_code'] ?? '');
         $itemName = trim($row['item_name'] ?? '');
@@ -22,13 +22,31 @@ class GaAssetsImport implements ToModel, WithHeadingRow
         $date = trim($row['date'] ?? '');
         $condition = trim($row['condition'] ?? '');
 
-        // Extract category code from asset_code (format: MJG-INV-HCG.05-00-{categoryCode}-{autoIncrement})
+        // 1. Priority: lookup by extracted category code
         $categoryCode = $this->extractCategoryCode($assetCode);
+        $sheetCategoryName = trim($row['category_name'] ?? $row['category'] ?? '');
 
-        // Lookup or skip if category not found
         $category = $categoryCode
             ? GaAssetCategory::where('code', $categoryCode)->first()
             : null;
+
+        // 2. Fallback: lookup by sheet category name
+        if (! $category && $sheetCategoryName !== '') {
+            $category = GaAssetCategory::where('name', $sheetCategoryName)->first();
+        }
+
+        // 3. Create new category if both lookups failed
+        if (! $category) {
+            $code = $categoryCode ?? $this->generateCategoryCode();
+            $name = $sheetCategoryName !== ''
+                ? $sheetCategoryName
+                : strtoupper(explode(' ', $itemName)[0] ?? 'UNCATEGORIZED');
+
+            $category = GaAssetCategory::create([
+                'code' => $code,
+                'name' => $name,
+            ]);
+        }
 
         // Parse year from date (format: "06 APR 2026" or "2026")
         $yearBought = $this->parseYear($date);
@@ -43,7 +61,7 @@ class GaAssetsImport implements ToModel, WithHeadingRow
             'assetId'            => Str::orderedUuid(),
             'asset_name'         => strtoupper($name),
             'asset_code'         => $assetCode,
-            'asset_category_id'  => $category?->id,
+            'asset_category_id'  => $category->id,
             'asset_year_bought'  => $yearBought,
             'asset_brand'        => strtoupper($manufacturer),
             'asset_model'        => strtoupper($model),
@@ -69,11 +87,23 @@ class GaAssetsImport implements ToModel, WithHeadingRow
     {
         // Format: MJG-INV-HCG.05-00-{categoryCode}-{autoIncrement}
         // e.g., MJG-INV-HCG.05-00-001-01 → categoryCode = "001"
-        if (preg_match('/MJG-INV-HCG\.05-00-(\d{3})-\d{2}/', $assetCode, $matches)) {
+        if (preg_match('/MJG-INV-HCG\.05-00-(\d+)-\d+/', $assetCode, $matches)) {
             return $matches[1];
         }
 
         return null;
+    }
+
+    private function generateCategoryCode(): string
+    {
+        $maxCode = GaAssetCategory::select('code')
+            ->whereRaw('code REGEXP ?', ['^[0-9]+$'])
+            ->orderByRaw('CAST(code AS UNSIGNED) DESC')
+            ->value('code');
+
+        $next = $maxCode ? ((int) $maxCode + 1) : 1;
+
+        return str_pad($next, 3, '0', STR_PAD_LEFT);
     }
 
     private function parseYear(string $date): int
