@@ -42,10 +42,10 @@ class GaAssetsImport implements ToModel, WithHeadingRow
                 ? $sheetCategoryName
                 : strtoupper(explode(' ', trim($itemName))[0] ?: 'UNCATEGORIZED');
 
-            $category = GaAssetCategory::create([
-                'code' => $code,
-                'name' => $name,
-            ]);
+            $category = GaAssetCategory::firstOrCreate(
+                ['name' => $name],
+                ['code' => $code]
+            );
         }
 
         // Parse year from date (format: "06 APR 2026" or "2026")

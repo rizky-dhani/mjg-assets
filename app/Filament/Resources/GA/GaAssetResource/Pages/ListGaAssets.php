@@ -8,6 +8,7 @@ use App\Filament\Resources\GA\GaAssetResource;
 use App\Imports\GA\GaAssetsImport;
 use Filament\Actions;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Select;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ListRecords;
 use Maatwebsite\Excel\Facades\Excel;
@@ -59,15 +60,44 @@ class ListGaAssets extends ListRecords
                         ->label('Excel File')
                         ->disk('local')
                         ->acceptedFileTypes(['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-excel'])
-                        ->required(),
+                        ->required()
+                        ->reactive()
+                        ->afterStateUpdated(function ($state, callable $set) {
+                            if (!$state) {
+                                $set('sheet_names', null);
+                                $set('selected_sheet', null);
+                                return;
+                            }
+                            try {
+                                $filePath = \Storage::path($state);
+                                $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($filePath);
+                                $sheetNames = $spreadsheet->getSheetNames();
+                                unset($spreadsheet);
+                                $set('sheet_names', json_encode($sheetNames));
+                                if (count($sheetNames) === 1) {
+                                    $set('selected_sheet', $sheetNames[0]);
+                                } else {
+                                    $set('selected_sheet', null);
+                                }
+                            } catch (\Exception $e) {
+                                $set('sheet_names', null);
+                                $set('selected_sheet', null);
+                            }
+                        }),
+                    Select::make('selected_sheet')
+                        ->label('Select Sheet to Import')
+                        ->options(function ($get) {
+                            $sheetNames = json_decode($get('sheet_names') ?? '[]', true);
+                            return array_combine($sheetNames, $sheetNames);
+                        })
+                        ->required(fn ($get) => count(json_decode($get('sheet_names') ?? '[]', true)) > 1)
+                        ->visible(fn ($get) => count(json_decode($get('sheet_names') ?? '[]', true)) > 1),
                 ])
                 ->action(function (array $data) {
                     try {
                         $filePath = \Storage::path($data['file']);
-                        Excel::import(
-                            new GaAssetsImport,
-                            $filePath
-                        );
+                        $sheetName = $data['selected_sheet'] ?? null;
+                        Excel::import(new GaAssetsImport, $filePath, null, null, $sheetName);
                         Notification::make()
                             ->title('Import successful!')
                             ->success()
