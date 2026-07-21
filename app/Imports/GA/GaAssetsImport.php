@@ -51,6 +51,7 @@ class GaAssetsImport implements ToCollection
             }
 
             $itemName = $data['item_name'] ?? '';
+            $manufacturer = $data['Manufacturer'] ?? '';
             $date = $data['Date'] ?? '';
             $serialNo = $data['Serial No./ Processor'] ?? '';
             $condition = $data['condition'] ?? '';
