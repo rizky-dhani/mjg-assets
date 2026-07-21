@@ -114,7 +114,7 @@ class GaAssetsImport implements ToCollection
                     'asset_location_id' => $this->usageLocationId,
                     'room_id'           => $room->id,
                     'usage_quantity'     => 1,
-                    'usage_start_date'  => $this->parseDate($date),
+                    'usage_start_date'  => $this->parseDate($date) ?? now()->format('Y-m-d'),
                 ]);
             }
         });
@@ -134,26 +134,17 @@ class GaAssetsImport implements ToCollection
 
     private function parseDate(string $date): ?string
     {
-        // Format: "06 APR 2026" → "2026-04-06"
-        $months = [
-            'JAN' => '01', 'FEB' => '02', 'MAR' => '03', 'APR' => '04',
-            'MAY' => '05', 'JUN' => '06', 'JUL' => '07', 'AUG' => '08',
-            'SEP' => '09', 'OCT' => '10', 'NOV' => '11', 'DEC' => '12',
-        ];
-
-        if (preg_match('/^(\d{2})\s+([A-Z]{3})\s+(\d{4})$/', strtoupper(trim($date)), $m)) {
-            $month = $months[$m[2]] ?? null;
-            if ($month) {
-                return "{$m[3]}-{$month}-{$m[1]}";
-            }
+        $date = trim($date);
+        if ($date === '') {
+            return null;
         }
 
-        // Plain year: "2026" → "2026-01-01"
-        if (preg_match('/^(\d{4})$/', trim($date), $m)) {
-            return "{$m[1]}-01-01";
+        // Try Carbon for any common format
+        try {
+            return \Carbon\Carbon::parse($date)->format('Y-m-d');
+        } catch (\Exception $e) {
+            return null;
         }
-
-        return null;
     }
 
     private function parseYear(string $date): int
