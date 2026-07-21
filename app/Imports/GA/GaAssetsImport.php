@@ -15,46 +15,40 @@ class GaAssetsImport implements ToModel, WithHeadingRow
 {
     public function model(array $row): ?GaAsset
     {
-        $assetCode = trim($row['asset_code'] ?? '');
-        $itemName = trim($row['item_name'] ?? '');
-        $manufacturer = trim($row['manufacturer'] ?? '');
-        $serialNo = trim($row['serial_no'] ?? '');
-        $date = trim($row['date'] ?? '');
-        $condition = trim($row['condition'] ?? '');
-
-        // 1. Priority: lookup by extracted category code
-        $categoryCode = $this->extractCategoryCode($assetCode);
-        $sheetCategoryName = trim($row['category_name'] ?? $row['category'] ?? $row['name'] ?? $row['Name'] ?? '');
-
-        $category = $categoryCode
-            ? GaAssetCategory::where('code', $categoryCode)->first()
-            : null;
-
-        // 2. Fallback: lookup by sheet category name
-        if (! $category && $sheetCategoryName !== '') {
-            $category = GaAssetCategory::where('name', $sheetCategoryName)->first();
+        $assetCode = trim($row['Inventory Code'] ?? '');
+        if ($assetCode === '') {
+            return null;
         }
 
-        // 3. Create new category if both lookups failed
-        if (! $category) {
-            $code = $categoryCode ?? $this->generateCategoryCode();
-            $name = $sheetCategoryName !== ''
-                ? $sheetCategoryName
-                : strtoupper(explode(' ', trim($itemName))[0] ?: 'UNCATEGORIZED');
+        $itemName = trim($row['item_name'] ?? '');
+        $manufacturer = trim($row['Manufacturer'] ?? '');
+        $serialNo = trim($row['Serial No./ Processor'] ?? '');
+        $date = trim($row['date'] ?? '');
+        $condition = trim($row['condition'] ?? '');
+        $areaName = trim($row['Area'] ?? '');
+        $categoryName = trim($row['Name'] ?? '');
 
-            $category = GaAssetCategory::firstOrCreate(
-                ['name' => $name],
-                ['code' => $code]
+        // Category: lookup by name, create if not exists
+        $category = $categoryName !== ''
+            ? GaAssetCategory::firstOrCreate(
+                ['name' => $categoryName],
+                ['code' => $this->generateCategoryCode()]
+            )
+            : GaAssetCategory::firstOrCreate(
+                ['name' => 'UNCATEGORIZED'],
+                ['code' => $this->generateCategoryCode()]
+            );
+
+        // Location: lookup by name, create if not exists
+        $location = null;
+        if ($areaName !== '') {
+            $location = \App\Models\GA\GaAssetLocation::firstOrCreate(
+                ['name' => $areaName]
             );
         }
 
-        // Parse year from date (format: "06 APR 2026" or "2026")
         $yearBought = $this->parseYear($date);
-
-        // Map condition: A=Active→New, or use as-is if matches enum
         $mappedCondition = $this->mapCondition($condition);
-
-        // Parse item name: "Air Conditioner GWC-18N" → name="AIR CONDITIONER", model="GWC-18N"
         ['name' => $name, 'model' => $model] = $this->parseItemName($itemName);
 
         return new GaAsset([
@@ -71,7 +65,7 @@ class GaAssetsImport implements ToModel, WithHeadingRow
             'asset_sell_price'   => null,
             'asset_notes'        => null,
             'asset_remarks'      => null,
-            'asset_location_id'  => null,
+            'asset_location_id'  => $location?->id,
             'asset_user_id'      => null,
             'pic_id'             => auth()->id(),
             'barcode'            => null,
@@ -83,16 +77,6 @@ class GaAssetsImport implements ToModel, WithHeadingRow
         return 9;
     }
 
-    private function extractCategoryCode(string $assetCode): ?string
-    {
-        // Format: MJG-INV-HCG.05-00-{categoryCode}-{autoIncrement}
-        // e.g., MJG-INV-HCG.05-00-001-01 → categoryCode = "001"
-        if (preg_match('/MJG-INV-HCG\.05-00-(\d+)-\d+/', $assetCode, $matches)) {
-            return $matches[1];
-        }
-
-        return null;
-    }
 
     private function generateCategoryCode(): string
     {
