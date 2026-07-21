@@ -24,7 +24,7 @@ class GaAssetsImport implements ToModel, WithHeadingRow
 
         // 1. Priority: lookup by extracted category code
         $categoryCode = $this->extractCategoryCode($assetCode);
-        $sheetCategoryName = trim($row['category_name'] ?? $row['category'] ?? '');
+        $sheetCategoryName = trim($row['category_name'] ?? $row['category'] ?? $row['name'] ?? $row['Name'] ?? '');
 
         $category = $categoryCode
             ? GaAssetCategory::where('code', $categoryCode)->first()
