@@ -4,79 +4,120 @@ namespace App\Imports\GA;
 
 use App\Models\GA\GaAsset;
 use App\Models\GA\GaAssetCategory;
+use App\Models\GA\GaAssetLocation;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use Maatwebsite\Excel\Concerns\ToModel;
-use Maatwebsite\Excel\Concerns\WithHeadingRow;
-use Maatwebsite\Excel\Imports\HeadingRowFormatter;
+use Maatwebsite\Excel\Concerns\ToCollection;
 
-HeadingRowFormatter::default('none');
 
-class GaAssetsImport implements ToModel, WithHeadingRow
+class GaAssetsImport implements ToCollection
 {
-    public function model(array $row): ?GaAsset
+    public int $headingRowNumber = 8;
+    public bool $createUsageHistory = false;
+    public ?int $usageLocationId = null;
+
+
+    public function collection(Collection $rows): void
     {
-        $assetCode = trim($row['Inventory Code'] ?? '');
-        if ($assetCode === '') {
-            return null;
+        $headingIndex = $this->headingRowNumber - 1;
+        $mergeIndex = $this->headingRowNumber;
+
+        // Build merged heading from two rows (handles merged cells)
+        $headings = [];
+        if (isset($rows[$headingIndex])) {
+            foreach ($rows[$headingIndex] as $col => $val) {
+                $headings[$col] = trim((string) $val);
+            }
+        }
+        if (isset($rows[$mergeIndex])) {
+            foreach ($rows[$mergeIndex] as $col => $val) {
+                $val = trim((string) $val);
+                if ($val !== '') {
+                    $headings[$col] = $val;
+                }
+            }
         }
 
-        $itemName = trim($row['item_name'] ?? '');
-        $manufacturer = trim($row['Manufacturer'] ?? '');
-        $serialNo = trim($row['Serial No./ Processor'] ?? '');
-        $date = trim($row['date'] ?? '');
-        $condition = trim($row['condition'] ?? '');
-        $areaName = trim($row['Area'] ?? '');
-        $categoryName = trim($row['Name'] ?? '');
+        $rows->slice($this->headingRowNumber + 1)->each(function ($row) use ($headings) {
+            $data = [];
+            foreach ($row as $col => $val) {
+                $heading = $headings[$col] ?? "col_{$col}";
+                $data[$heading] = trim((string) $val);
+            }
 
-        // Category: lookup by name, create if not exists
-        $category = $categoryName !== ''
-            ? GaAssetCategory::firstOrCreate(
-                ['name' => $categoryName],
-                ['code' => $this->generateCategoryCode()]
-            )
-            : GaAssetCategory::firstOrCreate(
-                ['name' => 'UNCATEGORIZED'],
-                ['code' => $this->generateCategoryCode()]
-            );
+            $assetCode = $data['Inventory Code'] ?? '';
+            if ($assetCode === '' || GaAsset::where('asset_code', $assetCode)->exists()) {
+                return;
+            }
 
-        // Location: lookup by name, create if not exists
-        $location = null;
-        if ($areaName !== '') {
-            $location = \App\Models\GA\GaAssetLocation::firstOrCreate(
-                ['name' => $areaName]
-            );
-        }
+            $itemName = $data['item_name'] ?? '';
+            $date = $data['Date'] ?? '';
+            $serialNo = $data['Serial No./ Processor'] ?? '';
+            $condition = $data['condition'] ?? '';
+            $areaName = $data['Area'] ?? '';
+            $categoryName = $data['Name'] ?? '';
 
-        $yearBought = $this->parseYear($date);
-        $mappedCondition = $this->mapCondition($condition);
-        ['name' => $name, 'model' => $model] = $this->parseItemName($itemName);
+            // Category: lookup by name, create if not exists
+            $category = $categoryName !== ''
+                ? GaAssetCategory::firstOrCreate(
+                    ['name' => $categoryName],
+                    ['code' => $this->generateCategoryCode()]
+                )
+                : GaAssetCategory::firstOrCreate(
+                    ['name' => 'UNCATEGORIZED'],
+                    ['code' => $this->generateCategoryCode()]
+                );
 
-        return new GaAsset([
-            'assetId'            => Str::orderedUuid(),
-            'asset_name'         => strtoupper($name),
-            'asset_code'         => $assetCode,
-            'asset_category_id'  => $category->id,
-            'asset_year_bought'  => $yearBought,
-            'asset_brand'        => strtoupper($manufacturer),
-            'asset_model'        => strtoupper($model),
-            'asset_serial_number'=> strtoupper($serialNo ?: '0000'),
-            'asset_condition'    => $mappedCondition,
-            'asset_price'        => null,
-            'asset_sell_price'   => null,
-            'asset_notes'        => null,
-            'asset_remarks'      => null,
-            'asset_location_id'  => $location?->id,
-            'asset_user_id'      => null,
-            'pic_id'             => auth()->id(),
-            'barcode'            => null,
-        ]);
+            // Location: lookup by name, create if not exists
+            $location = null;
+            if ($areaName !== '') {
+                $location = GaAssetLocation::firstOrCreate(
+                    ['name' => $areaName],
+                    ['locationId' => Str::orderedUuid()]
+                );
+            }
+
+            $yearBought = $this->parseYear($date);
+            $mappedCondition = $this->mapCondition($condition);
+            ['name' => $name, 'model' => $model] = $this->parseItemName($itemName);
+
+            $asset = GaAsset::create([
+                'assetId'            => Str::orderedUuid(),
+                'asset_name'         => strtoupper($name),
+                'asset_code'         => $assetCode,
+                'asset_category_id'  => $category->id,
+                'asset_year_bought'  => $yearBought,
+                'asset_brand'        => strtoupper($manufacturer),
+                'asset_model'        => strtoupper($model),
+                'asset_serial_number'=> strtoupper($serialNo ?: '0000'),
+                'asset_condition'    => $mappedCondition,
+                'asset_price'        => null,
+                'asset_sell_price'   => null,
+                'asset_notes'        => null,
+                'asset_remarks'      => null,
+                'asset_location_id'  => $location?->id,
+                'asset_user_id'      => null,
+                'pic_id'             => auth()->id(),
+                'barcode'            => null,
+            ]);
+
+            // Auto-create usage history if enabled
+            if ($this->createUsageHistory && $this->usageLocationId && $location) {
+                $room = \App\Models\GA\GaAssetRoom::firstOrCreate(
+                    ['name' => $areaName, 'location_id' => $location->id]
+                );
+
+                \App\Models\GA\GaAssetUsageHistory::create([
+                    'usageId'           => Str::orderedUuid(),
+                    'asset_id'          => $asset->id,
+                    'asset_location_id' => $this->usageLocationId,
+                    'room_id'           => $room->id,
+                    'usage_quantity'     => 1,
+                    'usage_start_date'  => $this->parseDate($date),
+                ]);
+            }
+        });
     }
-
-    public function headingRow(): int
-    {
-        return 9;
-    }
-
 
     private function generateCategoryCode(): string
     {
@@ -90,9 +131,32 @@ class GaAssetsImport implements ToModel, WithHeadingRow
         return str_pad($next, 3, '0', STR_PAD_LEFT);
     }
 
+    private function parseDate(string $date): ?string
+    {
+        // Format: "06 APR 2026" → "2026-04-06"
+        $months = [
+            'JAN' => '01', 'FEB' => '02', 'MAR' => '03', 'APR' => '04',
+            'MAY' => '05', 'JUN' => '06', 'JUL' => '07', 'AUG' => '08',
+            'SEP' => '09', 'OCT' => '10', 'NOV' => '11', 'DEC' => '12',
+        ];
+
+        if (preg_match('/^(\d{2})\s+([A-Z]{3})\s+(\d{4})$/', strtoupper(trim($date)), $m)) {
+            $month = $months[$m[2]] ?? null;
+            if ($month) {
+                return "{$m[3]}-{$month}-{$m[1]}";
+            }
+        }
+
+        // Plain year: "2026" → "2026-01-01"
+        if (preg_match('/^(\d{4})$/', trim($date), $m)) {
+            return "{$m[1]}-01-01";
+        }
+
+        return null;
+    }
+
     private function parseYear(string $date): int
     {
-        // Format: "06 APR 2026" → 2026
         if (preg_match('/(\d{4})/', $date, $matches)) {
             return (int) $matches[1];
         }
@@ -104,7 +168,6 @@ class GaAssetsImport implements ToModel, WithHeadingRow
     {
         $condition = strtoupper(trim($condition));
 
-        // Map common codes to enum values
         return match ($condition) {
             'A', 'ACTIVE', 'NEW', 'BARU' => 'New',
             'FH', 'FIRST HAND' => 'First Hand',
@@ -117,22 +180,12 @@ class GaAssetsImport implements ToModel, WithHeadingRow
 
     private function parseItemName(string $itemName): array
     {
-        // "Air Conditioner GWC-18N" → name="Air Conditioner", model="GWC-18N"
-        // "Kursi Kerja" → name="Kursi Kerja", model=""
-        // "Pesawat Telefon KX-TS505" → name="Pesawat Telefon", model="KX-TS505"
-
         $parts = preg_split('/\s+/', $itemName, -1, PREG_SPLIT_NO_EMPTY);
 
         if (count($parts) <= 1) {
             return ['name' => $itemName, 'model' => ''];
         }
 
-        // Known model patterns (alphanumeric with hyphens/dots)
-        $modelPatterns = [
-            '/^[A-Z0-9][\w.-]*$/i', // Alphanumeric model codes
-        ];
-
-        // Try to find where model starts (last part that looks like a model number)
         $nameParts = [];
         $modelParts = [];
         $modelFound = false;
@@ -147,7 +200,6 @@ class GaAssetsImport implements ToModel, WithHeadingRow
             }
         }
 
-        // If no model found, treat last word as model if it looks like one
         if (empty($modelParts) && count($parts) > 1) {
             $lastPart = end($parts);
             if (preg_match('/[A-Z0-9]{2,}/i', $lastPart)) {
