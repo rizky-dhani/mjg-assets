@@ -6,6 +6,8 @@ use App\Models\GA\GaAsset;
 use App\Models\GA\GaAssetCategory;
 use App\Models\GA\GaAssetLocation;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Storage;
+use Milon\Barcode\DNS2D;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Concerns\ToCollection;
 
@@ -82,8 +84,16 @@ class GaAssetsImport implements ToCollection
             $mappedCondition = $this->mapCondition($condition);
             ['name' => $name, 'model' => $model] = $this->parseItemName($itemName);
 
+            // Generate QR Code
+            $assetId = Str::orderedUuid();
+            $route = route('general-affairs.assets.show', ['assetId' => $assetId]);
+            $qr = new DNS2D;
+            $qrCodeImage = base64_decode($qr->getBarcodePNG($route, 'QRCODE,H'));
+            $barcodePath = 'assets/'.$assetId.'.png';
+            Storage::disk('public')->put($barcodePath, $qrCodeImage);
+
             $asset = GaAsset::create([
-                'assetId'            => Str::orderedUuid(),
+                'assetId'            => $assetId,
                 'asset_name'         => strtoupper($name),
                 'asset_code'         => $assetCode,
                 'asset_category_id'  => $category->id,
@@ -99,7 +109,7 @@ class GaAssetsImport implements ToCollection
                 'asset_location_id'  => $location?->id,
                 'asset_user_id'      => null,
                 'pic_id'             => auth()->id(),
-                'barcode'            => null,
+                'barcode'            => $barcodePath,
             ]);
 
             // Auto-create usage history if enabled
