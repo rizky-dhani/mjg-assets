@@ -2,6 +2,10 @@
 
 use Illuminate\Support\Str;
 
+// PHP 8.5+ deprecates PDO::MYSQL_ATTR_SSL_CA in favor of Pdo\Mysql::ATTR_SSL_CA
+// Polyfill to suppress deprecation warning on 8.5+ and stay forward-compatible
+$pdoMySqlSslCa = class_exists('Pdo\\Mysql') ? constant('Pdo\\Mysql::ATTR_SSL_CA') : PDO::MYSQL_ATTR_SSL_CA;
+
 return [
 
     /*
@@ -58,7 +62,7 @@ return [
             'strict' => true,
             'engine' => null,
             'options' => extension_loaded('pdo_mysql') ? array_filter([
-                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+                $pdoMySqlSslCa => env('MYSQL_ATTR_SSL_CA'),
             ]) : [],
         ],
 
@@ -74,11 +78,11 @@ return [
             'charset' => env('DB_CHARSET', 'utf8mb4'),
             'collation' => env('DB_COLLATION', 'utf8mb4_unicode_ci'),
             'prefix' => '',
-            'prefix_indexes' => true,
             'strict' => true,
+            'prefix_indexes' => true,
             'engine' => null,
             'options' => extension_loaded('pdo_mysql') ? array_filter([
-                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+                $pdoMySqlSslCa => env('MYSQL_ATTR_SSL_CA'),
             ]) : [],
         ],
 
