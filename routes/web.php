@@ -7,6 +7,8 @@ use App\Models\IT\ITAsset;
 use Illuminate\Support\Facades\Route;
 use Spatie\Browsershot\Browsershot;
 
+// Redirect root to dashboard
+Route::get('/', fn () => redirect('/dashboard'));
 // For IT assets
 Route::get('itd/public/asset-detail/{assetId}', ITAssetDetail::class)
     ->name('itd.assets.show');
