@@ -98,6 +98,10 @@ class ITAssetResource extends Resource
                             ->label('Serial Number')
                             ->maxLength(100)
                             ->afterStateUpdated(fn ($state, callable $set) => $set('asset_serial_number', strtoupper($state))),
+                        TextInput::make('imei')
+                            ->label('IMEI')
+                            ->maxLength(100)
+                            ->afterStateUpdated(fn ($state, callable $set) => $set('imei', strtoupper($state))),
                         TextInput::make('asset_port')
                             ->label('Port')
                             ->maxLength(36)
@@ -167,6 +171,11 @@ class ITAssetResource extends Resource
                 TextColumn::make('asset_serial_number')
                     ->label('Serial Number')
                     ->getStateUsing(fn ($record) => $record->asset_serial_number ? strtoupper($record->asset_serial_number) : 'N/A')
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('imei')
+                    ->label('IMEI')
+                    ->getStateUsing(fn ($record) => $record->imei ? strtoupper($record->imei) : 'N/A')
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('asset_port')
@@ -374,6 +383,11 @@ class ITAssetResource extends Resource
                             ->label('Serial Number')
                             ->getStateUsing(function ($record) {
                                 return $record->asset_serial_number ? strtoupper($record->asset_serial_number) : 'N/A';
+                            }),
+                        TextEntry::make('imei')
+                            ->label('IMEI')
+                            ->getStateUsing(function ($record) {
+                                return $record->imei ? strtoupper($record->imei) : 'N/A';
                             }),
                         TextEntry::make('asset_year_bought')
                             ->label('Year Bought'),

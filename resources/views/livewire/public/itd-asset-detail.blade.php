@@ -29,6 +29,10 @@
                     <td>{{ $asset->asset_serial_number ?? 'N/A' }}</td>
                 </tr>
                 <tr>
+                    <th class="text-start">IMEI</th>
+                    <td>{{ $asset->imei ?? 'N/A' }}</td>
+                </tr>
+                <tr>
                     <th class="text-start">Condition</th>
                     <td>{{ $asset->asset_condition ?? 'N/A' }}</td>
                 </tr>
