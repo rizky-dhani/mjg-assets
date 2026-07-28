@@ -98,10 +98,14 @@ class ITAssetResource extends Resource
                             ->label('Serial Number')
                             ->maxLength(100)
                             ->afterStateUpdated(fn ($state, callable $set) => $set('asset_serial_number', strtoupper($state))),
-                        TextInput::make('imei')
-                            ->label('IMEI')
+                        TextInput::make('imei_1')
+                            ->label('IMEI 1')
                             ->maxLength(100)
-                            ->afterStateUpdated(fn ($state, callable $set) => $set('imei', strtoupper($state))),
+                            ->afterStateUpdated(fn ($state, callable $set) => $set('imei_1', strtoupper($state))),
+                        TextInput::make('imei_2')
+                            ->label('IMEI 2')
+                            ->maxLength(100)
+                            ->afterStateUpdated(fn ($state, callable $set) => $set('imei_2', strtoupper($state))),
                         TextInput::make('asset_port')
                             ->label('Port')
                             ->maxLength(36)
@@ -173,9 +177,14 @@ class ITAssetResource extends Resource
                     ->getStateUsing(fn ($record) => $record->asset_serial_number ? strtoupper($record->asset_serial_number) : 'N/A')
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('imei')
-                    ->label('IMEI')
-                    ->getStateUsing(fn ($record) => $record->imei ? strtoupper($record->imei) : 'N/A')
+                TextColumn::make('imei_1')
+                    ->label('IMEI 1')
+                    ->getStateUsing(fn ($record) => $record->imei_1 ? strtoupper($record->imei_1) : 'N/A')
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('imei_2')
+                    ->label('IMEI 2')
+                    ->getStateUsing(fn ($record) => $record->imei_2 ? strtoupper($record->imei_2) : 'N/A')
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('asset_port')
@@ -384,10 +393,15 @@ class ITAssetResource extends Resource
                             ->getStateUsing(function ($record) {
                                 return $record->asset_serial_number ? strtoupper($record->asset_serial_number) : 'N/A';
                             }),
-                        TextEntry::make('imei')
-                            ->label('IMEI')
+                        TextEntry::make('imei_1')
+                            ->label('IMEI 1')
                             ->getStateUsing(function ($record) {
-                                return $record->imei ? strtoupper($record->imei) : 'N/A';
+                                return $record->imei_1 ? strtoupper($record->imei_1) : 'N/A';
+                            }),
+                        TextEntry::make('imei_2')
+                            ->label('IMEI 2')
+                            ->getStateUsing(function ($record) {
+                                return $record->imei_2 ? strtoupper($record->imei_2) : 'N/A';
                             }),
                         TextEntry::make('asset_year_bought')
                             ->label('Year Bought'),
