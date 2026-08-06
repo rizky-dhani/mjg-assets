@@ -39,7 +39,7 @@ Route::get('/assets/bulk-export-pdf/export', function () {
 
     $html = view('pdf.assets-list', compact('assets'));
     $pdf = Browsershot::html($html)
-        ->setChromePath('/usr/bin/chromium-browser')
+        ->setChromePath('/home/webportal/.cache/puppeteer/chrome/linux-151.0.7922.71/chrome-linux64/chrome')
         ->noSandbox()
         ->format('A4')
         ->showBackground()
