@@ -39,6 +39,8 @@ Route::get('/assets/bulk-export-pdf/export', function () {
 
     $html = view('pdf.assets-list', compact('assets'));
     $pdf = Browsershot::html($html)
+        ->setChromePath('/usr/bin/chromium-browser')
+        ->noSandbox()
         ->format('A4')
         ->showBackground()
         ->pdf();
