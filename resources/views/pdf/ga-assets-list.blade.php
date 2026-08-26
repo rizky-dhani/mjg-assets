@@ -21,7 +21,13 @@
             padding: 8px 10px;
             word-break: break-all;
         }
+        .label-body {
+            display: flex;
+            align-items: stretch;
+        }
         .asset-details {
+            flex: 1 1 0;
+            min-width: 0;
             padding: 8px 10px;
         }
         .asset-details .detail-line {
@@ -32,6 +38,21 @@
         }
         .asset-details .detail-label {
             font-weight: 600;
+        }
+        .qr-code {
+            flex: 0 0 auto;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6px;
+            border-left: 1px solid rgba(255, 255, 255, 0.25);
+        }
+        .qr-code img {
+            width: 52px;
+            height: auto;
+            object-fit: contain;
+            display: block;
         }
     </style>
 </head>
@@ -46,10 +67,15 @@ $chunks = $assets->chunk(3);
                     <div class="col-4 d-flex justify-content-center">
                         <div class="ga-label">
                             <div class="label-title">{{ $asset->asset_code }}</div>
-                            <div class="asset-details">
-                                <div class="detail-line"><span class="detail-label">Date :</span> {{ $asset->asset_year_bought }}</div>
-                                <div class="detail-line"><span class="detail-label">Location :</span> {{ $asset->location->name ?? 'N/A' }}</div>
-                                <div class="detail-line"><span class="detail-label">Initial Name :</span> {{ $asset->user?->employee?->initial ?? 'N/A' }}</div>
+                            <div class="label-body">
+                                <div class="asset-details">
+                                    <div class="detail-line"><span class="detail-label">Date :</span> {{ $asset->asset_year_bought }}</div>
+                                    <div class="detail-line"><span class="detail-label">Location :</span> {{ $asset->location->name ?? 'N/A' }}</div>
+                                    <div class="detail-line"><span class="detail-label">Initial Name :</span> {{ $asset->user?->employee?->initial ?? 'N/A' }}</div>
+                                </div>
+                                <div class="qr-code">
+                                    <img src="{{ asset('storage/' . $asset->barcode) }}" alt="QR Code">
+                                </div>
                             </div>
                         </div>
                     </div>
