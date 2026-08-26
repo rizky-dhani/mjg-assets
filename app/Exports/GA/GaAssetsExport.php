@@ -4,20 +4,17 @@ namespace App\Exports\GA;
 
 use App\Models\GA\GaAsset;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Border;
-use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class GaAssetsExport implements FromCollection, WithStyles
+class GaAssetsExport implements FromCollection, ShouldAutoSize, WithHeadings, WithMapping, WithStyles
 {
     protected ?array $ids;
-
-    // Card grid: 4 cards per row, each card spanning 3 columns.
-    private const CARDS_PER_ROW = 4;
-    private const COLS_PER_CARD = 3;
-    private const ROWS_PER_CARD = 4;
 
     public function __construct(?array $ids = null)
     {
@@ -26,7 +23,7 @@ class GaAssetsExport implements FromCollection, WithStyles
 
     public function collection()
     {
-        $query = GaAsset::with(['category', 'location', 'user.employee']);
+        $query = GaAsset::with(['category', 'employee', 'user.employee', 'usageHistory.position', 'usageHistory.location', 'usageHistory.room']);
 
         if ($this->ids) {
             $query->whereIn('id', $this->ids);
@@ -35,70 +32,89 @@ class GaAssetsExport implements FromCollection, WithStyles
         return $query->orderByDesc('created_at')->get();
     }
 
-    public function styles(Worksheet $sheet): array
+    public function headings(): array
     {
-        // Fixed column widths for a consistent card grid.
-        $totalCols = self::CARDS_PER_ROW * self::COLS_PER_CARD;
-        foreach (range(1, $totalCols) as $col) {
-            $sheet->getColumnDimensionByColumn($col)->setWidth(20);
+        return [
+            'Asset Code',
+            'Serial Number',
+            'Asset Year',
+            'Category',
+            'Condition',
+            'User',
+            'Position',
+            'Latest Position',
+            'Created By',
+        ];
+    }
+
+    public function map($asset): array
+    {
+        // Position: from latest active usage history
+        $latestUsage = $asset->usageHistory()->latest('created_at')->first();
+        $position = 'N/A';
+        if ($latestUsage && ! $latestUsage->usage_end_date && $latestUsage->position) {
+            $position = $latestUsage->position->name;
         }
 
-        $assets = $this->collection();
+        // Latest Position: computed like the table column
+        $latestPosition = 'No history';
+        if ($latestUsage) {
+            $locationName = $latestUsage->location->name ?? 'Unknown Location';
+            $roomName = $latestUsage->room->name ?? null;
 
-        $assets->each(function ($asset, $index) use ($sheet) {
-            $colGroup = $index % self::CARDS_PER_ROW;
-            $rowGroup = intdiv($index, self::CARDS_PER_ROW);
-
-            $startCol = ($colGroup * self::COLS_PER_CARD) + 1;
-            $endCol = $startCol + self::COLS_PER_CARD - 1;
-            $titleRow = ($rowGroup * self::ROWS_PER_CARD) + 1;
-            $endRow = $titleRow + self::ROWS_PER_CARD - 1;
-
-            $assetCode = $asset->asset_code ?? 'N/A';
-            $year = (string) ($asset->asset_year_bought ?? 'N/A');
-            $location = $asset->location->name ?? 'N/A';
-            $initial = $asset->user?->employee?->initial ?? 'N/A';
-
-            // --- Title row: asset_code, bold, blue background, white text ---
-            $sheet->mergeCellsByColumnAndRow($startCol, $titleRow, $endCol, $titleRow);
-            $sheet->setCellValueExplicitByColumnAndRow($startCol, $titleRow, $assetCode, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
-            $sheet->getStyleByColumnAndRow($startCol, $titleRow)
-                ->getFont()
-                ->setBold(true)
-                ->setColor(new \PhpOffice\PhpSpreadsheet\Style\Color('FFFFFFFF'))
-                ->setSize(12);
-            $sheet->getStyleByColumnAndRow($startCol, $titleRow)
-                ->getFill()
-                ->setFillType(Fill::FILL_SOLID)
-                ->setStartColor(new \PhpOffice\PhpSpreadsheet\Style\Color('FF0E0E96'));
-            $sheet->getStyleByColumnAndRow($startCol, $titleRow)
-                ->getAlignment()
-                ->setHorizontal(Alignment::HORIZONTAL_LEFT)
-                ->setVertical(Alignment::VERTICAL_CENTER);
-            $sheet->getRowDimension($titleRow)->setRowHeight(26);
-
-            // --- Data rows: Date, Location, Initial Name (left aligned) ---
-            $dataRows = [
-                ["Date : {$year}", $titleRow + 1],
-                ["Location : {$location}", $titleRow + 2],
-                ["Initial Name : {$initial}", $titleRow + 3],
-            ];
-
-            foreach ($dataRows as [$text, $row]) {
-                $sheet->setCellValueExplicitByColumnAndRow($startCol, $row, $text, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
-                $sheet->getStyleByColumnAndRow($startCol, $row)
-                    ->getAlignment()
-                    ->setHorizontal(Alignment::HORIZONTAL_LEFT)
-                    ->setVertical(Alignment::VERTICAL_CENTER);
-                $sheet->getRowDimension($row)->setRowHeight(18);
+            if ($asset->asset_location_id && $latestUsage->asset_location_id != $asset->asset_location_id) {
+                $latestPosition = $roomName ? "{$locationName} - {$roomName}" : $locationName;
+            } else {
+                $latestPosition = $roomName ?? 'No room specified';
             }
+        }
 
-            // --- Borders: simple bordered box around the whole card ---
-            $cardStyle = $sheet->getStyleByColumnAndRow($startCol, $titleRow, $endCol, $endRow);
-            $cardStyle->getBorders()->getAllBorders()
-                ->setBorderStyle(Border::BORDER_THIN)
-                ->setColor(new \PhpOffice\PhpSpreadsheet\Style\Color('FF0E0E96'));
-        });
+        // Created By
+        $initial = $asset->user->employee->initial ?? '';
+        $signature = $initial.' '.strtoupper($asset->created_at->format('d M Y'));
+
+        return [
+            $asset->asset_code,
+            $asset->asset_serial_number ? strtoupper($asset->asset_serial_number) : 'N/A',
+            (string) $asset->asset_year_bought,
+            $asset->category->name ?? 'N/A',
+            $asset->asset_condition,
+            $asset->employee?->name ?? 'N/A',
+            $position,
+            $latestPosition,
+            $signature,
+        ];
+    }
+
+    public function styles(Worksheet $sheet): array
+    {
+        $lastColumn = $sheet->getHighestColumn();
+        $lastRow = $sheet->getHighestRow();
+
+        $sheet->getStyle("A1:{$lastColumn}1")->applyFromArray([
+            'font' => ['bold' => true, 'size' => 11],
+            'alignment' => [
+                'horizontal' => Alignment::HORIZONTAL_CENTER,
+                'vertical' => Alignment::VERTICAL_CENTER,
+            ],
+        ]);
+
+        if ($lastRow >= 2) {
+            $sheet->getStyle("A2:{$lastColumn}{$lastRow}")->applyFromArray([
+                'alignment' => [
+                    'horizontal' => Alignment::HORIZONTAL_CENTER,
+                    'vertical' => Alignment::VERTICAL_CENTER,
+                ],
+            ]);
+        }
+
+        $sheet->getStyle("A1:{$lastColumn}{$lastRow}")->applyFromArray([
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => Border::BORDER_THIN,
+                ],
+            ],
+        ]);
 
         return [];
     }

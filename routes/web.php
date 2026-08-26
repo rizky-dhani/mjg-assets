@@ -27,17 +27,21 @@ Route::get('/assets/bulk-export-pdf/export', function () {
     $user = auth()->user();
     $assets = null;
 
-    // Check if user has a division or department that indicates GA vs IT
-    if ($user && $user->division->initial === 'GA') {
-        $assets = GaAsset::whereIn('id', $ids)->get();
+    // Check if current user has a division or IT indicates GA or IT
+    $isGA = $user && $user->division && $user->division->initial === 'GA';
+
+    if ($isGA) {
+        $assets = GaAsset::with(['location', 'user.employee'])->whereIn('id', $ids)->get();
         $filename = 'GA-ASSETS-'.now()->format('Y-m-d').'.pdf';
+        $view = 'pdf.ga-assets-list';
     } else {
         // Default to IT assets or if user is from IT department
-        $assets = ITAsset::whereIn('id', $ids)->get();
+        $assets = ITAsset::with(['location', 'user.employee'])->whereIn('id', $ids)->get();
         $filename = 'IT-ASSETS-'.now()->format('Y-m-d').'.pdf';
+        $view = 'pdf.assets-list';
     }
 
-    $html = view('pdf.assets-list', compact('assets'));
+    $html = view($view, compact('assets'));
     $pdf = Browsershot::html($html)
         ->setChromePath('/home/webportal/.cache/puppeteer/chrome/linux-151.0.7922.71/chrome-linux64/chrome')
         ->noSandbox()
