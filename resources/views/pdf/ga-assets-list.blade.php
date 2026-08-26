@@ -20,7 +20,6 @@
             text-align: left;
             padding: 8px 10px;
             word-break: break-all;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.25);
         }
         .asset-details {
             padding: 8px 10px;
