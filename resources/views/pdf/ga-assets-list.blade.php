@@ -8,53 +8,31 @@
         .ga-label {
             max-width: 240px;
             min-width: 240px;
-            border: 3px solid #0E0E96;
+            background: #0E0E96;
             border-radius: 6px;
             margin: 8px auto;
-            background: #fff;
             overflow: hidden;
         }
         .label-title {
-            background: #0E0E96;
             color: #fff;
             font-weight: 700;
-            font-size: 12px;
+            font-size: 13px;
             text-align: left;
-            padding: 6px 8px;
+            padding: 8px 10px;
             word-break: break-all;
-            border-bottom: 1px solid #0E0E96;
-        }
-        .label-body {
-            display: flex;
-            align-items: flex-start;
-            padding: 6px 8px;
-        }
-        .qr-code img {
-            width: 55px;
-            height: auto;
-            object-fit: contain;
-            display: block;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.25);
         }
         .asset-details {
-            flex: 1 1 0;
-            min-width: 0;
-            padding-left: 8px;
+            padding: 8px 10px;
         }
         .asset-details .detail-line {
-            font-size: 9px;
-            line-height: 1.35;
-            color: #111;
+            font-size: 10px;
+            line-height: 1.5;
+            color: #fff;
             text-align: left;
         }
         .asset-details .detail-label {
             font-weight: 600;
-        }
-        .medquest-logo img {
-            max-width: 70px;
-            width: 70px;
-            height: auto;
-            display: block;
-            margin-bottom: 2px;
         }
     </style>
 </head>
@@ -69,18 +47,10 @@ $chunks = $assets->chunk(3);
                     <div class="col-4 d-flex justify-content-center">
                         <div class="ga-label">
                             <div class="label-title">{{ $asset->asset_code }}</div>
-                            <div class="label-body">
-                                <div class="qr-code">
-                                    <img src="{{ asset('storage/' . $asset->barcode) }}" alt="QR Code">
-                                </div>
-                                <div class="asset-details">
-                                    <div class="medquest-logo">
-                                        <img src="{{ asset('assets/images/LOGO-MEDQUEST-HD.png') }}" alt="Medquest Jaya Global">
-                                    </div>
-                                    <div class="detail-line"><span class="detail-label">Date :</span> {{ $asset->asset_year_bought }}</div>
-                                    <div class="detail-line"><span class="detail-label">Location :</span> {{ $asset->location->name ?? 'N/A' }}</div>
-                                    <div class="detail-line"><span class="detail-label">Initial Name :</span> {{ $asset->user?->employee?->initial ?? 'N/A' }}</div>
-                                </div>
+                            <div class="asset-details">
+                                <div class="detail-line"><span class="detail-label">Date :</span> {{ $asset->asset_year_bought }}</div>
+                                <div class="detail-line"><span class="detail-label">Location :</span> {{ $asset->location->name ?? 'N/A' }}</div>
+                                <div class="detail-line"><span class="detail-label">Initial Name :</span> {{ $asset->user?->employee?->initial ?? 'N/A' }}</div>
                             </div>
                         </div>
                     </div>
