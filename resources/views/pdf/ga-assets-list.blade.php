@@ -71,7 +71,7 @@ $chunks = $assets->chunk(3);
                                 <div class="asset-details">
                                     <div class="detail-line"><span class="detail-label">Date :</span> {{ $asset->asset_year_bought }}</div>
                                     <div class="detail-line"><span class="detail-label">Location :</span> {{ $asset->location->name ?? 'N/A' }}</div>
-                                    <div class="detail-line"><span class="detail-label">Initial Name :</span> {{ $asset->user?->employee?->initial ?? 'N/A' }}</div>
+                                    <div class="detail-line"><span class="detail-label">Initial Name :</span> {{ $asset->usageHistory()->latest('created_at')->first()?->employee?->initial ?? 'N/A' }}</div>
                                 </div>
                                 <div class="qr-code">
                                     <img src="{{ asset('storage/' . $asset->barcode) }}" alt="QR Code">
