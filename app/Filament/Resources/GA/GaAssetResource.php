@@ -7,6 +7,7 @@ use App\Filament\Resources\GA\GaAssetResource\Pages;
 use App\Filament\Resources\GA\GaAssetResource\RelationManagers\UsageHistoryRelationManager;
 use App\Models\GA\GaAsset;
 use App\Models\GA\GaAssetCategory;
+use App\Models\GA\GaAssetRoom;
 use Filament\Actions;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\DatePicker;
@@ -229,6 +230,26 @@ class GaAssetResource extends Resource
                     ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->code} - {$record->name}")
                     ->preload()
                     ->searchable(),
+                SelectFilter::make('asset_location_id')
+                    ->label('Location')
+                    ->relationship('location', 'name')
+                    ->preload()
+                    ->searchable(),
+                SelectFilter::make('room_id')
+                    ->label('Room')
+                    ->options(fn () => GaAssetRoom::query()
+                        ->with('location')
+                        ->orderBy('name')
+                        ->get()
+                        ->mapWithKeys(fn ($room) => [
+                            $room->id => ($room->location?->name ? $room->location->name.' - ' : '').$room->name,
+                        ])
+                        ->toArray())
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query->when($data['value'] ?? null, fn ($query, $roomId) => $query->whereHas('usageHistory', fn ($q) => $q->where('room_id', $roomId)));
+                    })
+                    ->searchable()
+                    ->preload(),
                 SelectFilter::make('asset_condition')
                     ->label('Condition')
                     ->options([

@@ -250,6 +250,11 @@ class ITAssetResource extends Resource
                     ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->code} - {$record->name}")
                     ->preload()
                     ->searchable(),
+                SelectFilter::make('asset_location_id')
+                    ->label('Location')
+                    ->relationship('location', 'name')
+                    ->preload()
+                    ->searchable(),
                 SelectFilter::make('asset_condition')
                     ->label('Condition')
                     ->options([
