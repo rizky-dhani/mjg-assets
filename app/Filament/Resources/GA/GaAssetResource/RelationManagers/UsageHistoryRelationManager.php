@@ -89,15 +89,7 @@ class UsageHistoryRelationManager extends RelationManager
                 Section::make('Employee Assignment')
                     ->columns(3)
                     ->columnSpanFull()
-                    ->visible(function () {
-                        $ownerRecord = $this->getOwnerRecord();
-                        $categoryCode = $ownerRecord->category->code ?? null;
-
-                        // Define the array of codes where the section should be hidden
-                        $codesToHide = ['009', '015', '016']; // You can customize this list
-
-                        return $categoryCode && ! in_array(strtoupper($categoryCode), $codesToHide);
-                    })
+                    // Visible for all GA asset categories so any asset can be assigned to a user.
                     ->schema([
                         Select::make('employee_id')
                             ->label('Assign To...')
